@@ -180,7 +180,7 @@ def detect_badge(image_path):
         # Filter op positie: borstgebied (onder het gezicht)
         center_y = (y + h / 2) / height
         center_x = (x + w / 2) / width
-        if center_y < 0.40 or center_y > 0.75:
+        if center_y < 0.38 or center_y > 0.78:
             continue
         if center_x < 0.20 or center_x > 0.80:
             continue
