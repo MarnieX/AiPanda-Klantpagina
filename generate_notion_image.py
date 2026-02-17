@@ -11,7 +11,7 @@ Gebruik:
   python generate_notion_image.py "abstract tech design" --model gemini-2.5-flash-preview-05-20
 
 Vereisten:
-  pip install google-genai Pillow python-dotenv requests
+  pip install google-genai Pillow python-dotenv requests opencv-python-headless
 
 Configuratie:
   .env bestand met GEMINI_API_KEY=jouw-key
@@ -21,6 +21,7 @@ import sys
 import argparse
 import base64
 import json
+import tempfile
 from pathlib import Path
 from datetime import datetime
 
@@ -102,6 +103,142 @@ def save_image(image_part, output_path):
     return output_path
 
 
+def download_logo(domain):
+    """Download bedrijfslogo via Google Favicons API."""
+    import requests
+
+    url = f"https://www.google.com/s2/favicons?domain={domain}&sz=256"
+    print(f"Logo downloaden voor {domain}...")
+
+    try:
+        response = requests.get(url, timeout=15)
+        response.raise_for_status()
+
+        if len(response.content) < 100:
+            print(f"WARNING: Logo te klein of niet gevonden voor {domain}")
+            return None
+
+        tmp = tempfile.NamedTemporaryFile(suffix=".png", delete=False)
+        tmp.write(response.content)
+        tmp.close()
+        print(f"Logo opgeslagen: {tmp.name} ({len(response.content):,} bytes)")
+        return tmp.name
+    except Exception as e:
+        print(f"WARNING: Logo download mislukt voor {domain}: {e}")
+        return None
+
+
+def detect_badge(image_path):
+    """Detecteer witte badge op het jasje van de panda via OpenCV."""
+    try:
+        import cv2
+        import numpy as np
+    except ImportError:
+        print("WARNING: opencv-python-headless niet geinstalleerd. Badge detectie overgeslagen.")
+        print("  Installeer met: pip install opencv-python-headless")
+        return None
+
+    print("Badge detecteren...")
+    img = cv2.imread(image_path)
+    if img is None:
+        print("WARNING: Kon afbeelding niet laden voor badge detectie")
+        return None
+
+    height, width = img.shape[:2]
+    image_area = height * width
+
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+    # Filter op wit/lichtgrijs (de badge)
+    lower_white = np.array([0, 0, 200])
+    upper_white = np.array([180, 40, 255])
+    mask = cv2.inRange(hsv, lower_white, upper_white)
+
+    # Morphologische operaties om gaten te dichten
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
+    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+    best_badge = None
+    best_score = 0
+
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        area = w * h
+        area_ratio = area / image_area
+
+        # Filter op grootte
+        if area_ratio < 0.01 or area_ratio > 0.10:
+            continue
+
+        # Filter op aspect ratio (roughly vierkant)
+        aspect = w / h if h > 0 else 0
+        if aspect < 0.5 or aspect > 2.0:
+            continue
+
+        # Filter op positie: borstgebied (onder het gezicht)
+        center_y = (y + h / 2) / height
+        center_x = (x + w / 2) / width
+        if center_y < 0.40 or center_y > 0.75:
+            continue
+        if center_x < 0.20 or center_x > 0.80:
+            continue
+
+        # Solidity check: badge should be compact (filled vs bounding box)
+        contour_area = cv2.contourArea(contour)
+        solidity = contour_area / area if area > 0 else 0
+        if solidity < 0.4:
+            continue
+
+        # Score: prefer groter, more compact, and more central
+        score = area_ratio * solidity * (1.0 - abs(center_x - 0.5))
+        if score > best_score:
+            best_score = score
+            best_badge = (x, y, w, h)
+
+    if best_badge:
+        x, y, w, h = best_badge
+        print(f"Badge gevonden: x={x}, y={y}, w={w}, h={h}")
+    else:
+        print("WARNING: Geen badge gedetecteerd in de afbeelding")
+
+    return best_badge
+
+
+def composite_logo(image_path, logo_path, badge_rect, output_path):
+    """Plaats bedrijfslogo over de gedetecteerde badge."""
+    from PIL import Image
+
+    print("Logo compositen over badge...")
+
+    try:
+        panda_img = Image.open(image_path).convert("RGBA")
+        logo_img = Image.open(logo_path).convert("RGBA")
+
+        x, y, w, h = badge_rect
+
+        # Resize logo naar 80% van badge-grootte (wat padding)
+        logo_w = int(w * 0.8)
+        logo_h = int(h * 0.8)
+        logo_img = logo_img.resize((logo_w, logo_h), Image.LANCZOS)
+
+        # Centreer logo binnen de badge bounding box
+        paste_x = x + (w - logo_w) // 2
+        paste_y = y + (h - logo_h) // 2
+
+        # Paste met alpha-masker
+        panda_img.paste(logo_img, (paste_x, paste_y), logo_img)
+
+        # Sla op als RGB (PNG zonder alpha voor compatibiliteit)
+        panda_img.convert("RGB").save(output_path)
+        print(f"Gecomposite afbeelding opgeslagen: {output_path}")
+        return output_path
+    except Exception as e:
+        print(f"WARNING: Compositing mislukt: {e}")
+        return None
+
+
 def upload_to_cloudinary(filepath):
     """Upload afbeelding naar Cloudinary (persistent hosting)."""
     cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
@@ -172,6 +309,8 @@ def main():
                         help="Output bestandspad (default: auto-generated)")
     parser.add_argument("--upload", action="store_true",
                         help="Upload naar catbox.moe en toon URL")
+    parser.add_argument("--logo-domain", default=None,
+                        help="Domein voor logo-download (bijv. coolblue.nl)")
     parser.add_argument("--json", action="store_true",
                         help="Output als JSON (voor scripts/automatie)")
 
@@ -192,6 +331,27 @@ def main():
 
     # Sla op
     filepath = save_image(image_part, args.output)
+
+    # Logo compositing (optioneel)
+    if args.logo_domain:
+        logo_path = download_logo(args.logo_domain)
+        if logo_path:
+            badge_rect = detect_badge(filepath)
+            if badge_rect:
+                result_path = composite_logo(filepath, logo_path, badge_rect, filepath)
+                if result_path:
+                    print("Logo compositing succesvol!")
+                else:
+                    print("Logo compositing mislukt, originele afbeelding wordt gebruikt.")
+            else:
+                print("Geen badge gevonden, originele afbeelding wordt gebruikt.")
+            # Cleanup temp logo file
+            try:
+                os.unlink(logo_path)
+            except OSError:
+                pass
+        else:
+            print("Logo niet beschikbaar, originele afbeelding wordt gebruikt.")
 
     # Upload (optioneel)
     url = None
