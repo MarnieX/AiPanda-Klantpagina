@@ -1,9 +1,13 @@
 {
   "name": "ai-panda-klantpagina",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Genereer professionele Notion-klantpagina's voor AI Panda met bedrijfsinfo, teamleden en een AI-implementatie roadmap.",
   "author": {
     "name": "Marnix Matthijsse"
   },
-  "keywords": ["notion", "klantpagina", "ai-panda", "sales"]
+  "keywords": ["notion", "klantpagina", "ai-panda", "sales"],
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json"
 }
