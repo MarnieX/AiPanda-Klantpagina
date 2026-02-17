@@ -1,0 +1,14 @@
+{
+  "Stop": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Controleer of de zojuist gegenereerde Notion-klantpagina aan alle kwaliteitseisen voldoet. Check het volgende:\n\n1. BEDRIJFSINFO: Is de bedrijfsnaam correct en de omschrijving specifiek (niet generiek)?\n2. TEAM: Zijn er minimaal 2 consultants met naam, functie en contactgegevens?\n3. AFBEELDING: Is er een panda-afbeelding URL opgenomen (geen lege placeholder)?\n4. ROADMAP: Zijn alle 4 fasen (Discovery, Pilot, Implementatie, Schaling) specifiek ingevuld voor de sector van dit bedrijf? Generieke teksten zoals 'AI-oplossingen implementeren' zijn NIET voldoende.\n5. VOLGENDE STAPPEN: Staan er concrete actiepunten met de bedrijfsnaam?\n\nAls een van deze punten niet voldoet, geef een korte waarschuwing aan de gebruiker met wat er verbeterd kan worden. Als alles goed is, bevestig dit kort.",
+          "timeout": 30
+        }
+      ]
+    }
+  ]
+}
