@@ -31,9 +31,20 @@ from google.genai import types
 
 
 def load_api_key():
-    """Laad API key uit .env bestand."""
-    # Zoek .env in huidige map of bovenliggende mappen
-    for p in [Path(".env"), Path(__file__).parent.parent / ".env", Path(__file__).parent / ".env"]:
+    """Laad API key uit .env bestand of environment variable."""
+    import glob as _glob
+
+    # Zoekpaden: lokaal, plugin-root, en Cowork-gemounte projectmap
+    candidates = [
+        Path(".env"),
+        Path(__file__).parent.parent / ".env",  # project root (lokaal)
+        Path(__file__).parent / ".env",
+    ]
+    # Cowork: .env in gemounte projectmap (één of twee niveaus diep)
+    for pattern in ["/sessions/*/mnt/*/.env", "/sessions/*/mnt/*/*/.env"]:
+        candidates.extend(Path(p) for p in _glob.glob(pattern))
+
+    for p in candidates:
         if p.exists():
             load_dotenv(p)
             break
