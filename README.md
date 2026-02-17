@@ -10,7 +10,7 @@ Met de Klantpagina Generator maken consultants van **AI Panda** razendsnel profe
 
 **Het probleem:** Voor elke nieuwe klant maak je handmatig een Notion-pagina aan. Bedrijfsinfo opzoeken, afbeelding zoeken of maken, template invullen, roadmap aanmaken. Dat kost tijd en ziet er niet altijd consistent uit.
 
-**De oplossing:** Deze plugin automatiseert het hele proces. Je typt `/klantpagina`, geeft een bedrijfsnaam op, en binnen een paar seconden staat er een complete, professionele klantpagina in Notion.
+**De oplossing:** Deze plugin automatiseert het hele proces. Je typt `/klantpagina` in Claude Cowork, geeft een bedrijfsnaam op, en binnen een paar seconden staat er een complete, professionele klantpagina in Notion.
 
 ---
 
@@ -28,21 +28,38 @@ Het resultaat: een consistente, professionele uitstraling voor elke klant, zonde
 
 ---
 
-## ⚡ Hoe werkt het?
+## 🚀 Aan de slag
 
-### Via Claude Code (aanbevolen)
+### Stap 1: Plugin installeren in Claude Cowork
 
-Typ simpelweg `/klantpagina` in Claude Code en volg de stappen. Claude vraagt om de klantnaam, haalt alles op en maakt de pagina aan.
+Download het plugin-bestand (`ai-panda-klantpagina.plugin`) uit deze repository en installeer het in Claude Cowork:
 
-### De afbeeldingen-tool los gebruiken
+1. Open **Claude Cowork**
+2. Ga naar **Instellingen** > **Plugins**
+3. Klik op **Plugin toevoegen** en selecteer het `.plugin` bestand
+4. De plugin is nu beschikbaar in je Cowork-omgeving
 
-Wil je alleen een afbeelding genereren (bijvoorbeeld voor een presentatie of social post)? Dat kan ook los:
+### Stap 2: API-keys instellen
 
+De plugin maakt gebruik van externe services. Je moet de volgende API-keys instellen op je eigen computer:
+
+| Key | Waarvoor | Waar aan te maken |
+|---|---|---|
+| `GEMINI_API_KEY` | AI-beeldgeneratie (verplicht) | [Google AI Studio](https://aistudio.google.com/apikey) (gratis) |
+| `CLOUDINARY_CLOUD_NAME` | Image hosting (optioneel) | [Cloudinary](https://cloudinary.com/users/register_free) |
+| `CLOUDINARY_API_KEY` | Image hosting (optioneel) | Cloudinary dashboard |
+| `CLOUDINARY_API_SECRET` | Image hosting (optioneel) | Cloudinary dashboard |
+
+Maak een `.env` bestand aan in je projectfolder (gebruik `.env.example` als voorbeeld):
+
+```bash
+cp .env.example .env
+# Open .env en vul je API-keys in
 ```
-./banana.sh "een panda die code schrijft"
-```
 
-Je kunt kiezen uit verschillende stijlen: **cartoon**, **foto**, **logo** of **artistiek**. En verschillende formaten: vierkant, liggend of staand.
+### Stap 3: Klantpagina genereren
+
+Typ `/klantpagina` in Claude Cowork en volg de stappen. Claude vraagt om de klantnaam, haalt de bedrijfsinfo op, genereert een afbeelding en maakt de Notion-pagina aan.
 
 ---
 
@@ -54,29 +71,6 @@ Je kunt kiezen uit verschillende stijlen: **cartoon**, **foto**, **logo** of **a
 | **Nano Banana Pro** | AI-afbeeldingen genereren via Google Gemini |
 | **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele prompt voor de beste resultaten |
 | **AI Quiz** | Interactief quiz-element voor de klantpagina |
-
----
-
-## 🚀 Aan de slag
-
-### Wat heb je nodig?
-
-- **Python 3.8+** (voor de afbeeldingen-tool)
-- **Google Gemini API key** ([gratis aanmaken](https://aistudio.google.com/apikey))
-
-### Installatie
-
-```bash
-# Repository ophalen
-git clone https://github.com/MarnieX/AiPanda-Klantpagina.git
-
-# API key instellen
-cp .env.example .env
-# Open .env en vul je Gemini API key in
-
-# Python packages installeren
-pip install google-genai Pillow python-dotenv requests
-```
 
 ---
 
