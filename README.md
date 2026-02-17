@@ -1,89 +1,123 @@
-# 🐼 AI Panda - Klantpagina Generator
+# AI Panda - Klantpagina Generator
 
-> Van klantnaam naar complete Notion-pagina in een paar seconden.
+> Van bedrijfsnaam naar professionele Notion-klantpagina, volledig automatisch.
 
-Met de Klantpagina Generator maken consultants van **AI Panda** razendsnel professionele klantpagina's aan in Notion. Geen handmatig kopieerwerk, geen losse templates. Geef een bedrijfsnaam op en de rest gebeurt automatisch.
-
----
-
-## 🎯 Wat doet het?
-
-**Het probleem:** Voor elke nieuwe klant maak je handmatig een Notion-pagina aan. Bedrijfsinfo opzoeken, afbeelding zoeken of maken, template invullen, roadmap aanmaken. Dat kost tijd en ziet er niet altijd consistent uit.
-
-**De oplossing:** Deze plugin automatiseert het hele proces. Je typt `/klantpagina` in Claude Cowork, geeft een bedrijfsnaam op, en binnen een paar seconden staat er een complete, professionele klantpagina in Notion.
+De Klantpagina Generator is een **Claude Cowork plugin** waarmee consultants van AI Panda in een paar stappen een complete klantpagina aanmaken in Notion. Bedrijfsinfo wordt automatisch opgehaald, een AI-gegenereerde panda-afbeelding gemaakt, en het team gekoppeld. Geen templates invullen, geen handwerk.
 
 ---
 
-## 📄 Wat staat er op de klantpagina?
+## Hoe werkt het?
 
-Elke gegenereerde klantpagina bevat:
+Je typt `/klantpagina` in Claude Cowork en volgt drie stappen:
 
-- 🖼️ **AI-gegenereerde afbeelding** in de herkenbare AI Panda-stijl, met de bedrijfsnaam op het shirt van de panda-mascotte
-- 🏢 **Bedrijfsprofiel** met een korte omschrijving, automatisch opgehaald van de website van de klant
-- 👥 **Consultantteam** met foto, functie en contactgegevens van de gekoppelde AI Panda-consultants
-- 🗺️ **AI Implementatie Roadmap** in vier fases (Discovery, Pilot, Implementatie, Schaling), specifiek toegespitst op de sector van de klant
-- ✅ **Volgende stappen** als checklist om direct mee aan de slag te gaan
+1. **Bedrijfsnaam opgeven** - de plugin haalt automatisch bedrijfsinfo op van de website
+2. **Consultants kiezen** - selecteer wie er aan dit project werkt (uit het teambestand)
+3. **Bevestigen** - controleer de samenvatting en klik op akkoord
 
-Het resultaat: een consistente, professionele uitstraling voor elke klant, zonder handwerk.
+De rest gaat automatisch: afbeelding genereren, content samenstellen, Notion-pagina aanmaken. Je krijgt een klikbare link terug.
 
 ---
 
-## 🚀 Aan de slag
+## Wat staat er op de klantpagina?
 
-### Stap 1: Plugin installeren in Claude Cowork
+Elke gegenereerde pagina bevat:
 
-Download het plugin-bestand (`ai-panda-klantpagina.plugin`) uit deze repository en installeer het in Claude Cowork:
+- **AI-gegenereerde afbeelding** in de AI Panda-stijl, met het bedrijfslogo verwerkt via Gemini
+- **Bedrijfsprofiel** met omschrijving, automatisch opgehaald van de website
+- **Consultantteam** met foto, functie en contactgegevens
+- **AI Implementatie Roadmap** in vier fases, specifiek voor de sector van de klant
+- **Volgende stappen** als checklist om direct mee te starten
+
+---
+
+## Aan de slag
+
+### 1. Plugin installeren
+
+Download `ai-panda-klantpagina.zip` uit deze repository en installeer het in Claude Cowork:
 
 1. Open **Claude Cowork**
 2. Ga naar **Instellingen** > **Plugins**
-3. Klik op **Plugin toevoegen** en selecteer het `.plugin` bestand
-4. De plugin is nu beschikbaar in je Cowork-omgeving
+3. Klik op **Plugin toevoegen** en selecteer het `.zip` bestand
 
-### Stap 2: API-keys instellen
+### 2. API-key instellen
 
-De plugin maakt gebruik van externe services. Je moet de volgende API-keys instellen op je eigen computer:
+De plugin gebruikt Google Gemini voor beeldgeneratie. Je hebt een (gratis) API-key nodig:
 
-| Key | Waarvoor | Waar aan te maken |
+| Key | Waarvoor | Aanmaken |
 |---|---|---|
-| `GEMINI_API_KEY` | AI-beeldgeneratie (verplicht) | [Google AI Studio](https://aistudio.google.com/apikey) (gratis) |
-| `CLOUDINARY_CLOUD_NAME` | Image hosting (optioneel) | [Cloudinary](https://cloudinary.com/users/register_free) |
-| `CLOUDINARY_API_KEY` | Image hosting (optioneel) | Cloudinary dashboard |
-| `CLOUDINARY_API_SECRET` | Image hosting (optioneel) | Cloudinary dashboard |
+| `GEMINI_API_KEY` | AI-beeldgeneratie | [Google AI Studio](https://aistudio.google.com/apikey) |
 
-Maak een `.env` bestand aan in je projectfolder (gebruik `.env.example` als voorbeeld):
+Stel de key in als environment variable, of maak een `.env` bestand aan (zie `.env.example`):
 
 ```bash
 cp .env.example .env
-# Open .env en vul je API-keys in
+# Vul je GEMINI_API_KEY in
 ```
 
-### Stap 3: Klantpagina genereren
+Zonder API-key werkt de plugin nog steeds, maar met een placeholder-afbeelding.
 
-Typ `/klantpagina` in Claude Cowork en volg de stappen. Claude vraagt om de klantnaam, haalt de bedrijfsinfo op, genereert een afbeelding en maakt de Notion-pagina aan.
+### 3. Klantpagina genereren
+
+Typ `/klantpagina` in Claude Cowork en volg de wizard.
 
 ---
 
-## 🧩 Onderdelen
+## Projectstructuur
 
-| Onderdeel | Wat het doet |
+```
+scripts/                  Python scripts voor beeldgeneratie
+  generate_notion_image.py    Nano Banana Pro (Gemini image pipeline)
+  prompt-optimizer.py         Prompt templates voor verschillende stijlen
+  banana.sh                   CLI wrapper
+
+plugin/                   Plugin bronbestanden (wordt gezipt door build.sh)
+  commands/klantpagina.md     /klantpagina slash command
+  servers/gemini-image-server.py  MCP server voor Gemini
+  hooks/hooks.json            Automatische kwaliteitscheck
+  skills/klantpagina/SKILL.md     Volledige skill-workflow
+
+assets/                   Referentiebestanden
+  panda-reference.png         Panda character referentie voor Gemini
+
+data/                     Projectdata
+  ai-panda-team.xlsx          Teambestand met alle consultants
+
+docs/                     Referentiemateriaal, vergaderverslagen, presentaties
+```
+
+---
+
+## Onderdelen
+
+| Onderdeel | Beschrijving |
 |---|---|
-| **Klantpagina Skill** | Het hoofdproces: van klantnaam naar complete Notion-pagina |
-| **Nano Banana Pro** | AI-afbeeldingen genereren via Google Gemini |
-| **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele prompt voor de beste resultaten |
-| **AI Quiz** | Interactief quiz-element voor de klantpagina |
+| **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina |
+| **Gemini MCP Server** | Beeldgeneratie via Google Gemini, upload naar catbox.moe |
+| **Nano Banana Pro** | Geavanceerd Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
+| **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele Gemini-prompt |
+| **Kwaliteitscheck Hook** | Controleert automatisch of de gegenereerde pagina compleet en specifiek is |
 
 ---
 
-## 📌 Status
+## Status
 
-🚧 In ontwikkeling (testfase)
+Fase 1 (MVP) is afgerond. De end-to-end flow werkt: van bedrijfsnaam tot Notion-pagina.
 
-## 📚 Documentatie
+Momenteel in ontwikkeling: Notion-template met strakke huisstijl, AI-quiz (Noud), toekomstvisie (Rick).
 
-- [PLAN.md](./PLAN.md) - Architectuur, features, tech stack
-- [BACKLOG.md](./BACKLOG.md) - Openstaande taken per fase
-- [CHANGELOG.md](./CHANGELOG.md) - Versiegeschiedenis
-- [CLAUDE.md](./CLAUDE.md) - AI-agent instructies
+Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
+
+---
+
+## Documentatie
+
+| Bestand | Inhoud |
+|---|---|
+| [PLAN.md](./PLAN.md) | Architectuur, features en technische details |
+| [BACKLOG.md](./BACKLOG.md) | Openstaande taken per fase |
+| [CHANGELOG.md](./CHANGELOG.md) | Versiegeschiedenis |
+| [CLAUDE.md](./CLAUDE.md) | AI-agent instructies voor dit project |
 
 ---
 
