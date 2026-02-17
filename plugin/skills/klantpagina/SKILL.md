@@ -5,48 +5,63 @@ description: "Genereer een professionele Notion-klantpagina voor AI Panda. Haalt
 
 # AI Panda Klantpagina Generator
 
-Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde.
+Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde. Start parallelstappen altijd tegelijk om snelheid te winnen.
 
-Gebruik TodoWrite om je voortgang te tonen met deze stappen:
-1. Klant-URL ophalen
-2. Bedrijfsinfo ophalen van website
-3. AI Panda team inlezen uit Excel
-4. Consultants laten kiezen
-5. AI Panda-afbeelding genereren
+Gebruik TodoWrite om voortgang te tonen:
+1. Klant en consultants ophalen
+2. Bedrijfsinfo + Excel matchen (parallel)
+3. Bevestiging vragen
+4. Afbeelding genereren + content voorbereiden (parallel)
+5. Image uploaden
 6. Notion-pagina aanmaken
 7. Resultaat bevestigen
 
 ---
 
-## Stap 1: Vraag om de klant
+## Stap 1: Vraag om bedrijf
 
 Gebruik AskUserQuestion:
-- question: "Voor welk bedrijf wil je een AI Panda klantpagina genereren?"
+- question: "Voor welk bedrijf maak je een klantpagina? Geef de naam of website-URL."
 - header: "Klant"
-- Bied 3 voorbeeldbedrijven als opties (bijv. Coolblue, bol.com, Jumbo) — de gebruiker kan ook via "Other" een eigen URL/naam typen.
+- options: drie voorbeeldbedrijven zoals "Coolblue", "bol.com", "Jumbo" — de gebruiker kan via "Other" een eigen naam of URL typen
 - multiSelect: false
 
-## Stap 2: Haal bedrijfsinformatie op
+Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
-Probeer EERST WebFetch op de website van het bedrijf:
-- prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschrijving in 2-3 zinnen (wat doet het bedrijf, sector, wat maakt het uniek), 3) De sector in één woord"
+---
 
-Als WebFetch faalt (403/timeout), gebruik WebSearch als alternatief:
-- query: "[bedrijfsnaam] Nederland bedrijfsprofiel"
-- Destilleer bedrijfsnaam, omschrijving en sector uit de zoekresultaten.
+## Stap 2: Vraag om consultants
 
-Als BEIDE falen, vraag het de gebruiker via AskUserQuestion.
+Gebruik AskUserQuestion:
+- question: "Welke consultants werken aan dit traject? Typ de namen (gescheiden door komma's)."
+- header: "Consultants"
+- options: drie voorbeeldantwoorden zoals "Marnix, Noud, Rick", "Ik typ ze zelf", "Alleen Marnix" — de gebruiker typt via "Other" de juiste namen
+- multiSelect: false
 
-Sla op: BEDRIJFSNAAM, OMSCHRIJVING (2-3 zinnen), SECTOR (één woord), WEBSITE_DOMEIN (bijv. `bol.com`, `coolblue.nl` — zonder https://).
+Sla op: CONSULTANT_INPUT (ruwe tekst, bijv. "Marnix, Lisa")
 
-## Stap 3: Lees het AI Panda teambestand
+---
 
-Installeer openpyxl als het nog niet beschikbaar is, en lees het Excel-bestand:
+## Stap 3: Parallel ophalen (start beide tegelijk)
+
+### 3A — Bedrijfsinfo ophalen
+
+Als KLANT_INPUT een URL bevat (http of een domein), gebruik WebFetch direct op die URL.
+Anders, bouw de URL op als `https://www.[klant].nl` of zoek via WebSearch.
+
+WebFetch prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschrijving in 2-3 zinnen (wat doet het bedrijf, sector, wat maakt het uniek), 3) De sector in één woord"
+
+Fallback: als WebFetch faalt (403/timeout) → WebSearch met query "[klant] Nederland bedrijfsprofiel"
+Fallback 2: als beide falen → gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap
+
+Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
+
+### 3B — Excel lezen en namen matchen
 
 ```bash
 pip install openpyxl --break-system-packages -q 2>/dev/null
 python3 << 'PYEOF'
-import openpyxl, json, glob, os
+import openpyxl, json, glob, os, sys
 
 paths = (
     glob.glob("/sessions/*/mnt/*/ai-panda-team.xlsx") +
@@ -55,8 +70,8 @@ paths = (
     glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai-panda-team.xlsx"))
 )
 if not paths:
-    print("ERROR: ai-panda-team.xlsx niet gevonden")
-    exit(1)
+    print(json.dumps({"error": "ai-panda-team.xlsx niet gevonden"}))
+    sys.exit(0)
 
 wb = openpyxl.load_workbook(paths[0])
 ws = wb.active
@@ -74,36 +89,56 @@ print(json.dumps(team, indent=2, ensure_ascii=False))
 PYEOF
 ```
 
-## Stap 4: Laat de gebruiker consultants kiezen
+Match de getypte namen uit CONSULTANT_INPUT aan teamleden (case-insensitief, gedeeltelijke match is ok).
+Sla op: CONSULTANTS (lijst met naam, functie, foto_url, email per consultant)
 
-Gebruik AskUserQuestion met multiSelect: true.
+Fallback als Excel niet gevonden: gebruik de namen zoals ingetypt, functie/email leeg. GA ALTIJD DOOR.
 
-BELANGRIJK: maximaal 4 opties per vraag. Verdeel het team over 2 vragen als er meer dan 4 leden zijn:
+---
 
-Vraag 1 (kernteam + leads):
-- question: "Welke consultants worden ingezet voor [BEDRIJFSNAAM]? (deel 1/2)"
-- header: "Team"
-- Toon de eerste 4 teamleden (naam als label, functie als description)
+## Stap 4: Bevestigingsscherm
 
-Vraag 2 (overige teamleden):
-- question: "Nog meer consultants toevoegen? (deel 2/2 — sla over als je al 3 hebt)"
-- header: "Extra"
-- Toon de volgende 4 teamleden
+Toon de opgehaalde informatie overzichtelijk aan de gebruiker:
 
-Verzamel de geselecteerde namen (streef naar 3 consultants). Match elke geselecteerde naam terug naar het Excel voor functie, foto_url en email.
+```
+📋 Samenvatting — klopt dit?
 
-## Stap 5: Genereer de AI Panda-afbeelding
+🏢 Bedrijf: [BEDRIJFSNAAM]
+🌐 Website: [WEBSITE_DOMEIN]
+📝 Sector: [SECTOR]
 
-Gebruik het Python-script in `--client` mode. Dit bouwt automatisch een sector-specifieke prompt, haalt het bedrijfslogo op en geeft het als referentie mee aan Gemini.
+Over het bedrijf:
+[OMSCHRIJVING]
 
-### Script uitvoeren
+👥 Consultants:
+• [NAAM_1] — [FUNCTIE_1]
+• [NAAM_2] — [FUNCTIE_2]
+• [NAAM_3] — [FUNCTIE_3]
+```
 
-Zoek eerst het script (Cowork-sessie of lokaal):
+Gebruik daarna AskUserQuestion:
+- question: "Klopt bovenstaande informatie, of wil je iets aanpassen?"
+- header: "Bevestiging"
+- options:
+  - "Ziet er goed uit, ga door" (Recommended)
+  - "Bedrijfsinfo aanpassen"
+  - "Consultants aanpassen"
+
+Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie. Herhaal het bevestigingsscherm daarna niet opnieuw — vertrouw op de aanpassing en ga door.
+
+---
+
+## Stap 5: Parallel uitvoeren (start beide tegelijk na bevestiging)
+
+### 5A — AI Panda-afbeelding genereren
+
+Zoek het script:
 ```bash
 SCRIPT=$(find /sessions -name "generate_notion_image.py" 2>/dev/null | head -1)
 if [ -z "$SCRIPT" ]; then
   SCRIPT=$(find ~ -maxdepth 6 -name "generate_notion_image.py" 2>/dev/null | head -1)
 fi
+echo "$SCRIPT"
 ```
 
 Genereer de afbeelding:
@@ -118,36 +153,45 @@ cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
   --upload --json
 ```
 
-De `url` uit de JSON-output is de PANDA_IMAGE_URL voor Stap 6.
+De `url` uit de JSON-output is PANDA_IMAGE_URL.
 
-### Fallback: Placeholder
-Als het script niet gevonden wordt of faalt → gebruik:
-`https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png`
-Meld kort dat een placeholder is gebruikt. GA ALTIJD DOOR.
+Fallback: gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
 
-## Stap 6: Maak de Notion-pagina aan
+### 5B — Roadmap content voorbereiden
 
-Gebruik `notion-create-pages`. De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een `page_id` mee om de pagina onder een bestaande Notion-pagina aan te maken.
+Bereid de sector-specifieke roadmap voor (geen externe call nodig, kan meteen):
 
-```json
-{
-  "pages": [{
-    "properties": {
-      "title": "🏢 [BEDRIJFSNAAM] — AI Panda Klantprofiel"
-    },
-    "content": "ZIE TEMPLATE"
-  }]
-}
-```
+Maak elke fase specifiek voor SECTOR en BEDRIJFSNAAM. Vermijd generieke tekst. Voorbeelden per sector:
+- Retail/e-commerce → productaanbevelingen, voorraadbeheer, vraagvoorspelling
+- Zorg → patiëntmonitoring, planningsoptimalisatie, medische beeldherkenning
+- Logistiek → routeoptimalisatie, voorspellend onderhoud, warehouse-automatisering
+- Fintech → fraudedetectie, risicobeoordeling, chatbot-automatisering
+- B2B/dienstverlening → offerteautomatisering, kennismanagement, CRM-verrijking
 
-### Notion content template:
+Sla op als ROADMAP_CONTENT (markdown tekst voor fase 1 t/m 4).
+
+---
+
+## Stap 6: Notion-pagina aanmaken
+
+Wacht tot zowel 5A als 5B klaar zijn. Gebruik dan `notion-create-pages`.
+
+De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een `page_id` mee als je de pagina onder een bestaande pagina wilt plaatsen.
+
+**Foto's:** Als foto_url leeg is → gebruik `https://ui-avatars.com/api/?name=[VOORNAAM]&size=150&background=10B981&color=ffffff&bold=true&rounded=true`
+
+**Datum:** Gebruik formaat "DD maand YYYY" (bijv. "17 februari 2026").
+
+### Content template (simpele versie — definitief template volgt later):
 
 ```markdown
 ![AI Panda x [BEDRIJFSNAAM]]([PANDA_IMAGE_URL])
 
 ## 🏢 Over [BEDRIJFSNAAM]
 
-[OMSCHRIJVING — 2-3 zinnen van de website/zoekresultaten]
+[OMSCHRIJVING]
+
+**Sector:** [SECTOR] | **Website:** [WEBSITE_DOMEIN]
 
 ---
 
@@ -155,25 +199,25 @@ Gebruik `notion-create-pages`. De `parent` parameter is optioneel: laat weg voor
 
 | | Consultant | Functie | Contact |
 |---|---|---|---|
-| ![foto]([FOTO_URL_1_OF_AVATAR]) | **[NAAM_1]** | [FUNCTIE_1] | [EMAIL_1] |
-| ![foto]([FOTO_URL_2_OF_AVATAR]) | **[NAAM_2]** | [FUNCTIE_2] | [EMAIL_2] |
-| ![foto]([FOTO_URL_3_OF_AVATAR]) | **[NAAM_3]** | [FUNCTIE_3] | [EMAIL_3] |
+| ![foto]([FOTO_URL_1]) | **[NAAM_1]** | [FUNCTIE_1] | [EMAIL_1] |
+| ![foto]([FOTO_URL_2]) | **[NAAM_2]** | [FUNCTIE_2] | [EMAIL_2] |
+| ![foto]([FOTO_URL_3]) | **[NAAM_3]** | [FUNCTIE_3] | [EMAIL_3] |
 
 ---
 
 ## 🗺️ AI Implementatie Roadmap
 
 ### 🔍 Fase 1: Discovery (Week 1-2)
-> [SPECIFIEK voor dit bedrijf: welke processen worden geanalyseerd, welke AI-kansen zijn relevant voor deze SECTOR]
+[ROADMAP_FASE_1]
 
 ### 🧪 Fase 2: Pilot (Week 3-6)
-> [SPECIFIEK: concrete AI-use case als proof-of-concept, relevant voor hun business]
+[ROADMAP_FASE_2]
 
 ### 🚀 Fase 3: Implementatie (Week 7-12)
-> [SPECIFIEK: uitrol, integratie met systemen die dit type bedrijf gebruikt]
+[ROADMAP_FASE_3]
 
 ### 📈 Fase 4: Schaling & Optimalisatie (Week 13+)
-> [SPECIFIEK: KPIs, uitbreidingsmogelijkheden, relevante metrics voor deze sector]
+[ROADMAP_FASE_4]
 
 ---
 
@@ -186,31 +230,30 @@ Gebruik `notion-create-pages`. De `parent` parameter is optioneel: laat weg voor
 
 ---
 
-*Gegenereerd door AI Panda Cowork — [DATUM in formaat "DD maand YYYY"]*
+## 🤖 Over AI Panda Cowork
+
+*Meer weten over het platform waarmee dit traject wordt begeleid? Een volledige uitleg volgt binnenkort op een aparte pagina.*
+
+---
+
+*Gegenereerd door AI Panda Cowork — [DATUM]*
 ```
 
-### Invulregels:
-
-**Foto's:** Als Foto-URL in Excel leeg is → gebruik `https://ui-avatars.com/api/?name=[VOORNAAM]&size=150&background=10B981&color=ffffff&bold=true&rounded=true`
-
-**Roadmap:** Maak ELKE fase specifiek. Noem concrete AI-toepassingen per sector:
-- Retail/e-commerce → productaanbevelingen, voorraadbeheer, vraagvoorspelling
-- Zorg → patiëntmonitoring, planningsoptimalisatie, medische beeldherkenning
-- Logistiek → routeoptimalisatie, voorspellend onderhoud, warehouse AI
-- Fintech → fraudedetectie, risicobeoordeling, chatbot-automatisering
-- Vermijd generieke tekst — dit moet de klant overtuigen.
+---
 
 ## Stap 7: Bevestig het resultaat
 
 Toon:
-1. ✅ Bevestiging dat de pagina is aangemaakt
+1. ✅ Notion-pagina aangemaakt
 2. 🔗 De Notion-URL (klikbaar)
-3. 📋 Samenvatting: bedrijfsnaam, gekozen consultants, dat de roadmap is gegenereerd
+3. 📋 Korte samenvatting: bedrijf, consultants, roadmap gegenereerd
+
+---
 
 ## Foutafhandeling
 
-De shortcut moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
+De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
 - WebFetch faalt → WebSearch → gebruiker vragen
-- Image-generatie faalt → placeholder
-- Excel niet gevonden → gebruiker vragen om namen
+- Excel niet gevonden → namen gebruiken zoals ingetypt
+- Image-generatie faalt → placeholder URL, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken

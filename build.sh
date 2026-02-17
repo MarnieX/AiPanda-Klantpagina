@@ -11,7 +11,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PLUGIN_FILE="$SCRIPT_DIR/ai-panda-klantpagina.plugin"
+PLUGIN_FILE="$SCRIPT_DIR/ai-panda-klantpagina.zip"
 PLUGIN_SRC="$SCRIPT_DIR/plugin"
 SKILL_SRC="$SCRIPT_DIR/.claude/skills/klantpagina/SKILL.md"
 SKILL_DEST="$PLUGIN_SRC/skills/klantpagina/SKILL.md"
@@ -32,4 +32,4 @@ cd "$PLUGIN_SRC" && zip -r "$PLUGIN_FILE" . \
   --exclude "__pycache__/*" \
   --exclude "*.pyc"
 
-echo "Done: ai-panda-klantpagina.plugin"
+echo "Done: ai-panda-klantpagina.zip"
