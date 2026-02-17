@@ -54,6 +54,11 @@ WebFetch prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschri
 Fallback: als WebFetch faalt (403/timeout) → WebSearch met query "[klant] Nederland bedrijfsprofiel"
 Fallback 2: als beide falen → gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap
 
+**Diagnostics:** Meld altijd welke methode gebruikt is:
+- `[DIAG 3A] WebFetch geslaagd op [URL]`
+- `[DIAG 3A] WebFetch faalde (403/timeout) → WebSearch gebruikt`
+- `[DIAG 3A] WebSearch ook gefaald → handmatige invoer`
+
 Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
 
 ### 3B — Excel lezen en namen matchen
@@ -63,12 +68,17 @@ Gebruik `find` als primaire zoekmethode (betrouwbaarder dan hardcoded paden in C
 ```bash
 pip install openpyxl --break-system-packages -q 2>/dev/null
 
-# Zoek Excel via find — werkt in Cowork (plugin/data/) én lokaal
+echo "[DIAG 3B] Zoeken naar ai-panda-team.xlsx via find /sessions ~ (maxdepth 10)..."
 EXCEL_PATH=$(find /sessions ~ -maxdepth 10 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
 
 if [ -z "$EXCEL_PATH" ]; then
+    echo "[DIAG 3B] NIET GEVONDEN. Mapstructuur van /sessions voor debug:"
+    find /sessions -maxdepth 5 -type d 2>/dev/null | head -30
+    echo "[DIAG 3B] Home directory inhoud:"
+    ls ~ 2>/dev/null | head -20
     echo '{"error": "ai-panda-team.xlsx niet gevonden"}'
 else
+    echo "[DIAG 3B] Gevonden op: $EXCEL_PATH"
     EXCEL_PATH="$EXCEL_PATH" python3 << 'PYEOF'
 import openpyxl, json, os, sys
 
@@ -85,6 +95,7 @@ for row in ws.iter_rows(min_row=2, values_only=True):
             "foto_url": str(row[3] or ""),
             "email": str(row[5] or "")
         })
+print(f"[DIAG 3B] {len(team)} teamleden geladen", file=__import__('sys').stderr)
 print(json.dumps(team, indent=2, ensure_ascii=False))
 PYEOF
 fi
@@ -135,8 +146,15 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 Zoek het script (werkt in Cowork via plugin/scripts/ én lokaal):
 ```bash
+echo "[DIAG 5A] Zoeken naar generate_notion_image.py via find /sessions ~ (maxdepth 10)..."
 SCRIPT=$(find /sessions ~ -maxdepth 10 -name "generate_notion_image.py" 2>/dev/null | head -1)
-echo "Script gevonden: $SCRIPT"
+
+if [ -z "$SCRIPT" ]; then
+    echo "[DIAG 5A] NIET GEVONDEN. Mapstructuur van /sessions:"
+    find /sessions -maxdepth 5 -type d 2>/dev/null | head -30
+else
+    echo "[DIAG 5A] Script gevonden op: $SCRIPT"
+fi
 ```
 
 Genereer de afbeelding:
