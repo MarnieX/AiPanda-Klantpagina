@@ -1,0 +1,2278 @@
+[
+  {
+    "speaker" : "Rick",
+    "text" : "Alles wel?"
+  },
+  {
+    "text" : "Jazeker.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Is dat mijn notteker?"
+  },
+  {
+    "text" : "Ja Rick, Rick's Fireflies nooteken. Heb je gewoon je vriendje uitgenodigd.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik dacht dat ik hem eigenlijk had verwijderd."
+  },
+  {
+    "text" : "Die Fireflies is wel, als je die helemaal op geïnstalleerd laat die niet meer los.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Nee. Het blijkt. Zo.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Eenhoud.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Yo.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik gebruik zelf wat Mac Whisper, die laat ik gewoon meelopen op de achtergrond, maar dan wordt hij niet echt zo toegevoegd aan een meeting."
+  },
+  {
+    "text" : "Wat laat jij op de achtergrond meelopen?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Mac Whisper, dat is eigenlijk gewoon zo'n Whisperflow-achtige tool die gewoon opneemt wat er in zo'n gesprek gebeurt als transcript.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Oh, dat meen je. En dat ziet ook niemand."
+  },
+  {
+    "text" : "Nee, ik zeg het altijd wel hoor. Maar het is niet zo dat je gelijk zo'n ding in je meeting hebt.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, en kan je die ook voor de telefoon gebruiken bijvoorbeeld?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, hij is er wel. Maar dan betaal je weer maandelijks abonnementen. Dus ik heb eigenlijk nog nooit getest. Voor mobiel ben ik nog een beetje zoeken naar wat nou goed is."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, ja, oké."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar Fireflies kan je ook gebruiken als extensie."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Fireflies."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus ik weet niet, ja, als je nu, ik weet niet, misschien gebruik je de Teams app gewoon. Maar als jij in de browser doet, dan kan je via Chrome extensie... ...kan je Fireflies ook op de achtergrond toevoegen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oh ja."
+  },
+  {
+    "text" : "Dus dan zie je niet dat die joint.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Oh ja. Ik heb ook eens gezien.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Als dat wat chiller is."
+  },
+  {
+    "text" : "Ja precies, dat is wat minder intrusive. Maar ik heb ook eens gehad dat het automatisch dan alle gebruikers een mail ging sturen aan sluitend met een transcript. Met Five Lies.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Oh ja. Ja, klopt. Hé, hoe heet die tool? Wat zei je nou?"
+  },
+  {
+    "text" : "Heb je een Macbook of niet?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dan gebruik ik MacWi..."
+  },
+  {
+    "text" : "happy zei je",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nee, maar dan heb je een Macbook."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "oh macbook nee"
+  },
+  {
+    "text" : "Dan heb je pech. Nee, dan zal ik Whisper Flow een keer bekijken.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "oh nou ja prima",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik zit er wel even in de chat."
+  },
+  {
+    "text" : "ja die ken ik wel",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Oh ja, nou, dit is vergelijkbaar, maar dit kan je gewoon zelf een AI-model koppelen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "die gebruik ik wel",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Dus dat heb je wat meer in de hand.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "oh ja",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "En het draait deels lokaal.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja ja ja nice nice"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oké."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "oké"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Hey, maar back to school. Hebben jullie een beetje iets kunnen doen?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ik heb het opgestart, ik heb het gedownload, ik heb even gekeken. Maar niet echt, zeg maar iets uitgewerkt of zo. Of een plugin of een skill gemaakt of zo."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oké."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Jullie?"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Nou, ik ben er inderdaad twee dagen mee bezig geweest."
+  },
+  {
+    "text" : "Ik ben er twee dagen mee bezig geweest.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik heb het geprobeerd te leren kennen. En ik vind het vreselijk interessant. En je kan er vreselijk veel mee. Maar dat maakt ook. Dat je op een gegeven moment af gaat vragen. Maar wat gaan we er dan mee doen?"
+  },
+  {
+    "text" : "Ja. En heb je...",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Hoe was dat voor jullie?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "heb je iets kunnen maken ermee of iets iets kunnen opzetten",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Nou ik heb voor mezelf het een of ander geprobeerd. In het begin heb ik best wel veel moeite gehad. Omdat ik allemaal foutmeldingen kreeg over cloud, API en dat soort dingen. Maar ik heb nu mijn eerste skill gemaakt. En dat is iets heel simpels en niet relevant hiervoor, denk ik. Maar ik was in ieder geval blij dat dat was gelukt. Maar ik was eigenlijk in de veronderstelling dat we hier eerst het idee gingen brainstormen voordat we dat verder gingen uitwerken."
+  },
+  {
+    "text" : "Dat meende ik ook. Ik heb net, want ik dacht van joh, ik kan niet helemaal onvoorbereid komen. Ik heb net aan Cloud gevraagd. Want ik was in de verontstelling. Althans, Rick en ik hadden het over N8N. Maar Marnix, gebruik jij N8N?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik gebruik wel ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus ik was vooral benieuwd. Wanneer gebruik je welke tool? We kregen natuurlijk al de vraag. Wat is het verschil tussen project, skill of weet ik veel? Maar ik was nu ook wel benieuwd. In de use case waarin ik zelf Cloud gebruik op dit moment. Wanneer zou ik voor code gebruiken? Wanneer zou ik Cowork gebruiken?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Ja."
+  },
+  {
+    "text" : "Dus ik moet wel eens kijken of ik een window kost. Want hij heeft een prachtig HTML-etje. Zien jullie mijn scherm?",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. Nou ja, dit heeft hij eigenlijk niet bekijken. Het is gewoon letterlijk net af. Maar hier zie je in het kort denk ik een overzicht van wat Cloud Code, Cowork en N8N in één overzicht doen. Dus ik dacht van, ja kijk, ik zat een beetje te kijken van, oké, maar wat is ook precies de opdracht? Want ja, ik bedoel, het was vrij breed volgens mij. Maar ik denk vooral ook een beetje de doelgroep, die zit denk ik, ja, precies tussen deze drie mogelijkheden, zeg maar.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Um abraço."
+  },
+  {
+    "text" : "Want met de komst van CloudCode, CloudCode, maakt niet uit, vervang je nog niet N8N per se. Ik zie het meer als een aanvulling, maar ik weet niet hoe jullie daarnaar kijken.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja ik ook wel een beetje hoor ik en 8 en dat is wel gewoon een tool die natuurlijk al langer bestaat om gewoon workflows te bouwen. En daar zit eigenlijk de AI,"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Mm-hmm."
+  },
+  {
+    "text" : "kan je in een nood stoppen, dus gewoon in een stapje. Terwijl Cloud Code is natuurlijk een wat meer",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Mm-hmm.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "AI-first platform. En ik ben zelf, ik ben eigenlijk pas gisteren begonnen met Cloud Code Work, ik was ervoor eigenlijk alleen met Code bezig. Maar ik werd er niet zo enthousiast van",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Mm-hmm.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "als ik werd van Cloud Code, omdat het voelt best wel beperkend hoe je erin moet werken. En ik was best wel aan het zoeken van, ik heb een skill gebouwd, Waarom werkt die dan weer niet in een andere chat en zo?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Yay."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Als je op een gegeven moment cloud code een beetje hebt uitgevogeld. Dan kan je best wel makkelijk. Ik bouw iets en dat is in alle chats beschikbaar. En ik weet hoe ik dat structurer en zo. En als ik het een beetje opzoek. Dan zag ik vooral het verschil tussen co-work en code. Dat co-work wat visueel aantrekkelijker wordt gemaakt. Voor mensen die de terminal nogal spannend vinden."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En nog iets meer gericht op echt productiviteit in de zin van Word, Excel, dat soort dingen genereren. En ook wel wat meer browsen en wat visueler. Dus ik vond dat nogal... Nou, ik moest echt weer even op Soeknet. Toen ben ik uiteindelijk weer Cloud Code gaan gebruiken om een plugin te bouwen voor Cowork."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar dat is misschien een beetje faals spelen."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Maar ik denk ook, van wat ik ook van begreep, ze hebben een beetje dezelfde functionaliteit. Het is een beetje dezelfde opsteek. Alleen, het is gemaakt voor de niet-technische mensen. En als je al best wel diep geworteld zit in MCPs, APIs en in af en. Dan denk ik al dat je sneller naar code neigde. En dat je dus echt naar die specifieke use cases moet gaan van oké, wanneer gebruik ik dan Cowork? Want volgens mij wat ik zag is dat de connecties ook anders zijn."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Waarin de Cloud Cowork echt lokaal op jouw mapje draait. En een beetje gericht is op het maken van bijvoorbeeld wat zij lieten zien. Zo'n nieuwsbrief weet je wel.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar als ik iets aan het automatiseren ben. Dan heb ik liever die MCP en dan meer op de tool gericht. Dus ik denk dat het compleet afhangt van welke context wat je aan het doen bent."
+  },
+  {
+    "text" : "Ja, ik denk dat er heel veel wel in beide kan.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus als ik zo even kijk hoe het dan werkt op de achterkant Cowork."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Het is wat meer dichtgetimerd, maar als je bijvoorbeeld een plugin bouwt, dan kan je daar van alles in stoppen. Dus kan je een MCP in stoppen, je kan er skills in stoppen. Je kan het volgens mij best wel ingewikkeld maken."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Alleen dan zeg je toch tegen Cowork, je mag alleen deze toolset gebruiken voor deze opdracht."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "text" : "Die je dan voorbouwt. Maar hoe ik hem had begrepen, had het opdracht wel om Cowork te laten zien aan de hand van een leuk voorbeeld. want ik vond op zich het voorbeeld dat zij best wel tof hadden met die nieuwsbrief.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja"
+  },
+  {
+    "text" : "Maar misschien kunnen jullie iets vergelijkbaars bedenken. Ik weet niet of jullie daar ideeën bij hadden.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Nou ja Kijk Ik had ook wel een paar video's gekeken Want ik bedoel zo werk ik dan"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "음?"
+  },
+  {
+    "text" : "Gewoon even kijken van wat andere mensen zeiden Maar iemand zei van ja kijk Stel je voor je hebt gewoon allemaal afdelingen Want ik bedoel als je kijkt En Tropic heeft allemaal voorbedachte plugins gemaakt. En het idee zou kunnen zijn dat je bijvoorbeeld Cowork gebruikt als ook een soort van landschap waarin heel veel tools samen kunnen komen. Dus als je kijkt naar bijvoorbeeld een financiële maandafsluiting. Dat je dus systemen met elkaar kan laten praten en daarin je rapport kan maken. Maar bijvoorbeeld een marketing die dan weer met Canva en met andere dingen connecties kan maken. dus je maakt een soort van bakjes van dit is voor finance heel nice, dit is voor marketing heel nice, dit is voor legal heel nice en dat je wel dus scheiding houdt tussen waar ze allemaal bij mogen, niet dat iedereen maar APIs en MCPs krijgt dus er zit dan kan je dus wel op een groter niveau zeggen jij krijgt deze plugin en jij krijgt deze plugin, als gewoon plug and play dat is een beetje hoe ik het zag maar misschien is dat ook wel iets te algemeen hoor maar ik zie daar wel dat ik denk van als je dit op gewoon wat grotere MKB, waar echt afdelingen zijn. Ik denk dat dat best wel cool is. Want dan kun je dus ook niet technische mensen zoveel gebruik laten maken van deze oplossingen. Van betere rapporten maken tot aan van die kleinere taken, zeg maar.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, ik denk alleen dat voor deze opdracht de bedoeling is dat we een werkende,"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "..."
+  },
+  {
+    "text" : "Hoe zeg je dat? Sessie of skill laten zien. Die daadwerkelijk iets oud boek. Maar misschien heb ik dat ook niet helemaal begrepen. Want nu ik eigenlijk ook terugkijk. Dan zie ik dat de rest ook ongeveer hetzelfde moet doen. Of hadden jullie de opdracht anders begrepen?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ik had al wel echt begrepen van bouw inderdaad iets werkends... demonstreer aan de hand daarvan wat Cloud Cowork kan. Dus gewoon wel iets wat ik zie ook al wat jij bedoelt onnout en dat is denk ik ook",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "text" : "waar bedrijven naartoe gaan is dat je het echt helemaal met met plugins per",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "yeah",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "werkproces inrichten en zo dat je echt dat best wel goed kan specificeren. Maar ik denk dat het leuk is gewoon een voorbeeldje te laten zien waar dan een eindproduct uit komt zoals een nieuwsbrief of of iets anders en dat we",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "yeah",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Zodat we dat aftrappen in de les en als het bezig is, of daarna even uitleggen van: \"Hé, wat hebben we nou gedaan en hoe werkt dat in CLOWWORK?\""
+  },
+  {
+    "text" : "Ik ben even hardopdenkend. Maar kunnen we niet. Bijvoorbeeld. Een AI quick scan. Toolje maken. Net als dat hun die. AI prompt opdracht hebben. Dat we zeggen oké. Je gooit er een naam in. En je zegt, nou ja, maak een quickscan van dit bedrijf.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Thank you.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Die misschien, weet ik veel, het gesprek omtrent AI kan aftrappen. En misschien de eerste richting kan bepalen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Zo leek me ook leuk. Dat je eigenlijk gewoon iets bouwt. En dat we dan live in de les vragen. Nou noem maar een bedrijf. Dus dat daar een soort variabel in zit. Die we niet kunnen voorbereiden. Maar dat we dan daarmee zo'n tool demonstreren."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, ik denk dat dit genoeg relevantie heeft. Waarin je zegt, je kan een beetje testen. Het is ook niet te groot."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ik zie hem wel.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik had zelf..."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Het zou ook een beetje een compliance ding kunnen zijn. En ook vooral commercieel denk ik. Dat je zegt, dit is een typologiebedrijf met retail. Die heeft te maken met dit soort processen. Dus zal de kansen hier groot zijn om daar een soortgelijk project of zo. Want ik bedoel, als je een typologie van een bedrijf hebt. Weet je al wel grote Nils wat voor bedrijfvoering zij hebben. En dus ook de processen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Ja, alleen denk ik, het is wel leuk natuurlijk om te bouwen, maar je moet een beetje oppassen dat je niet allemaal dingen gaat invullen."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Terwijl je eigenlijk in een normaal traject wil je eerst wel heel veel vragen, vragen, vragen, voordat jij de use case gaat aandragen. Ik had zelf een beetje geëxperimenteerd met een klantpagina."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus wij zou volgens mij ook zelf wel mee bezig zijn om gewoon geautomatiseerd een pagina in te richten in Notion voor een klant of voor het team zelf."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Yeah."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus ik kan het even laten zien, ik was er nog niet zo ver mee om, maar dan krijg je zeg maar zoiets. dus dat kick je dan af en dan bouwt hij zeg maar aan de hand van, je geeft de naam van het bedrijf doet hij Coolblue en dan schreeuwt hij de website van Coolblue met een klein tussenstukje en dan kan je bijvoorbeeld aangeven in die uitvraag van wie zijn de consultants, dus dat zou dan wij drie kunnen zijn bijvoorbeeld met een fotootje erbij en dat een stukje uitleg is van hoe werkt de AI Panda en wat kunnen ze verwachten als bedrijf ik dacht maak je het ook wel leuk visueel en dat zouden zij natuurlijk in de toekomst wel kunnen gebruiken zo'n vorm, dat je direct dat klaar zet voor de klant."
+  },
+  {
+    "text" : "Ja, ook leuk.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus daar zat ik een beetje mee te stoer en dan krijg je zeg maar dit. Dus dit was zo'n plugin. En dan die trap je af en dan gaat hij gewoon, hij is nog niet goed hoor, maar dan vraagt hij van joh, wie is de klant, wie worden de consultants vanuit AI Panda, zijn nog andere dingen relevant en dan bouwt hij gewoon een pagina."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, dat kunnen we ook doen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus zoiets. Maar dit kan je best wel breder trekken want het is eigenlijk gewoon een proces die je aftrapt. Je kan ook zeggen van nou maak een quizje of maak inderdaad een quickscan dat je een aantal onderdelen nog uitwerkt om zo'n pagina te vullen. Dus hier zeg je van nou weet ik veel, een McDonald's. En dan aan de hand daarvan werkt hij hem gewoon uit."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "So, Nick."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Want aan de achterkant, wat dan is misschien ook wel goed als je dit met z'n drieën doet. Even kijken hoe ik dat kan laten zien. Want dit is eigenlijk gewoon een scale. En dit is eigenlijk gewoon een stappenplan wat die dan volgt. Van vraag de klant, doe een multiselect, haal bedrijfsinformatie op. Hier heb ik een Excel bestand gemaakt."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Die zet je dan in die map. Van wie werken er bij AI Panda? Dus dan kan je kiezen uit de consultants."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja. Ja."
+  },
+  {
+    "text" : "En dan plaatsen ze automatisch onze informatie erbij en het telefoonnummer.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, het is wel slim bedacht. En ik denk ook wel dat dit, in welke vorm dan ook, dat dit principe gewoon heel simpel aan te passen is."
+  },
+  {
+    "text" : "Ja, en ik denk voor hen ook wel leuk.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Maar ik dacht het misschien wel goed, als we het gewoon met z'n drieën doen, dat we even nadenken van, hey, kunnen we allemaal een stukje ontwikkelen? En dat we dat dan bij elkaar vegen en dan loopt hij gewoon een aantal stappen door.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. Hoe doe je dat nu? Kan Claude nu direct in jouw Notion?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik heb hem gekoppeld aan Notion, ja. Dus hij kan dus pagina's aanmaken in Notion. Dus dat is gewoon met de standaard... Wat hier zit. Even kijken. De connectors. Wow. Nou, welke consultants doen we? Maar niks. Note. O, u toch?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "N-O-U-D, heel goed."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, oké. Dit kan wel nog wat slimmer. Maar je hebt dus hier die connectors. En die stel je van tevoren in. Dus ik heb al, ja je kan van alles koppelen. Maar dit is Notion, is een leuke. Word Gamma is ook wel een leuke. Want die bouwt presentaties. Dus ik wil elke keer zeggen, nou bouw presentatie automatisch. Om het in de MD te presenteren, ik noem maar wat. Om even te laten zien dat je eigenlijk met een druk op de knop al best wel dingen kan laten bouwen."
+  },
+  {
+    "text" : "Ja, gut idea. Und wie zie ich das für? Instagram?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Nou ik denk het leuk is dat we met elkaar brainstormen wat zouden we dan kunnen bedenken wat enigszins klantwaarde heeft aan het begin van zo'n traject. Dus het zou denk ik leuk zijn als er gewoon een mooie notion template komt en als je gewoon een goede template hebt dan zeg gewoon nou vul deze in. Maar misschien kunnen we ook wel testen inderdaad zoiets als een quick scan is leuk of een quiz dat dat de klant alvast zijn ai level kan bepalen met een quizje of zo dat het interactief is wat dan geknusteld wordt met een hand van vragen uit hun sector",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "text" : "dat kun je misschien laten genereren",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "maar ik weet niet"
+  },
+  {
+    "text" : "Oh, dat is wel een goede inderdaad. Ja, ja, ja, ja, ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar dus, van wat ik nu begrijp, ik vind het heel mooi, heel tof. Het lijkt me niet heel chill als we, ik denk dat we gewoon vanuit een soort basis, zoals dit bijvoorbeeld, moeten gaan werken. En dat ieder een klein iets toevoegt of zo."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ik denk niet dat het heel handig is als we in dezelfde skill gaan werken. En dan heb je allemaal verschillende versies natuurlijk."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus misschien kunnen we op de logica bouwen."
+  },
+  {
+    "text" : "Nee, maar het is eigenlijk gewoon een stap die je dan zegt. Jij doet een stap en stap 6 is de AI quiz, noem maar wat.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Nee, precies."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En dan werk je eigenlijk gewoon uit van wat is daarvoor nodig om te bouwen. En dat is eigenlijk gewoon een stuk prompting."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "En dan kijk ik wel of ik het bij elkaar kan vegen. Of misschien vindt jullie dat leuk om te oefenen, maar dat ik het bij elkaar vegen en doorstuur. En dat jullie nog even testen of zo, ik weet niet.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja ik denk dat het een goed idee is.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "het is een het is nu heb ik hem ik want ik kon weet niet hoe hij legde me uit dat je niet zomaar skills kan koppelen maar ik heb nu een plug-in mijn plug-in is eigenlijk niet meer dan dit is dan de plug-in en die zegt eigenlijk roep deze skill aan dus ja ik weet niet wat er dan dus dit is de skill maar wat"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, oké."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Oké."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ook kunnen doen natuurlijk."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Oké, maar..."
+  },
+  {
+    "text" : "Sorry, dat we gewoon even nadenken wat komt erin. En het dan met elkaar delen. En misschien kunnen we alle drie voor de oefening proberen te bouwen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "En dan kijken we donderdag einde dag",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "nog even van wie het het beste werk heeft gekregen. Zo is het ook."
+  },
+  {
+    "text" : "Want ik zit ook nog even te denken... in zo'n plugin, maar... dan... draaien in zo'n plugin.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Zeker.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Dus dat je inderdaad zegt, oké, en ik weet niet of dat zo werkt, maar je laat die plugin draaien en dan krijg je eerst inderdaad het algemene stuk. Tegelijkertijd krijg je die AI Quickscan, tegelijkertijd krijg je die AI quiz."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Die worden uiteindelijk allemaal samengevoegd in een Notion pagina.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja zeker. Ik denk dat dat zeker kan. En misschien juist wel goed is om die scale niet enorm groot te maken, maar juist op te knippen."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja exact."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "En dan zou je kunnen zeggen. Je hebt gewoon drie skills in één plugin. Die voeg je samen. En dat wordt iets uiteindelijk."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Als dat zo werkt. Want dat heb ik nog niet geprobeerd. Als dat zo werkt.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Nee, maar dat is denk ik wel een goede aanname die je hebt hoor. En misschien is het zo dat we uiteindelijk dan die scale toch moeten samenvoegen. Het gaat erom dat je dat stukje prompting hebt van wat moet je doen en wanneer kan die aan de slag als die een bedrijfsnaam heeft of een website.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja Ja"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Eigenlijk dat is de informatie die je nodig hebt en maak dan een quizje van 10 vragen gericht op dit onderwerp en zorg dat je zo de score telt."
+  },
+  {
+    "text" : "Maar Marnix Als je nu kijkt van wat dit nu kan Want ik bedoel volgens mij is dit gewoon je eerste poging en Werkt het al prima, maar kan dit al een pagina aanmaken in jouw Notion omgeving?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, dus ik kan het even laten zien, want dit is gewoon een aangemaakte... Ik wil graag een plaatje, want mij leek me leuk dat er dan gewoon zo'n panda met dat logo op z'n borst of zo. Of iets met die panda in de huisstijl kleuren van Coolblue."
+  },
+  {
+    "text" : "Oh, ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar daar ben ik nog niet uit. Maar dit is gewoon aangemaakt, helemaal door Claude. En dat is eigenlijk gewoon informatie over het bedrijf, welke drie consultants worden er gekoppeld. Dit is eigenlijk gewoon hun eigen roadmap, hoe ziet hij eruit. En dit mag eruit, want die volgende stappen, dat zijn meer voor ons en minder voor de klant. Maar ja, als je hier nog twee blokjes onder doet of erboven, dan heb je gewoon een leuke pagina, daar gaat het om."
+  },
+  {
+    "text" : "Ja. Dan hebben we de opdracht voldaan.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "En dan. Ik denk dat het voor iedereen leuk is. Om op die manier inderdaad te laten zien. Een use case te kunnen laten zien. Van Claude."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Ik zit nu een beetje te kijken. Hoe willen we dit gaan doen? Want ik denk dat. Je al eigenlijk een basis hebt. En we hoeven niet opnieuw het wiel uit te vinden."
+  },
+  {
+    "text" : "Nee zeker niet. Ik denk het leuk is als we gewoon een paar elementen bedenken die er nog bij kunnen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Dus.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En dat jullie gewoon zeggen van nou ik vind het leuk om dit te maken en ik vond het leuk om dat te maken. En dan vegen we het bij elkaar en dan test ik het en dan kunnen jullie het ook testen en dan hebben we wat."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "lijkt mij goed dus laten we kijken wat we willen maken want ik vind het dus ook wel een cool idee om bijvoorbeeld te zeggen het idee is oké AI Panda heeft nu net een nieuwe klant of die is in gesprek een beetje in die hoek zit je ze hebben een omgeving waar ze en willen vastleggen met wie ze te maken hebben en wat een beetje de informatie van het bedrijf is. Dus een klantpagina, ik weet niet wat voor omgeving zij nu hebben,"
+  },
+  {
+    "text" : "So let's work on notions, Elif.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "maar misschien dat we in die context kunnen kijken van, zo'n quiz is natuurlijk al, om een beetje in te schatten, wat voor slide deck ga je meenemen bij een eventuele training? Maar je kan ook verder kijken van, wat voor soort use cases kunnen wij verwachten bij dit bedrijf? Of misschien dat je verschillende skills kan aanroepen in de fase waarin je zit te sparren met je partner of met je klant. Dus initieel om eigenlijk een soort, hey, wie hebben we te maken met McDonald's? Wat doet McDonald's? Maar ook van, hoe ziet dat eruit voor AI Panda als we dan eventueel verder gaan en nog iets. Dat je dus een beetje een skill hebt die daarin indeelt. Of is er dan niet heel...",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ik snap wat je bedoelt. Ik denk dat het goed om dan onderscheid te maken. Kijk, dit is klantgericht. Dus dit ga je je klant aanbieden. We zijn begonnen met het traject.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "We hebben dit gisteren helemaal voor jou neergezet."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En nou ja, druk op de knop. Er staat wat."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar je zou kunnen zeggen, je maakt ook een interne pagina. Want die ga je natuurlijk wat anders vormgeven."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Waar staan we met de klant? Wie zijn de stekels? Maar ik denk voor het gemak, we bouwen één pagina die er goed uitziet voor de klant.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. Ja, precies. Maar dat is wel, om dan even concreet te hebben, dat zou dus wel een pagina zijn die je deelt met je klant.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Juist. Want kijk, wat mooi is van Notion.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Een soort offerteachtig, denk ik dan. of zelf",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik zou echt zeggen, we hebben handje klap gedaan. We gaan een traject starten, zo gaat het traject eruit zien. Offerte kan ook natuurlijk, maar dan zit je natuurlijk nog niet in dit stadium. Maar wat het leuke natuurlijk is, je drukt op de knop en dan heb je hier je site gepublished. Dus dan heb je gewoon een linkje."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja"
+  },
+  {
+    "text" : "Dit is met Notion, dus die maak je aantrekkelijk. Want zeker als die template een beetje pimpt, dan maak je een mooie banner, weet ik het allemaal.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En dan heb je gewoon een goede site."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik denk inderdaad dat we met zoiets moeten komen ook. Omdat het kan beter iets simpeler zijn. Maar wel gewoon sprekend. Dan dat we het heel ingewikkeld gaan maken. En dat het 70% is."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Eens."
+  },
+  {
+    "text" : "En dit is denk ik wel zo leuk om te vertellen van wat zit er nou in en wat bouw je. En ze hebben het zelf elke keer over klantwaarde creëren. Dit is direct klantwaarde want de klant heeft iets. Hij heeft een paginaatje.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar wat misschien leuk is om te doen. Nou Nout wat jij zegt. Je zit op de use case. Dat je gewoon inderdaad iets bouwt. Denk na over mogelijke use cases. Dat de klant alvast een idee krijgt. Waar moet ik aan denken? Aan wat voor dingen gaan we misschien werken? Dat die zoiets genereert."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Maar ik zit ook weer even te kijken. Gewoon in praktische zin. Als je dus zeg maar zegt. We gaan drie skills maken. Dan is het voor mij of twee skills. Dat je het aanvullend doet ofzo. Maar dan is het heel duidelijk. Dat je dit eigenlijk een soort samenvoegt. Dat je eigenlijk ook laat zien van. Hé je kan in verschillende fases. Maar misschien denk ik dan te ver hoor. Maar heel praktisch dacht ik. Als je gewoon twee skills aanmaakt. Dan kunnen we die er gewoon erbij voegen. En dan heb je iets wat meer kan doen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Obrigado."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dan alleen een pagina aanmaken. Maar ook gewoon aanvullen. Of weet ik veel. Dus het was vooral praktisch gezien. Als je nu het werk verdeelt. Dat je zegt van. Ik ga nu een skill maken hiervoor. Zo, zeg maar, die gedachtengang."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Ja zeker. En het is denk ik ook gewoon goed om na te denken. Kijk je aan een skillmaker die use cases potentieel bedenkt voor een klant. En die kan je laten outputten in Notion. Maar je kan ook zeggen. Geef een output in Excel. Geef een output in Word. Dat kan diezelfde skill allemaal maar doen, als je maar aan de voorkant weet waarvoor die dan ingezet wordt."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar wat bijvoorbeeld ook wel, nice in notion, ik zou even een ander voorbeeld geven van... Dit soort dingen, als je deze weergave doet, dan doe je gewoon verschillende mogelijkheden en dan zet je de weergave op galerij."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "..."
+  },
+  {
+    "text" : "Dan heb je gelijk zo'n soort showcase met potentiële dingen. Dus dat je zegt waar moet je aan denken en dan doe je bijvoorbeeld dit.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "..."
+  },
+  {
+    "text" : "Of de fasering kan je zo visueel maken.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus dit stuur je naar McDonald's om te zeggen, hey McDonald's, wij zijn zo goed, want dit hebben wij al uitgewerkt."
+  },
+  {
+    "text" : "Nou ik zou jezelf niet zo neerzetten want de klant is natuurlijk expert van het proces. Maar meer van hier moet je aan denken als ze met elkaar aan de slag gaan. Als voorbeeld. Of dit hebben we voor andere klanten gedaan. Hier krijg je vast een indruk. Maar bijvoorbeeld in Notion werkt het zo dat het eigenlijk dus gewoon een lijst is. Een database is dat in Notion. En die kan je zo weer geven. Maar je kan hem ook zo tonen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "En dan wordt het alweer gelijk een heel ander beeld.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus dat het echt een soort van nee, dat zijn allemaal kaartjes. Even ter inspiratie voor wat je zou kunnen doen."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Het is wel cool. Het is wel cool. Wat is praktisch? Want ik denk dat je, als je zoiets zou zeggen van wat hebben we al gedaan, dan gaan we met dubbingdata werken. Maar als je dus de methodiek maakt, dan kunnen we het ook itereren en dan uiteindelijk misschien gebruiken of het idee gebruiken."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus welke kant willen we op?"
+  },
+  {
+    "text" : "Ik denk dat het leukste effect krijgt bij de mensen die hiernaar moeten gaan kijken, is als je de combinatie maakt van we hebben een klant en we combineren dat met de methode van AI Panda en daaruit wordt iets gegenereerd. Dus stel je voor het is McDonald's, dat je alvast in je programma zegt van nou we gaan dus eerst kijken naar het hamburgerproces en daarna kijken we naar hoe we de bestelpalen slimmer kunnen maken, noem maar wat. Maar dat je dat terug ziet komen, want dan laat je zien dat er slimmigheid in zit.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Mm-hmm. Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "maar het concreet te maken is denk ik leuk om gewoon iets te kiezen wat op deze pagina erbij zou kunnen om hem te verrijken een element"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "en dan te zeggen van nou ik vind het leuk om te bouwen of te kijken of ik daar een skill voor kan bouwen en die skill moet eigenlijk alleen iets kunnen een stukje dat blok genereren in Notion en als die dat kan dan kunnen we dat bij elkaar vegen"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Zou je die plugin slash scale die je nu hebt gemaakt, zou je die naar ons zoek kunnen sturen?"
+  },
+  {
+    "text" : "ja zeker ik gebruik jullie github",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "ik gebruik het niet maar ik heb het wel"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "oh ja want dat probeer ik mezelf aan te winnen github is eigenlijk online versiebeheer dus daar"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "zeker"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "kan ik daar bijvoorbeeld zeg maar mijn om een knutselprojectie hebben een github paginaatje omdat je nogal de laatste versie hebt en ook makkelijk terug kan. Ik zou ook bijvoorbeeld een pagina kunnen aanmaken waar dan altijd jullie bij kunnen waar dan de bestanden staan."
+  },
+  {
+    "text" : "Ik vind het helemaal prima. Dat is ook goed.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Oké, dus wat heeft waarde voor de klant wat we als een blokje eraan toe gaan voegen?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja, ik denk dat het leuk is om daarover na te denken. En ik vind die quiz is leuk, volgens mij, wat je zegt. Kijk waar jij staat. Dus die kan je natuurlijk ook verschillende medewerkers kunnen opnieuw doen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja. Even kijken. De implementatiestappen, de volgende stappen. We kunnen inderdaad een soort gepersonaliseerde inventarisatie doen."
+  },
+  {
+    "text" : "Want hier...",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Van wat heb je al binnen de organisatie. We kunnen... We zouden bijvoorbeeld ook een soort..."
+  },
+  {
+    "text" : "Thank you.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Hoe ga ik dat nou zo goed omschrijven? Een soort what could be. Zeg maar 20, 30 scenario. Hoe zou je bedrijf eruit kunnen zien over een jaar of vijf. Om gewoon eens even echt een soort. Ja gewoon een soort hypothetisch scenario voor te schrijven."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "De punt tot de horizon."
+  },
+  {
+    "text" : "Ik vind het wel cool. Maar misschien kunnen we ook. Als ik dan toch denk. Als je een quiz hebt. En dan zoiets zou hebben als afsluitingen. Eigenlijk is dat een beetje een perspectief ding. Maar ook een beetje in lijn met dat zij een AI mindset willen creëren. Maar als je daarvoor nou vragen maakt. Aan die klant aangeeft van in welke stadium zij zich bevinden. Dus een beetje in lijn met wat we zagen toch. Dat mensen helemaal geen AI gebruiken. Een of twee keer. En zoveel tools of helemaal tweaken.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Mm-hmm.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dat je een beetje in die lijn vragen bedenkt. Zodat zij veel beter kunnen inschatten wat dan hun toekomst is. Niet om het al te groot te maken. Maar als je zegt we gaan all the way. En dan kunnen zij nu zeggen van oh dan is dit zo'n grote brug om daar te komen. Vanaf dat wij helemaal geen AI gebruiken. Tot aan een medium of een high usage of zo. Zoiets."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En zou je dat dan in het voorstadium willen doen deze vraag of dat zo'n quiz eigenlijk onderdeel is van wat je bouwt?"
+  },
+  {
+    "text" : "Ja, dat is het.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja, goeie vraag. Ik zit gewoon een beetje te kijken van, voor mij is inderdaad de timing. Als jij dus handje klap doet en eigenlijk staan Jack en Koen bijvoorbeeld al bijna op de stoep. Dan verschilt dat qua wat je dan laat zien aan de klant natuurlijk.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Mm-hmm."
+  },
+  {
+    "text" : "Dus wie ziet dit? Dus ja, wat mij betreft een beetje tip van de sluier om het zo maar te zeggen, denk ik. Maar het kan ook natuurlijk wat beschijniger zijn dat je dingen even wat uitzoomt of veel breder houdt.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Yeah.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Het maakt mij niet zoveel uit, maar het is gewoon een beetje dat je zegt van het is de logische volgorde."
+  },
+  {
+    "text" : "Ik denk dat dit voorbeeld mooi is op het moment dat je dus met elkaar hebt afgesproken we gaan een traject aan. Dan heb je al wat pitches gehad en dingen maar gewoon je hebt besluitgenomen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "yep"
+  },
+  {
+    "text" : "Als bedrijf gaan we dit doen. En eigenlijk dezelfde dag heb je nog een pagina klaarstaan voor jouw bedrijf met de belangrijke informatie. Wie zijn jouw contactpersonen en wat leuke gimmicks die het wat kleur geven.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "yeah",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Om gewoon alvast iets te hebben. Yes, ik heb een keuze gemaakt en je wordt bevestigd in de keuze, want er staat snel iets klaar. Zie je, we maken snelheid."
+  },
+  {
+    "text" : "yep",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Zo'n beeld heb ik er een beetje bij."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik wil ook nog bijvoorbeeld. Een blok toevoegen. Iets met kwantificering. Dat we zeggen. Van weet ik veel. Een beetje hoog over. Maar je analyseert het bedrijf. En dan geef je bijvoorbeeld. Een aantal kernwaarden mee. Bijvoorbeeld als een kenniswerker. Een uur per week. Bespaard met het implementeren. Van X. Dan brengt dat je uiteindelijk. van jouw organisatie dit op?"
+  },
+  {
+    "text" : "Oh, yeah. En waarom zou je dat dan laten baseren?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik heb geen idee."
+  },
+  {
+    "text" : "Het idee is wel goed. Maar het is moeilijk te kwantificeren, denk ik. Omdat je nog met weinig werkt.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, aan de andere kant. Klad kan ook hele marketing research onderzoeken en presentaties maken. En dat soort dingen. Dus misschien moeten we het ook niet onderschatten."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nee, ik denk dat de klant ook serieus moet nemen."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar"
+  },
+  {
+    "text" : "Ik heb het voorbeeld maar niet zoveel uit. Het is denk ik leuk als ze straks iets bouwen waarvan ze kunnen zeggen van we doen KLM, maar we kunnen ook bakkerij op de hoek doen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Marnix",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "En dat in beide gevallen die een pagina weet te genereren.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar Marnix, als je nu kijkt"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Sorry, wat wilde je zeggen?"
+  },
+  {
+    "text" : "Ik snap je zeker Als je nu kijkt naar, je zou dit delen met je klant Is dan bijvoorbeeld zo'n samenvatting Wie de organisatie is Hoe kijk jij daar dan naar Want stel je voor, jij stuurt die pagina naar mij. En ik lees van, nou ja, dit is zijn bedrijf. Dan denk ik, ja, zoveel mensen werken daar.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ja, leuk. Dat weet ik. Heel goed. Dat zou eigenlijk... Ja, dat zou eigenlijk...",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Maar misschien dat je het iets gerelateerder kan maken.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Zo kijken wij naar jullie. Zo'n samenvatting."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dat je in één opslag krijgt, dit is een samenwerking. Of iets in die trend."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Eens hoor. Dat intro tekstje zou nog veel meer gespecificeerd kunnen worden. Maar volgens mij... Misschien moeten we het ook gewoon even makkelijk maken voor onszelf."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah yeah there you go"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dat we zeggen inderdaad... En hoe maken we gewoon iets wat beknopt is, maar goed."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dat is denk ik, dan hebben we wat. En dat je inderdaad zegt, nou ik ga proberen om hier een afbeelding te krijgen. Dat vind ik wel leuk, maar ik weet niet of het me lukt. Maar dan heb je gewoon titel, vette afbeelding en eigenlijk hier dan een intro tekst. Wat jij zegt, Nout."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En hoe bouwen we eigenlijk een prompt met een zo relevant mogelijke intro tekst?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, maar hier zou ik letterlijk Coolblue XAI Panda. Zo'n tekst maken, weet je wel. Dit is vanuit onze waarde en uit jullie soort bedrijf hoe wij het zien. Het mag van allerlei kanten zijn, maar dat je zo'n soort samenvatting maakt."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "En dus daaronder zie je dan, dit zijn contactpersonen. Dus dat is ook logisch."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Zo ziet onze implementatie er ongeveer uit. Waar kan je aan denken? En dan nog één keer. Wat kan je daarna zien? Als je geen idee hebt. Je hebt al een idee van wij willen wat met AI. Het gaat ons zoveel weken duren. Wat zijn er nog meer? Wat voor inzichten zijn er nog meer leuk om te krijgen?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik denk zelf dat zo'n quizje best wel leuk is."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Dat je gewoon even iets interactiefs hebt. En in vijf vragen waar jij staat. Wat je aan AI niveau is.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Alleen, je moet even kijken hoe je dat technisch bouwt. Ik denk niet dat je het in Notion kan doen zelf. Maar dan wordt het misschien een linkje naar iets."
+  },
+  {
+    "text" : "of je maakt het nu gewoon letterlijk een 1, 2, 3, 4, 5 vragen. En dat je dat later kan zeggen van de eerste mogelijkheid om een form te maken. Dat AI Panda dit uitstuurt. Zij klikken op de form en dan weet AI Panda, oh dit is onze doelgroep een beetje. En dan kunnen zij de slides daarop aanpassen. Zou je wat ik bedoel?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, ik snap wat je bedoelt. Oké, ik dacht, leuk. Is dat toch? Ja, nee klopt. Ja."
+  },
+  {
+    "text" : "Noem dan maar op.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Maar kijk of je het kan maken zou ik zeggen."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Ja."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Dan wordt dat gewoon onderdeel van. Dan wordt dat gewoon. Misschien kan het wel in Notion. Het zijn legio mogelijkheden in Notion."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ik zit zelf meer in de. En af en denkwijze. Dus dat je een form link erin zet. En dat die die gewoon zet. Die zou je waarschijnlijk ook kunnen koppelen aan. Deze Notion pagina. Of iets wat hierachter zit."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Jazeker. Ik denk dat het een hele moottige is."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar misschien is dat iets te veel."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik zou..."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dat is een leuke toekomstvisie."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, want als je straks een kwartiertje hebt en je wilt wat laten zien, dan is het denk ik leuk van..."
+  },
+  {
+    "text" : "Maar...",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Er is iets gebouwd en daar kan ik doorheen klikken en dat is wat."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En 8N is denk ik wel mooi, maar dan maak je het best wel weer ingewikkeld om ook... Je wilt eigenlijk even focussen op deze tool."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, we moeten het gewoon even bij deze opdracht houden."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Maar zeg maar wat jullie leuk vinden om te doen. Want ik pak die afbeelding wel op. Ik pak dit wel op. Dat dit ook beeldend wordt met afbeeldingen van ons. Dat is denk ik leuk. En ik denk wel even goed naar hoe die flow dan een beetje logisch."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, ik..."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Hoe die dat uitvraagt logisch. Dat is denk ik ook wel een goeie."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja. Ik zou wel een soort toekomstbeeld AI-fantasie willen schetsen. Om toch een beetje te enthousiasmeren."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, hier gaan we naartoe. Of hier kunnen we naartoe."
+  },
+  {
+    "text" : "Ja van Dit kan het over een jaar zijn En over twintig jaar is het misschien wel dit",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Durf te dromen"
+  },
+  {
+    "text" : "Over 20 jaar?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Durf te dromen Ja even heel gek weet je wel"
+  },
+  {
+    "text" : "Oké.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Dat je gewoon Coolblue Die pakketten via de Langkabels in plaats van via busjes",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, leuk."
+  },
+  {
+    "text" : "ik denk dat ik dan toch ga naar die quiz en die gewoon nu heel simpel hou maar wel met het idee dat je dus ook zou kunnen pitchen van stel je voor dit zou je gebruiken dan zijn er ook heel veel mogelijkheden",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "maar zoiets dat het best wel beknopt is maar je hebt best een leuke pagina om ook echt te delen met een klant en dan heb je dus denk ik best iets grappigs te pakken al.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, dan heb je gewoon iets tofs. Wat ik dan wel even kan doen is een template bouwen die al wat opmaak heeft. Dus dat het gewoon wat strakker eruit ziet. Met een leuk bennetje van AI Panda en zo."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, ja, ja, exact."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dan kijken we een paar custom elementen doen en een paar goede elementen. En voor zo'n quiz moet je denken even op onderzoek. Kan je die draaien hierin? Want je hebt Notion, maar daar kan je van alles in draaien. Dus misschien kan je een van die embeds pakken die erin zitten."
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik weet niet wat er allemaal in zit. Er zit van alles in."
+  },
+  {
+    "text" : "ik zou eens kijken maar heb jij een betaalde versie van Notion?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nee, het gaatse versie."
+  },
+  {
+    "text" : "dus ik kan hier ook gewoon mee gaan puzzelen",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ja. Kijk, de betaalde versie is wel handig als je samen gaat werken.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "chill"
+  },
+  {
+    "text" : "Want ik kan nu niemand uitnodigen. Dus dat is jammer.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "nee ik zou ik",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Maar ik zou er zeker mee. Ik vind het zelf echt top. Ik gebruik het voor alles.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "En daar heb ik nu niet echt zicht op. Want ik werk zelf nu niet heel veel in Notion. Ik ken het wel. Maar als jij dus nu die Cowork plugin erbij pakt."
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Hij vraagt dingen op. En dan schiet hij dit erin toch?",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "ja en wat ik kan doen is door hem te helpen bijvoorbeeld ik heb hier een pagina en dan zeg ik hier copy link en dan zeg ik van nou gebruik deze link in Notion maar hier heeft hij dus een klantprofiel aangemaakt Dit is dan gewoon een nieuwe pagina die nergens onder hangt.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Maar voor de demonstraties dat prima.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Nee, exact. Want ik zit meer te denken, stel je voor, wij voegen dan dingen toe. Kan je dat dan gewoon, zeg maar, ook in deze flow direct bouwen? Of ja, hoe gaan we dat doen?"
+  },
+  {
+    "text" : "Wat handig is als jullie het bouwen is een scale of in ieder geval een stuk prompting. Waar je mee een co-work kan zeggen van start deze scale.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "yeah"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "en dat die skill dat blokje bouwt aan de hand van het bedrijf wat jij invoert."
+  },
+  {
+    "text" : "yeah",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "yeah exactly"
+  },
+  {
+    "text" : "Dat je eigenlijk vraagt, op welk bedrijf gaat het? En dat je dan gaat knutselen. Want dan vouwen we die skills wel in elkaar.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "text" : "Want we moeten denk ik ook wel een beetje laten zien van hoe Cowork dan werkt. Dat je eigenlijk dus hier je connectors hebt.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "yeah"
+  },
+  {
+    "text" : "Dus in dit geval heb je eigenlijk een notion en een skill. Dus dat zou dan iets van klantpagina bouwen worden. Maar je werkt dus ook met een lokale map. Dus dit is mijn lokale map hiervoor. Dus daar heb je een Excel-etje. Daar staat dan straks in. Wie zit er in het team? Daar maakt hij gebruik van. En je hebt een aantal scripts die daarin komen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Yep.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Of prompts of skills. Waar hij allemaal gebruik van maakt voor die klantpagina bouwen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Yep. Ja, ja, ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En dat ruikt me nog even op. Nu staat er van alles in. Maar dat je gewoon laat zien van het leest aantal bestanden op je computer. Je hebt skills. Die zet je dan weer gekoppeld. En aan de hand daarvan bouwt hij dingen."
+  },
+  {
+    "text" : "Ik denk dat dit heel geinig is. En ik denk ook dat dit een kans van slagen heeft om het even onder woorden te brengen.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus ja, heb je het al in Git staan, Marnix?"
+  },
+  {
+    "text" : "Oké. Ik denk leuk voorbeeldje inderdaad. Nee ga ik zo even een projectje aanmaken. En dan nodig ik je uit GitHub. Zal ik het nog even laten zien hoe GitHub werkt? Of komen jullie daar allebei wel uit?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik heb het nog niet zo vaak gebruikt. Ik heb het wel aangemaakt, maar niet zo vaak."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja het zou eigenlijk straks zijn dat ik dus ik kan wel even demonstreren, dus je hebt GitHub en in GitHub maak je repo's aan dat zijn eigenlijk verschillende projecten dus elk serieus open source software project heeft een GitHub en daar kunnen mensen dan voorstellen doen om aanpassingen te doen maar dit zijn allemaal eigen dingen dus ik heb bijvoorbeeld ook een AI Panda opleiding gemaakt als testje dus hiermee opleidingsdag gehad gekregen hadden dacht ik wil een notion omgeving dus toen heeft u uiteindelijk dit voor mij gebouwd gewoon puur op de kennis die ik op dat moment had want is gewoon leuk en dan heb je dus een per dag uitgesplitst wat we gingen doen en Hier heb je dus geen letter van getikt. En als ik straks, ik moet nog eens even het transcript aan het vragen. Dan zeg ik van, nou verwerk het transcript."
+  },
+  {
+    "text" : "Vielen Dank.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "En stel mij nog even tien vragen ofzo. Of weet ik veel. En dan kan je zo dat laten aanvullen. Maar hoe je zoiets doet."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Dit is wel echt nice."
+  },
+  {
+    "text" : "Is dat, ik laat het even vanuit Cloud Code zien. Want dan weet ik het uit mijn hoofd. Misschien kan het hier ook even kijken. Connectors. Git Connectors. Nee, ik doe toch even Cloud Code. Cloud Code is dit. Dus dan heb je zeg maar een ingebouwde omgeving in je terminal. En je maakt eerst een lege repro aan is dat. Dus hier repositories. Dus dat is een project. Nieuw project. en we noemen het eigenlijk AI Panda klantpagina. De rest is niet zo boeiend, want die kan je",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dank u wel."
+  },
+  {
+    "text" : "allemaal laten maken. Dan zet hij een lege pagina en dan zeg je dit. En de eerste keer moet je nog Ofwel GitHub een keer installeren. En zo. Maar nu kan ik gewoon zeggen. Koppel aan. Eigenlijk alleen die link. Nou. En dan gaat hij aan de slag. En dan gaat hij zeggen. Oh ik heb het gevonden. Ik kan het zoeken. Ik heb een account. Blablabla. En zelf koppelt hij het dan aan elkaar. Nou. Hier had het ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dank u wel."
+  },
+  {
+    "text" : "Ja. Dus ik start Cloud Code in de projectmap. Dus ik heb hier mijn projecten.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "dit zijn dus verschillende projecten en dus voor elk project maak ik ook een nieuwe map aan en dan zeg je eigenlijk in hier open die map dus open de folder"
+  },
+  {
+    "text" : "Ja, precies. Die had je nu open. Dus daarom kan hij, ik zeg, je koppel.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja en links zie je dus ook deze bestanden en dat zijn eigenlijk dezelfde bestanden als dit"
+  },
+  {
+    "text" : "Cool.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "en die gaat hij dan synchroniseren met GitHub behalve als je zegt sluit deze bestanden uit als je tot grote videofaal is ook wil je niet doen hij zegt eigenlijk ik heb een project aangemaakt ik heb het gekoppeld wil je dat ik een commit maak en push een commit maak is eigenlijk code die je hebt geschreven vastleggen en dan zeg ik ja en dan zeg ik lees het project en maak een readme dit duurt eventjes want dat is best wel iets traag"
+  },
+  {
+    "text" : "...",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "maar dan heeft je straks zal je zien staat hier alle code komt dan hier terecht en hier heeft hij dan zelf een readme geschreven met hoe hij dit project zou omschrijven en informatie. Noem maar op. En dan is de volgende stap. Hebben jullie een GitHub"
+  },
+  {
+    "text" : "Oké.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, cool."
+  },
+  {
+    "text" : "account? Dan kan ik jou ergens toevoegen denk ik. Settings.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Zeker.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "to to to to to to to collaborate this"
+  },
+  {
+    "text" : "Zal eens kijken.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Hebben jullie een e-mailadres of een username?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, het is not nout bij mij."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Not?"
+  },
+  {
+    "text" : "Dus niet nout. Niet nout. Dus not nout.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Not, ja. Zo. B."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, dat weet ik. Ja, met de Capibana."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nice. En jij Rick, had jou iets of ben je moet me ergens aanmaken?"
+  },
+  {
+    "text" : "Nee, ik heb hem al. Volgens mij is het gewoon hetzelfde als mijn e-mail. Dus rik.iblaze.nl",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Streepje blaze?"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Nee, nee, nee. Zonder een streepje."
+  },
+  {
+    "text" : "Dit zo?",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. Ja, volgens mij wel.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oké. Nou, dat kunnen jullie toevoegen en dan krijg je dus toegang tot deze repo. En dan werkt het zo dat jullie kunnen downloaden, jullie kunnen hem synchen. En als jullie wijzigingen willen aanbrengen, dan zeg je zeg maar ik wil een voorgestelde wijziging toevoegen. En dat komt dan hier als pool request in het ding. En dan de eigenaar in mijn geval kan dan zeggen, oh ja, dit wil ik toevoegen aan het project."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Oh, yeah. Cool."
+  },
+  {
+    "text" : "Maar dit is misschien een beetje advanced, maar daar komen we wel uit. Nou, dit moet je altijd even...",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar, Martix, we hebben het wel nu opgezet met code, hè?"
+  },
+  {
+    "text" : "Ja. Ja, ja, precies. Maar dat komt goed.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Dus, nee, het...",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Het kan ook wel met co-work, maar ik ga het even ombouwen en die plugin misschien even bouwen. En dan kan ik dat reproduceren. Maar kan ik... Het idee is dat je het volgens mij als connector hier ook kan toevoegen. Want ik heb hem hier... Oh nee. Manager connectors. Gid hebben we hier dan weer wel."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, hij is wel connected. Maar hij laat hem nog niet zien denk ik."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Kijk even of een connector beschikbaar is."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar ik vind het wel cool. Hij zegt dat hij het niet heeft. Dat is op Frans."
+  },
+  {
+    "text" : "ik ben echt aan het zoeken want hier staat daar net zag je het staan toch hier zit je mij te gaslighten",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja."
+  },
+  {
+    "text" : "of zo met de skin",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar ja. Ik denk misschien dat hij niet alle connectors heeft. Ze zijn verbonden."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja maar wat betekent dat dan"
+  },
+  {
+    "text" : "Maar ga ze meteen naar chat. En vraag, kan jij nu koppelen aan...",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "gitter"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ik denk namelijk dat als je tussen die drie kiest... Oh, sorry. Ik bedoel letterlijk Cloud Chat."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ok"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus in je desktop app. kan je kiezen tussen chat, co-work"
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "en code dus ik denk dat je daar namelijk wel met GitHub kan",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "je ziet daar kon ik met gewaring ook gekoppeld mogelijk die is zo wie"
+  },
+  {
+    "text" : "dat was altijd zo gezeikt dat soort dingen",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Waar Co-hook dus beter in is dat hij gewoon zeg maar je kan Google Chrome laten besturen en dan gaat hij naar GitHub, dan gaat hij daar kijken, dus dat kan hij wel."
+  },
+  {
+    "text" : "Ja. Jawel, maar het is gewoon een andere doelgroep. Ik denk niet dat de mensen die Cowork gebruiken...",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Of GitHub zitten.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Nee.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dat is gewoon de essentie."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Kijk, andere voorbeelden zijn bijvoorbeeld ook open met Gmail. mail, lees de laatste 10 mailtjes, kijk welke prioriteiten hebben en schrijf voor de eerste 5 een draft. Dat soort dingen kan je ervoor gebruiken."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Juist Hey en Marnix jij hebt de Max plan van klaar toch?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Is goed. Ja."
+  },
+  {
+    "text" : "Hoe groot? Want heb je ooit die andere de progen?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik ben begonnen met pro, maar als je dan gewoon code gaat gebruiken, dan knalt je er wel snel"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus de nette"
+  },
+  {
+    "text" : "doorheen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "En hoe is dat met Max? jouw ervaring"
+  },
+  {
+    "text" : "Ik heb wel eens limieten toen ik, je hebt allemaal plugins voor Excel en PowerPoint. Toen ik een PowerPoint ging maken knalde die ook heel snel doorheen.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Dus maar, gaat die ook snel?"
+  },
+  {
+    "text" : "als je die browser tool gaat gebruiken dan gaat die er ook snel doorheen",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, oké."
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar je kan hier best wel veel, ik heb vanmiddag best wel wat gebruikt. die maxcombinant maar ja het is wel 90 piek oh shit"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar ja, kijk, als je dat gewoon veel gebruikt."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja dan even kijken of die iets gebouwd heeft kom op push"
+  },
+  {
+    "text" : "Maar het zou dus ook kunnen dat als wij iets maken, Marnex, dat wij... Wij kunnen bij jouw hele GitHub op dit moment.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Dus het zou ook al kunnen dat ik zeg van,"
+  },
+  {
+    "text" : "Ja.",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Dan bouw ik mijn ding er al in. In de logica.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Ja. Ja, dan kan je dus een voorstel doen om dat dus in de juiste bestanden aan te passen. Dus dat is een skill voeg je toe en waarschijnlijk is het een soort...",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja exact."
+  },
+  {
+    "text" : "En het project. Dus probeer het zeker. Laten we lekker testen en we vegen het wel bij elkaar.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Nou ja. Ik ben heel benieuwd."
+  },
+  {
+    "text" : "ik ook oké dus voor nu denk ik even dat kan we",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Dus even samenvattend. Voor jou Marnix. Ik beschouw jou een beetje als de maintainer. Want jij hebt natuurlijk ook de repo. Maar jij zorgt uiteindelijk dat wat wij maken. Dat dat ook gewoon één wordt.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "ja"
+  },
+  {
+    "text" : "Uiteindelijk doen wij ook ons best. Maar jij bent gewoon de aangewezen persoon daarvoor. Jij zorgt voor die foto. Voor die samenvatting. Dan ga ik kijken naar de relevante vragen. Om te kijken wat voor niveau er zijn. Of een soort oriëntatie vragen. En Rick gaat voor een soort toekomstbeeld. Een visionair. die visionaire samenvatting. Ik weet niet hoe je het anders zou noemen.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ik ook nog niet."
+  },
+  {
+    "text" : "Dan zitten we op en-lijn.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "yeah",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Ja. En misschien maak ik er ook wel plaatjes bij. Zo.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Maar een dynamisch gegeneerde plaatje op het moment dat we hem aftrappen of gewoon van tevoren een plaatje?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Zo, nou."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Nee, wel een dynamische."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ah ja."
+  },
+  {
+    "text" : "Dus als mensen zeggen, doe maar van, noem eens even een bedrijf. Hoe heet dat bedrijf met al die...",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Bol. Bol. Bol.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Bol. Dat je dan een soort toekomstbeeld van Bol ziet."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Bol. Maar dat deel ben ik nog niet om uitgekomen. Het zou mooi zijn als je het weet om het even met mij te delen."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Maar dat kan je ook niet heel simpel doen, Mark. Ik weet niet wat je bedoeling was met je Notion pagina. Maar als je daar gewoon het logo van bijvoorbeeld Coolblue of McDonald's laat zien. Is dat ook niet al goed?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, dat kan ook al, dus dat is een mooie min. Maar het is leuk als je dus echt, ik wil eigenlijk naar de Bonano met de api aftrappen, dat hij dan zo'n plaatje erin gooit. Het is echt een gegenereerde afbeelding aan de hand."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja oké, dat is ook wel cool ja."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Wat is het leukste als het niet haalbaar is, gaan we voor iets minder."
+  },
+  {
+    "text" : "Maar laten we wel de filosofie hebben. Maak het werkend en dan fancy toch?",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Precies. Precies."
+  },
+  {
+    "text" : "Ja oké. Dan zit het op één lijn denk ik.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Laat je nog even zien wat hij nu dan in GitHub heeft gebouwd. Want ik ga daar ook wel even uitleggen hoe dan de flow eruit ziet bijvoorbeeld. Dus welke vragen die gaat stellen en zo. En daar kan je ook mee kijken en eventueel aanpassingen doen. Dus dan heb je nu dit.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Helemaal goed."
+  },
+  {
+    "text" : "Kijk, nu heeft hij dit gemaakt.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Oh dat is wel cool."
+  },
+  {
+    "text" : "Dus dan maakt hij gewoon echt uitleg hoe installeer je dit. Normaal nog wat duidelijker. Oké, komt goed. Misschien even voor afspraken. Wanneer we alles bij elkaar willen hebben. Ik hoop dat ik het nog een beetje kan testen enzo. Nu hebben jullie tijd.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, hoeveel marktjes zou je nodig hebben?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nou als het donderd met de lunch er is, is het voor mij fijn. Lukt dat jullie?"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja, dat moet wel lukken. Dank je wel."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oké. En ehm..."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Is het dan chill als wij los van, uiteindelijk denk ik dat we git to pushen, maar is het dan ook wel chill als jij gewoon een mailtje krijgt of is dat genoeg?"
+  },
+  {
+    "text" : "Nou... handig als je iets hebt. Maar ik ga ook even kijken of we houden deze chat inleven. Ik weet",
+    "speaker" : "Marnix"
+  },
+  {
+    "text" : "Goed.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "niet wat voor jullie handig is. Maar misschien is het ook wel leuk dat een van jullie dan kan nadenken hoe we het een beetje leuk presenteren straks. Want het is natuurlijk een stuk demo, maar misschien ook even dat iemand nadenkt van hoe leggen we nou cowork een beetje zinnig uit aan die groep."
+  },
+  {
+    "text" : "Ja, misschien zo'n visual dat ik net liet zien. Maar dan een beetje gerichter in de context waarin wij nu aan de slag zijn of zo.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Of een slide deck. Maar ik weet niet. Misschien is één visual wel prima."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Nou, misschien is dat wel goed hè. Want we trappen hem af en waarschijnlijk duwt het 5, 10 minuten voordat hij het gegenereerd heeft, Max. Dat hij ertussen het even wat vertelt."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja exact. En dan komt je praatje zeg maar."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Ja. Wel een goeie. Wil ik wel wat voor doen hoor. Zal ik dat oppakken?",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Is goed.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Als jij wil. Dan helemaal goed. Dan. Denk ik dat het redelijk duidelijk is. Ik zal eens kijken hoor. Want volgens mij zitten we wel allemaal in die. AI groep toch."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, je kunt ook even een appje aanmaken, om op WhatsApp, als dat makkelijk is."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Laten we dat doen. Dan kunnen we wat strakker. Kortere lijntjes."
+  },
+  {
+    "text" : "Ja, het voelt wel echt als een schoolapperdrag dit, hè?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Uitzetten."
+  },
+  {
+    "text" : "Dat is vroeger.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. Nu ineens wel ja. Zeker met deadlines."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja, wat leuk, man. Oké, ik probeer gewoon snel even wat neer te zetten dat het gewoon werkt. Dan kun je dat zelf ook reproduceren. En dan gaan we hem daarna nice maken."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Ja, goed idee. Oké, jongens. Ik ben echt benieuwd hoe dit... Weet je, ik heb er wel vertrouwen in. Maar ik moet het gewoon nog zien gebeuren."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Dat is het.",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik weet zeker dat jij gaat denken van wauw, wat heb ik nou gebouwd?"
+  },
+  {
+    "text" : "Nou ja.",
+    "speaker" : "Noud"
+  },
+  {
+    "text" : "Dat sowieso. Maar dat denk ik meestal wel. Als ik bezig ben. Dat ik op een gegeven moment denk ik, goh, dat heb ik dan weer goed gedaan.",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Ja. Wat ziet er goed uit?",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Oké."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Leuk."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Dat is goed."
+  },
+  {
+    "text" : "Oké, hou contact jongens.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Ja. En sorry, nog laatste."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "text" : "Jij gaat het in elkaar vlansen als je dan dinsdag, donderdag lunch ish hebt.",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja."
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "Willen we dan nog meeten of gaan we dan gewoon op de app regelen?"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Wat we willen."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "Johan, op mijn tref zetten we er even wat in om tussen vier en vijf."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Is goed."
+  },
+  {
+    "text" : "ja want ik bedoel volgens mij was het van we maken wel een app aan maar het is wel handig om",
+    "speaker" : "Noud"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. Ik maak even een nieuwe meeting voor deze. En dan tussen vier en vijf."
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Noud",
+    "text" : "we spreken met de losse eindjes toch denk ik ja"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ja. En de demo hem even. En dat is denk ik wel leuk even door te spreken. Hoe we hem dan verdelen. die de dag erna."
+  },
+  {
+    "text" : "ja",
+    "speaker" : "Rick"
+  },
+  {
+    "text" : "Oké, tof.",
+    "speaker" : "Marnix"
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja dat is goed"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Ik stuur jullie eens ook even een transcript van deze meeting."
+  },
+  {
+    "text" : "oké",
+    "speaker" : "Rick"
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Misschien heb je er wat aan."
+  },
+  {
+    "speaker" : "Rick",
+    "text" : "ja Oké, helemaal goed."
+  },
+  {
+    "speaker" : "Marnix",
+    "text" : "Oké, goed bezig. Ciao. Go."
+  },
+  {
+    "text" : "Hoi. Ciao, ciao. out.",
+    "speaker" : "Rick"
+  }
+]

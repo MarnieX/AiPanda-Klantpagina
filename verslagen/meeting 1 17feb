@@ -1,0 +1,74 @@
+# Verslag Meeting 1 - AI Panda Klantpagina
+
+**Datum:** 17 februari 2026
+**Aanwezig:** Marnix, Rick, Noud
+**Doel:** Brainstorm en taakverdeling voor het AI Panda Klantpagina project
+
+---
+
+## Bespreekpunten
+
+### 1. Voortgang en kennismaking met tooling
+- Rick heeft twee dagen met Claude Code gewerkt en zijn eerste skill gemaakt. Had aanvankelijk moeite met API-foutmeldingen.
+- Noud heeft Claude Code gedownload en verkend, maar nog geen skill of plugin gebouwd.
+- Marnix heeft al een werkende eerste versie van de klantpagina-plugin gebouwd in Claude Code, inclusief Notion-koppeling en beeldgeneratie.
+
+### 2. Tooling: Claude Code vs. Cowork vs. N8N
+- Noud heeft een overzicht gemaakt van de verschillen tussen Claude Code, Cowork en N8N.
+- Conclusie: Cowork is de visueel toegankelijkere variant van Claude Code, gericht op niet-technische gebruikers. N8N is een bestaande workflow-tool waar AI als stap in kan worden opgenomen.
+- Voor deze opdracht focussen we op Cowork. N8N voegt te veel complexiteit toe.
+- Marnix gebruikt Claude Code om de plugin te bouwen, die vervolgens in Cowork draait.
+
+### 3. Projectconcept
+- Het idee: een plugin die met een druk op de knop een professionele klantpagina in Notion genereert voor AI Panda.
+- De klant krijgt direct na het starten van een traject een gepersonaliseerde pagina met bedrijfsinfo, het consultantteam en een AI-implementatie roadmap.
+- De pagina wordt gedeeld met de klant als "welkomstpagina" na het starten van een samenwerking.
+- Live demo in de les: willekeurig bedrijf noemen en ter plekke een pagina laten genereren.
+
+### 4. Elementen van de klantpagina
+De groep heeft de volgende elementen besproken voor de Notion-pagina:
+- **AI Panda afbeelding** (panda-mascotte met bedrijfsnaam) - Marnix
+- **Bedrijfsprofiel** met intro tekst specifiek voor de samenwerking (AI Panda x Klant)
+- **Consultantteam** met foto, functie en contact (uit Excel-bestand)
+- **AI Implementatie Roadmap** in fases, toegespitst op de sector van de klant
+- **AI-quiz** om het AI-niveau van de klant te bepalen (5 vragen, interactief) - Noud
+- **Toekomstbeeld/AI-visie** om de klant te enthousiasmeren over mogelijkheden - Rick
+
+### 5. Samenwerking en techniek
+- Marnix heeft een GitHub repository aangemaakt en Rick en Noud als collaborators toegevoegd.
+- Ieder bouwt een eigen skill/element dat uiteindelijk wordt samengevoegd in de plugin.
+- Marnix bouwt de basis plugin-structuur, de Notion-template en de beeldgeneratie.
+- De samenwerking verloopt via GitHub met pull requests.
+
+---
+
+## Taakverdeling
+
+| Wie | Taak |
+|---|---|
+| **Marnix** | Plugin-structuur en basis skill, Notion-template met opmaak, AI Panda afbeelding generatie, samenvoegen van alle elementen |
+| **Noud** | AI-quiz element bouwen (bepaal AI-niveau van de klant in 5 vragen, sector-specifiek) |
+| **Rick** | Toekomstbeeld/AI-visie element (schets hoe het bedrijf er met AI uit kan zien) |
+
+---
+
+## Actiepunten
+
+- [ ] **Marnix:** GitHub repo delen met Rick en Noud (gedaan tijdens meeting)
+- [ ] **Marnix:** Plugin ombouwen voor Cowork en Notion-template opzetten met strakke opmaak
+- [ ] **Marnix:** Beeldgeneratie (panda met bedrijfsnaam) werkend krijgen
+- [ ] **Noud:** AI-quiz skill bouwen (5 vragen, sector-specifiek, bepaalt AI-niveau klant)
+- [ ] **Noud:** Onderzoeken hoe een quiz technisch in/via Notion kan werken (embed, form, of apart)
+- [ ] **Rick:** Toekomstbeeld/AI-visie skill bouwen (gepersonaliseerd per bedrijf en sector)
+- [ ] **Rick:** Nadenken over het verhaal rondom Claude Cowork voor de demonstratie
+- [ ] **Allen:** Donderdag einde dag tussenstand delen en kijken wie het verst is
+- [ ] **Allen:** Eigen element testen met een willekeurig bedrijf als input
+
+---
+
+## Afspraken
+
+- **Deadline tussenstand:** Donderdag 20 februari (einde dag)
+- **Werkwijze:** Ieder bouwt een eigen skill, Marnix voegt samen in de plugin
+- **Samenwerking:** Via GitHub repository (MarnieX/AiPanda-Klantpagina)
+- **Focus:** Liever iets simpels dat goed werkt dan iets ingewikkelds dat half af is
