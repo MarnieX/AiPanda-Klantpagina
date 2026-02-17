@@ -46,7 +46,7 @@ def load_api_key():
     return key
 
 
-def generate_image(prompt, model="gemini-2.0-flash-exp", aspect_ratio="1:1", image_size="1K"):
+def generate_image(prompt, model="gemini-2.5-flash-image", aspect_ratio="1:1", image_size="1K"):
     """Genereer afbeelding via Gemini API."""
     api_key = load_api_key()
     client = genai.Client(api_key=api_key)
@@ -102,6 +102,38 @@ def save_image(image_part, output_path):
     return output_path
 
 
+def upload_to_cloudinary(filepath):
+    """Upload afbeelding naar Cloudinary (persistent hosting)."""
+    cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME")
+    api_key = os.getenv("CLOUDINARY_API_KEY")
+    api_secret = os.getenv("CLOUDINARY_API_SECRET")
+
+    if not all([cloud_name, api_key, api_secret]):
+        print("Cloudinary niet geconfigureerd, fallback naar catbox.moe...")
+        return upload_to_catbox(filepath)
+
+    try:
+        import cloudinary
+        import cloudinary.uploader
+
+        cloudinary.config(
+            cloud_name=cloud_name,
+            api_key=api_key,
+            api_secret=api_secret,
+        )
+        print("Uploading naar Cloudinary...")
+        result = cloudinary.uploader.upload(filepath, folder="ai-panda")
+        url = result["secure_url"]
+        print(f"URL:          {url}")
+        return url
+    except ImportError:
+        print("Cloudinary package niet gevonden, fallback naar catbox.moe...")
+        return upload_to_catbox(filepath)
+    except Exception as e:
+        print(f"Cloudinary upload mislukt ({e}), fallback naar catbox.moe...")
+        return upload_to_catbox(filepath)
+
+
 def upload_to_catbox(filepath):
     """Upload afbeelding naar catbox.moe (gratis, geen account nodig)."""
     import requests
@@ -127,9 +159,9 @@ def upload_to_catbox(filepath):
 def main():
     parser = argparse.ArgumentParser(description="Nano Banana Pro Image Generator")
     parser.add_argument("prompt", help="Beschrijving van de gewenste afbeelding")
-    parser.add_argument("--model", default="gemini-2.0-flash-exp",
-                        choices=["gemini-3-pro-image-preview", "gemini-2.5-flash-preview-05-20", "gemini-2.0-flash-exp"],
-                        help="Gemini model (default: gemini-2.0-flash-exp)")
+    parser.add_argument("--model", default="gemini-2.5-flash-image",
+                        choices=["gemini-2.5-flash-image", "gemini-3-pro-image-preview", "imagen-4.0-generate-001"],
+                        help="Gemini model (default: gemini-2.5-flash-image)")
     parser.add_argument("--ratio", default="1:1",
                         choices=["1:1", "3:4", "4:3", "9:16", "16:9"],
                         help="Aspect ratio (default: 1:1)")
@@ -164,7 +196,7 @@ def main():
     # Upload (optioneel)
     url = None
     if args.upload:
-        url = upload_to_catbox(filepath)
+        url = upload_to_cloudinary(filepath)
 
     # JSON output voor automatie
     if args.json:
