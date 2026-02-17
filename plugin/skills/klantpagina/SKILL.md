@@ -37,7 +37,7 @@ Als WebFetch faalt (403/timeout), gebruik WebSearch als alternatief:
 
 Als BEIDE falen, vraag het de gebruiker via AskUserQuestion.
 
-Sla op: BEDRIJFSNAAM, OMSCHRIJVING (2-3 zinnen), SECTOR (één woord).
+Sla op: BEDRIJFSNAAM, OMSCHRIJVING (2-3 zinnen), SECTOR (één woord), WEBSITE_DOMEIN (bijv. `bol.com`, `coolblue.nl` — zonder https://).
 
 ## Stap 3: Lees het AI Panda teambestand
 
@@ -46,9 +46,14 @@ Installeer openpyxl als het nog niet beschikbaar is, en lees het Excel-bestand:
 ```bash
 pip install openpyxl --break-system-packages -q 2>/dev/null
 python3 << 'PYEOF'
-import openpyxl, json, glob
+import openpyxl, json, glob, os
 
-paths = glob.glob("/sessions/*/mnt/*/ai-panda-team.xlsx") + glob.glob("/sessions/*/mnt/Ai Panda/ai-panda-team.xlsx")
+paths = (
+    glob.glob("/sessions/*/mnt/*/ai-panda-team.xlsx") +
+    glob.glob("/sessions/*/mnt/Ai Panda/ai-panda-team.xlsx") +
+    glob.glob(os.path.expanduser("~/Documents/Projecten/Ai Panda Klantpagina/ai-panda-team.xlsx")) +
+    glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai-panda-team.xlsx"))
+)
 if not paths:
     print("ERROR: ai-panda-team.xlsx niet gevonden")
     exit(1)
@@ -89,29 +94,35 @@ Verzamel de geselecteerde namen (streef naar 3 consultants). Match elke geselect
 
 ## Stap 5: Genereer de AI Panda-afbeelding
 
-De afbeelding moet een schattige panda-mascotte tonen met de bedrijfsnaam op het shirt.
+Gebruik het Python-script in `--client` mode. Dit bouwt automatisch een sector-specifieke prompt, haalt het bedrijfslogo op en geeft het als referentie mee aan Gemini.
 
-### Methode A: MCP generate_image tool (als beschikbaar)
-Roep de `generate_image` tool aan met:
-- prompt: "A cute, friendly cartoon panda mascot (the AI Panda) standing proudly and giving a thumbs up. The panda wears a modern t-shirt with the text '[BEDRIJFSNAAM]' clearly printed on the chest in bold letters. Big expressive eyes, rosy cheeks, clean cartoon illustration style, white background, professional but playful."
-- aspectRatio: "1:1"
-- fileName: "panda_[bedrijfsnaam_lowercase]"
+### Script uitvoeren
 
-Upload het resultaat naar catbox.moe voor een publieke URL:
-```bash
-curl -s -F "reqtype=fileupload" -F "fileToUpload=@[BESTANDSPAD]" https://catbox.moe/user/api.php
-```
-
-### Methode B: Python-script (als MCP tool niet beschikbaar)
+Zoek eerst het script (Cowork-sessie of lokaal):
 ```bash
 SCRIPT=$(find /sessions -name "generate_notion_image.py" 2>/dev/null | head -1)
-cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
-  "A cute, friendly cartoon panda mascot (the AI Panda) standing proudly and giving a thumbs up. The panda wears a modern t-shirt with the text '[BEDRIJFSNAAM]' clearly printed on the chest in bold letters. Big expressive eyes, rosy cheeks, clean cartoon illustration style, white background, professional but playful." \
-  --model gemini-3-pro-image-preview --size 2K --output /tmp/panda_klant.png --upload --json
+if [ -z "$SCRIPT" ]; then
+  SCRIPT=$(find ~ -maxdepth 6 -name "generate_notion_image.py" 2>/dev/null | head -1)
+fi
 ```
 
+Genereer de afbeelding:
+```bash
+SAFE_NAME=$(echo "[BEDRIJFSNAAM]" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
+cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
+  --client \
+  --company-name "[BEDRIJFSNAAM]" \
+  --sector "[SECTOR]" \
+  --logo-domain "[WEBSITE_DOMEIN]" \
+  --output "/tmp/panda_${SAFE_NAME}.png" \
+  --upload --json
+```
+
+De `url` uit de JSON-output is de PANDA_IMAGE_URL voor Stap 6.
+
 ### Fallback: Placeholder
-Als ALLES faalt → gebruik: `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png`
+Als het script niet gevonden wordt of faalt → gebruik:
+`https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png`
 Meld kort dat een placeholder is gebruikt. GA ALTIJD DOOR.
 
 ## Stap 6: Maak de Notion-pagina aan
