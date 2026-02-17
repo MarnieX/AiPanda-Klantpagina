@@ -46,7 +46,7 @@ def load_api_key():
     return key
 
 
-def generate_image(prompt, model="gemini-2.5-flash-image", aspect_ratio="1:1", image_size="1K"):
+def generate_image(prompt, model="gemini-3-pro-image-preview", aspect_ratio="1:1", image_size="2K"):
     """Genereer afbeelding via Gemini API."""
     api_key = load_api_key()
     client = genai.Client(api_key=api_key)
@@ -159,15 +159,15 @@ def upload_to_catbox(filepath):
 def main():
     parser = argparse.ArgumentParser(description="Nano Banana Pro Image Generator")
     parser.add_argument("prompt", help="Beschrijving van de gewenste afbeelding")
-    parser.add_argument("--model", default="gemini-2.5-flash-image",
-                        choices=["gemini-2.5-flash-image", "gemini-3-pro-image-preview", "imagen-4.0-generate-001"],
-                        help="Gemini model (default: gemini-2.5-flash-image)")
+    parser.add_argument("--model", default="gemini-3-pro-image-preview",
+                        choices=["gemini-3-pro-image-preview", "gemini-2.5-flash-image", "imagen-4.0-generate-001"],
+                        help="Gemini model (default: gemini-3-pro-image-preview)")
     parser.add_argument("--ratio", default="1:1",
                         choices=["1:1", "3:4", "4:3", "9:16", "16:9"],
                         help="Aspect ratio (default: 1:1)")
-    parser.add_argument("--size", default="1K",
+    parser.add_argument("--size", default="2K",
                         choices=["1K", "2K", "4K"],
-                        help="Resolutie (default: 1K)")
+                        help="Resolutie (default: 2K)")
     parser.add_argument("--output", default=None,
                         help="Output bestandspad (default: auto-generated)")
     parser.add_argument("--upload", action="store_true",

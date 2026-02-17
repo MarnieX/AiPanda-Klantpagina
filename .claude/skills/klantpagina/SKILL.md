@@ -107,7 +107,7 @@ curl -s -F "reqtype=fileupload" -F "fileToUpload=@[BESTANDSPAD]" https://catbox.
 SCRIPT=$(find /sessions -name "generate_notion_image.py" 2>/dev/null | head -1)
 cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
   "A cute, friendly cartoon panda mascot (the AI Panda) standing proudly and giving a thumbs up. The panda wears a modern t-shirt with the text '[BEDRIJFSNAAM]' clearly printed on the chest in bold letters. Big expressive eyes, rosy cheeks, clean cartoon illustration style, white background, professional but playful." \
-  --model gemini-2.0-flash-exp --output /tmp/panda_klant.png --upload --json
+  --model gemini-3-pro-image-preview --size 2K --output /tmp/panda_klant.png --upload --json
 ```
 
 ### Fallback: Placeholder
