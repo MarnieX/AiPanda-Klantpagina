@@ -1,27 +1,34 @@
-# AI Panda - Klantpagina Generator
+# 🐼 AI Panda - Klantpagina Generator
 
 > Van klantnaam naar complete Notion-pagina in een paar seconden.
 
-AI Panda helpt consultants om razendsnel professionele klantpagina's aan te maken in Notion. Geen handmatig kopieerwerk, geen losse templates. Je geeft een bedrijfsnaam op en de rest gebeurt automatisch.
+Met de Klantpagina Generator maken consultants van **AI Panda** razendsnel professionele klantpagina's aan in Notion. Geen handmatig kopieerwerk, geen losse templates. Geef een bedrijfsnaam op en de rest gebeurt automatisch.
 
 ---
 
-## Wat doet het?
+## 🎯 Wat doet het?
 
 **Het probleem:** Voor elke nieuwe klant maak je handmatig een Notion-pagina aan. Bedrijfsinfo opzoeken, afbeelding zoeken of maken, template invullen, roadmap aanmaken. Dat kost tijd en ziet er niet altijd consistent uit.
 
-**De oplossing:** Deze tool automatiseert het hele proces:
+**De oplossing:** Deze plugin automatiseert het hele proces. Je typt `/klantpagina`, geeft een bedrijfsnaam op, en binnen een paar seconden staat er een complete, professionele klantpagina in Notion.
 
-1. **Bedrijfsinfo ophalen** - Haalt automatisch relevante informatie op van de website van de klant
-2. **Team koppelen** - Leest de beschikbare consultants uit het teambestand en koppelt de juiste mensen
-3. **Unieke afbeelding genereren** - Maakt met AI (Google Gemini) een op maat gemaakte afbeelding in de AI Panda-stijl
-4. **Notion-pagina bouwen** - Zet alles samen in een professionele klantpagina, compleet met roadmap en projectstructuur
+---
+
+## 📄 Wat staat er op de klantpagina?
+
+Elke gegenereerde klantpagina bevat:
+
+- 🖼️ **AI-gegenereerde afbeelding** in de herkenbare AI Panda-stijl, met de bedrijfsnaam op het shirt van de panda-mascotte
+- 🏢 **Bedrijfsprofiel** met een korte omschrijving, automatisch opgehaald van de website van de klant
+- 👥 **Consultantteam** met foto, functie en contactgegevens van de gekoppelde AI Panda-consultants
+- 🗺️ **AI Implementatie Roadmap** in vier fases (Discovery, Pilot, Implementatie, Schaling), specifiek toegespitst op de sector van de klant
+- ✅ **Volgende stappen** als checklist om direct mee aan de slag te gaan
 
 Het resultaat: een consistente, professionele uitstraling voor elke klant, zonder handwerk.
 
 ---
 
-## Hoe werkt het?
+## ⚡ Hoe werkt het?
 
 ### Via Claude Code (aanbevolen)
 
@@ -39,24 +46,23 @@ Je kunt kiezen uit verschillende stijlen: **cartoon**, **foto**, **logo** of **a
 
 ---
 
-## Onderdelen
+## 🧩 Onderdelen
 
 | Onderdeel | Wat het doet |
 |---|---|
 | **Klantpagina Skill** | Het hoofdproces: van klantnaam naar complete Notion-pagina |
 | **Nano Banana Pro** | AI-afbeeldingen genereren via Google Gemini |
 | **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele prompt voor de beste resultaten |
-| **MCP Plugin** | Integratie met Claude Desktop zodat je de tools direct vanuit Claude kunt gebruiken |
+| **AI Quiz** | Interactief quiz-element voor de klantpagina |
 
 ---
 
-## Aan de slag
+## 🚀 Aan de slag
 
 ### Wat heb je nodig?
 
 - **Python 3.8+** (voor de afbeeldingen-tool)
 - **Google Gemini API key** ([gratis aanmaken](https://aistudio.google.com/apikey))
-- **Node.js** (alleen als je de Claude Desktop plugin wilt gebruiken)
 
 ### Installatie
 
@@ -72,16 +78,19 @@ cp .env.example .env
 pip install google-genai Pillow python-dotenv requests
 ```
 
-### Claude Desktop plugin (optioneel)
+---
 
-```bash
-./setup-nano-banana-mcp.sh
-```
+## 📌 Status
 
-Dit script configureert alles automatisch. Na het herstarten van Claude Desktop kun je direct afbeeldingen genereren vanuit een gesprek.
+🚧 In ontwikkeling (testfase)
+
+## 📚 Documentatie
+
+- [PLAN.md](./PLAN.md) - Architectuur, features, tech stack
+- [BACKLOG.md](./BACKLOG.md) - Openstaande taken per fase
+- [CHANGELOG.md](./CHANGELOG.md) - Versiegeschiedenis
+- [CLAUDE.md](./CLAUDE.md) - AI-agent instructies
 
 ---
 
-## Gemaakt door
-
-Intern project van **AI Panda / Marnit** voor het automatiseren van klantprocessen.
+Intern project van **AI Panda** voor het automatiseren van klantprocessen.
