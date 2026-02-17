@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code vs Cowork vs n8n</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #0f0f13;
+    color: #e8e8ed;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #d4a574, #c084fc, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 0.95rem;
+    margin-bottom: 48px;
+  }
+
+  /* --- Three columns --- */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .card {
+    background: #1a1a22;
+    border-radius: 16px;
+    padding: 28px 24px;
+    border: 1px solid #2a2a35;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .card.code::before { background: linear-gradient(90deg, #34d399, #059669); }
+  .card.cowork::before { background: linear-gradient(90deg, #c084fc, #7c3aed); }
+  .card.n8n::before { background: linear-gradient(90deg, #f97316, #ea580c); }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+
+  .code .card-icon { background: #059669aa; }
+  .cowork .card-icon { background: #7c3aedaa; }
+  .n8n .card-icon { background: #ea580caa; }
+
+  .card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .card .tagline {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .card .for-who {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .code .for-who { background: #05966933; color: #34d399; }
+  .cowork .for-who { background: #7c3aed33; color: #c084fc; }
+  .n8n .for-who { background: #ea580c33; color: #fb923c; }
+
+  .features { list-style: none; }
+
+  .features li {
+    font-size: 0.85rem;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a2a35;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+  }
+
+  .features li:last-child { border-bottom: none; }
+
+  .features li .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+
+  .code .dot { background: #34d399; }
+  .cowork .dot { background: #c084fc; }
+  .n8n .dot { background: #fb923c; }
+
+  .example-box {
+    margin-top: 16px;
+    background: #12121a;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.78rem;
+    color: #aaa;
+    line-height: 1.5;
+  }
+
+  .example-box strong {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    color: #666;
+  }
+
+  /* --- Combination Section --- */
+  .combo-section {
+    background: linear-gradient(135deg, #1a1a22, #1e1e2a);
+    border-radius: 20px;
+    padding: 40px 36px;
+    border: 1px solid #2a2a35;
+    margin-bottom: 48px;
+  }
+
+  .combo-section h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .combo-section .combo-sub {
+    text-align: center;
+    color: #888;
+    font-size: 0.85rem;
+    margin-bottom: 32px;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .flow-step {
+    background: #12121a;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 160px;
+    border: 1px solid #2a2a35;
+  }
+
+  .flow-step .step-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    margin-bottom: 6px;
+  }
+
+  .flow-step .step-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .flow-step .step-desc {
+    font-size: 0.75rem;
+    color: #888;
+  }
+
+  .flow-step.is-n8n { border-color: #ea580c55; }
+  .flow-step.is-n8n .step-title { color: #fb923c; }
+
+  .flow-step.is-claude { border-color: #7c3aed55; }
+  .flow-step.is-claude .step-title { color: #c084fc; }
+
+  .flow-step.is-result { border-color: #059669; }
+  .flow-step.is-result .step-title { color: #34d399; }
+
+  .flow-arrow {
+    font-size: 1.4rem;
+    color: #444;
+    padding: 0 8px;
+  }
+
+  /* Levels */
+  .levels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .level {
+    background: #12121a;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #2a2a35;
+    text-align: center;
+  }
+
+  .level-num {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .level:nth-child(1) .level-num { color: #c084fc; }
+  .level:nth-child(2) .level-num { color: #fb923c; }
+  .level:nth-child(3) .level-num {
+    background: linear-gradient(135deg, #c084fc, #fb923c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .level h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .level p {
+    font-size: 0.78rem;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  /* --- Vergelijkingstabel --- */
+  .comparison {
+    background: #1a1a22;
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid #2a2a35;
+    overflow-x: auto;
+  }
+
+  .comparison h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 2px solid #2a2a35;
+    font-weight: 600;
+    color: #888;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  th:nth-child(2) { color: #34d399; }
+  th:nth-child(3) { color: #c084fc; }
+  th:nth-child(4) { color: #fb923c; }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #1f1f2a;
+    color: #ccc;
+    line-height: 1.4;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  td:first-child {
+    font-weight: 500;
+    color: #999;
+    white-space: nowrap;
+  }
+
+  .check { color: #34d399; }
+  .cross { color: #555; }
+  .partial { color: #fbbf24; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 40px;
+    color: #444;
+    font-size: 0.75rem;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Claude Code · Cowork · n8n</h1>
+  <p class="subtitle">Drie tools, drie rollen — samen het complete AI-automatiseringsplaatje voor MKB</p>
+
+  <!-- Three Columns -->
+  <div class="columns">
+
+    <!-- Claude Code -->
+    <div class="card code">
+      <div class="card-icon">⌨️</div>
+      <h2>Claude Code</h2>
+      <p class="tagline">De AI-developer in je terminal</p>
+      <span class="for-who">Voor developers & IT</span>
+      <ul class="features">
+        <li><span class="dot"></span>Werkt direct in je codebase via CLI</li>
+        <li><span class="dot"></span>Schrijft, refactort en debugt code</li>
+        <li><span class="dot"></span>Begrijpt hele projectstructuren</li>
+        <li><span class="dot"></span>Git-integratie & pull requests</li>
+        <li><span class="dot"></span>Uitbreidbaar via MCP servers</li>
+      </ul>
+      <div class="example-box">
+        <strong>Voorbeeld</strong>
+        "Refactor de authenticatie-module naar JWT en schrijf unit tests"
+      </div>
+    </div>
+
+    <!-- Claude Cowork -->
+    <div class="card cowork">
+      <div class="card-icon">🤝</div>
+      <h2>Claude Cowork</h2>
+      <p class="tagline">De AI-collega op je desktop</p>
+      <span class="for-who">Voor kenniswerkers & teams</span>
+      <ul class="features">
+        <li><span class="dot"></span>Desktop app — praat en krijg bestanden</li>
+        <li><span class="dot"></span>Maakt Word, Excel, PowerPoint, PDF</li>
+        <li><span class="dot"></span>Bedient je browser automatisch</li>
+        <li><span class="dot"></span>Connectoren naar Slack, Drive, etc.</li>
+        <li><span class="dot"></span>Shortcuts & geplande taken</li>
+      </ul>
+      <div class="example-box">
+        <strong>Voorbeeld</strong>
+        "Maak een offerte-PDF van deze briefing en mail 'm naar de klant"
+      </div>
+    </div>
+
+    <!-- n8n -->
+    <div class="card n8n">
+      <div class="card-icon">⚡</div>
+      <h2>n8n</h2>
+      <p class="tagline">De workflow-automatiseerder</p>
+      <span class="for-who">Voor IT & operations</span>
+      <ul class="features">
+        <li><span class="dot"></span>Visuele flow builder (no-code / low-code)</li>
+        <li><span class="dot"></span>400+ integraties met apps & API's</li>
+        <li><span class="dot"></span>Event-driven: webhooks, cron, triggers</li>
+        <li><span class="dot"></span>Branching, loops, error handling</li>
+        <li><span class="dot"></span>Self-hosted of cloud, open-source</li>
+      </ul>
+      <div class="example-box">
+        <strong>Voorbeeld</strong>
+        "Als er een lead binnenkomt → verrijk via API → update CRM → stuur Slack-melding"
+      </div>
+    </div>
+  </div>
+
+  <!-- Combination Section -->
+  <div class="combo-section">
+    <h2>🔗 De kracht van de combinatie</h2>
+    <p class="combo-sub">n8n vangt het signaal op — Claude doet het denkwerk — het resultaat stroomt automatisch door</p>
+
+    <div class="flow">
+      <div class="flow-step is-n8n">
+        <div class="step-label">Trigger</div>
+        <div class="step-title">n8n</div>
+        <div class="step-desc">Nieuwe e-mail met RFP binnenkomt</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step is-claude">
+        <div class="step-label">Denkwerk</div>
+        <div class="step-title">Claude</div>
+        <div class="step-desc">Analyseert RFP, schrijft concept-offerte</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step is-n8n">
+        <div class="step-label">Verwerking</div>
+        <div class="step-title">n8n</div>
+        <div class="step-desc">Slaat op in Drive, update CRM</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step is-result">
+        <div class="step-label">Resultaat</div>
+        <div class="step-title">Klaar ✓</div>
+        <div class="step-desc">Slack-notificatie naar sales team</div>
+      </div>
+    </div>
+
+    <div class="levels">
+      <div class="level">
+        <div class="level-num">1</div>
+        <h3>Cowork alleen</h3>
+        <p>Laagste drempel. Medewerker vraagt, krijgt direct resultaat. Geen setup nodig. Ideaal om te starten met AI.</p>
+      </div>
+      <div class="level">
+        <div class="level-num">2</div>
+        <h3>n8n alleen</h3>
+        <p>Repetitieve flows automatiseren. "Als X dan Y" zonder AI. Systemen koppelen, data laten stromen.</p>
+      </div>
+      <div class="level">
+        <div class="level-num">3</div>
+        <h3>n8n + Claude</h3>
+        <p>Maximale kracht. n8n als trigger & orkestratie, Claude als brein. Volledige end-to-end automatisering.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="comparison">
+    <h2>Vergelijking op een rij</h2>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Claude Code</th>
+          <th>Claude Cowork</th>
+          <th>n8n</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Interface</td>
+          <td>Terminal / CLI</td>
+          <td>Desktop app</td>
+          <td>Web UI (flow editor)</td>
+        </tr>
+        <tr>
+          <td>Doelgroep</td>
+          <td>Developers</td>
+          <td>Kenniswerkers</td>
+          <td>IT / Operations</td>
+        </tr>
+        <tr>
+          <td>AI-denkkracht</td>
+          <td class="check">✓ Volledig</td>
+          <td class="check">✓ Volledig</td>
+          <td class="partial">◐ Via AI-nodes</td>
+        </tr>
+        <tr>
+          <td>Integraties</td>
+          <td class="partial">◐ Via MCP</td>
+          <td class="partial">◐ Connectors + browser</td>
+          <td class="check">✓ 400+ native</td>
+        </tr>
+        <tr>
+          <td>Event triggers</td>
+          <td class="cross">✗</td>
+          <td class="partial">◐ Scheduled shortcuts</td>
+          <td class="check">✓ Webhooks, cron, events</td>
+        </tr>
+        <tr>
+          <td>Bestanden maken</td>
+          <td>Code-bestanden</td>
+          <td>Word, Excel, PPT, PDF</td>
+          <td>Via code-nodes</td>
+        </tr>
+        <tr>
+          <td>Complexe flows</td>
+          <td class="partial">◐ Scripts</td>
+          <td class="cross">✗ Eén taak tegelijk</td>
+          <td class="check">✓ Branching, loops, errors</td>
+        </tr>
+        <tr>
+          <td>Drempel</td>
+          <td>Hoog (technisch)</td>
+          <td>Laag (praat gewoon)</td>
+          <td>Middel (visueel bouwen)</td>
+        </tr>
+        <tr>
+          <td>Beste metafoor</td>
+          <td>AI-developer</td>
+          <td>AI-collega</td>
+          <td>Digitale loodgieter</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Gemaakt met Claude Cowork · AI Panda presentatie · Februari 2026
+  </div>
+
+</div>
+</body>
+</html>
