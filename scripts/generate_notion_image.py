@@ -33,7 +33,7 @@ from google.genai import types
 def load_api_key():
     """Laad API key uit .env bestand."""
     # Zoek .env in huidige map of bovenliggende mappen
-    for p in [Path(".env"), Path(__file__).parent / ".env"]:
+    for p in [Path(".env"), Path(__file__).parent.parent / ".env", Path(__file__).parent / ".env"]:
         if p.exists():
             load_dotenv(p)
             break
@@ -572,7 +572,7 @@ def main():
         prompt = args.prompt
 
     # Laad panda character reference (altijd, voor consistentie)
-    panda_ref_path = Path(__file__).parent / "assets" / "panda-reference.png"
+    panda_ref_path = Path(__file__).parent.parent / "assets" / "panda-reference.png"
     panda_ref_img = None
     if panda_ref_path.exists():
         from PIL import Image as PILImage
