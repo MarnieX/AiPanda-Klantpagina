@@ -2,7 +2,7 @@
 
 > Van klantnaam naar complete Notion-pagina in een paar seconden.
 
-AI Panda helpt consultants van **Marnit** om razendsnel professionele klantpagina's aan te maken in Notion. Geen handmatig kopieerwerk, geen losse templates. Je geeft een bedrijfsnaam op en de rest gebeurt automatisch.
+AI Panda helpt consultants om razendsnel professionele klantpagina's aan te maken in Notion. Geen handmatig kopieerwerk, geen losse templates. Je geeft een bedrijfsnaam op en de rest gebeurt automatisch.
 
 ---
 
