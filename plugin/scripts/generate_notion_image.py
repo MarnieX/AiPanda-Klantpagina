@@ -31,20 +31,23 @@ from google.genai import types
 
 
 def load_api_key():
-    """Laad API key uit .env bestand of environment variable."""
-    import glob as _glob
+    """Laad API key uit environment variable of lokaal .env bestand.
 
-    # Zoekpaden: lokaal, plugin-root, en Cowork-gemounte projectmap
-    candidates = [
-        Path(".env"),
-        Path(__file__).parent.parent / ".env",  # project root (lokaal)
-        Path(__file__).parent / ".env",
-    ]
-    # Cowork: .env in gemounte projectmap (één of twee niveaus diep)
-    for pattern in ["/sessions/*/mnt/*/.env", "/sessions/*/mnt/*/*/.env"]:
-        candidates.extend(Path(p) for p in _glob.glob(pattern))
+    Volgorde:
+    1. Os environment (wordt al gevuld door Cowork vanuit .env in projectmap)
+    2. Lokale .env naast het script of in de projectroot (voor lokale ontwikkeling)
+    """
+    # Stap 1: al beschikbaar als env var? Dan klaar.
+    key = os.getenv("GEMINI_API_KEY")
+    if key:
+        return key
 
-    for p in candidates:
+    # Stap 2: lokale .env laden (alleen voor lokale ontwikkeling)
+    for p in [
+        Path(__file__).parent.parent / ".env",  # project root
+        Path(__file__).parent / ".env",          # scripts/
+        Path(".env"),                             # working directory
+    ]:
         if p.exists():
             load_dotenv(p)
             break
