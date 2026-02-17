@@ -1,3 +1,0 @@
-A charming cartoon illustration of a cute giant panda sitting cross-legged in a lush bamboo forest. The panda has big, expressive round eyes with a warm sparkle, rosy cheeks, and a gentle smile. It is happily holding a bamboo stalk in one paw and munching on a leaf. The style is soft and friendly, with bold clean outlines, smooth cel-shading, and rounded proportions that give the panda a cuddly, approachable look. The colour palette is warm and inviting — soft greens for the bamboo, gentle earth tones for the forest floor, and the classic black-and-white of the panda with subtle warm highlights. The background features a dreamy, slightly blurred bamboo grove with soft golden sunlight filtering through the leaves.
-model:gemini-2.0-flash-exp
-ratio:1:1
