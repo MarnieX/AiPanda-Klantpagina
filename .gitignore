@@ -1,0 +1,17 @@
+# Secrets - NOOIT committen
+.env
+.env.*
+!.env.example
+
+# API keys en credentials
+*.key
+*.pem
+*.secret
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+~$*
+*.tmp

@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""
+Nano Banana Pro → Notion Pipeline
+==================================
+Genereert een afbeelding via Google Gemini API,
+upload naar een image host, en retourneert de URL.
+
+Gebruik:
+  python generate_notion_image.py "een panda die code schrijft"
+  python generate_notion_image.py "berglandschap bij zonsopgang" --ratio 16:9 --size 2K
+  python generate_notion_image.py "abstract tech design" --model gemini-2.5-flash-preview-05-20
+
+Vereisten:
+  pip install google-genai Pillow python-dotenv requests
+
+Configuratie:
+  .env bestand met GEMINI_API_KEY=jouw-key
+"""
+import os
+import sys
+import argparse
+import base64
+import json
+from pathlib import Path
+from datetime import datetime
+
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
+
+def load_api_key():
+    """Laad API key uit .env bestand."""
+    # Zoek .env in huidige map of bovenliggende mappen
+    for p in [Path(".env"), Path(__file__).parent / ".env"]:
+        if p.exists():
+            load_dotenv(p)
+            break
+
+    key = os.getenv("GEMINI_API_KEY")
+    if not key:
+        print("ERROR: GEMINI_API_KEY niet gevonden.")
+        print("Maak een .env bestand met: GEMINI_API_KEY=jouw-key")
+        print("Key aanmaken op: https://aistudio.google.com/apikey")
+        sys.exit(1)
+    return key
+
+
+def generate_image(prompt, model="gemini-2.0-flash-exp", aspect_ratio="1:1", image_size="1K"):
+    """Genereer afbeelding via Gemini API."""
+    api_key = load_api_key()
+    client = genai.Client(api_key=api_key)
+
+    print(f"Model:        {model}")
+    print(f"Aspect ratio: {aspect_ratio}")
+    print(f"Image size:   {image_size}")
+    print(f"Prompt:       {prompt[:100]}{'...' if len(prompt) > 100 else ''}")
+    print("Generating...")
+
+    # Bouw config
+    config_kwargs = {
+        "response_modalities": ["TEXT", "IMAGE"],
+    }
+
+    # Image config alleen voor image-specifieke modellen
+    if "image" in model or "imagen" in model:
+        config_kwargs["image_config"] = types.ImageConfig(
+            aspect_ratio=aspect_ratio,
+            image_size=image_size,
+        )
+
+    response = client.models.generate_content(
+        model=model,
+        contents=[prompt],
+        config=types.GenerateContentConfig(**config_kwargs),
+    )
+
+    # Verwerk response
+    image_data = None
+    description = None
+
+    for part in response.candidates[0].content.parts:
+        if part.inline_data is not None:
+            image_data = part
+        elif part.text is not None:
+            description = part.text
+
+    if not image_data:
+        print("ERROR: Geen afbeelding gegenereerd")
+        sys.exit(1)
+
+    return image_data, description
+
+
+def save_image(image_part, output_path):
+    """Sla afbeelding op als bestand."""
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+    image = image_part.as_image()
+    image.save(output_path)
+    size = os.path.getsize(output_path)
+    print(f"Opgeslagen:   {output_path} ({size:,} bytes)")
+    return output_path
+
+
+def upload_to_catbox(filepath):
+    """Upload afbeelding naar catbox.moe (gratis, geen account nodig)."""
+    import requests
+
+    print("Uploading naar catbox.moe...")
+    with open(filepath, "rb") as f:
+        response = requests.post(
+            "https://catbox.moe/user/api.php",
+            data={"reqtype": "fileupload"},
+            files={"fileToUpload": f},
+            timeout=60,
+        )
+
+    if response.status_code == 200 and response.text.startswith("https://"):
+        url = response.text.strip()
+        print(f"URL:          {url}")
+        return url
+    else:
+        print(f"Upload mislukt: {response.text}")
+        return None
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Nano Banana Pro Image Generator")
+    parser.add_argument("prompt", help="Beschrijving van de gewenste afbeelding")
+    parser.add_argument("--model", default="gemini-2.0-flash-exp",
+                        choices=["gemini-3-pro-image-preview", "gemini-2.5-flash-preview-05-20", "gemini-2.0-flash-exp"],
+                        help="Gemini model (default: gemini-2.0-flash-exp)")
+    parser.add_argument("--ratio", default="1:1",
+                        choices=["1:1", "3:4", "4:3", "9:16", "16:9"],
+                        help="Aspect ratio (default: 1:1)")
+    parser.add_argument("--size", default="1K",
+                        choices=["1K", "2K", "4K"],
+                        help="Resolutie (default: 1K)")
+    parser.add_argument("--output", default=None,
+                        help="Output bestandspad (default: auto-generated)")
+    parser.add_argument("--upload", action="store_true",
+                        help="Upload naar catbox.moe en toon URL")
+    parser.add_argument("--json", action="store_true",
+                        help="Output als JSON (voor scripts/automatie)")
+
+    args = parser.parse_args()
+
+    # Genereer bestandsnaam
+    if not args.output:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        args.output = f"generated_{timestamp}.png"
+
+    # Genereer
+    image_part, description = generate_image(
+        prompt=args.prompt,
+        model=args.model,
+        aspect_ratio=args.ratio,
+        image_size=args.size,
+    )
+
+    # Sla op
+    filepath = save_image(image_part, args.output)
+
+    # Upload (optioneel)
+    url = None
+    if args.upload:
+        url = upload_to_catbox(filepath)
+
+    # JSON output voor automatie
+    if args.json:
+        result = {
+            "filepath": filepath,
+            "url": url,
+            "description": description,
+            "model": args.model,
+            "prompt": args.prompt,
+        }
+        print(json.dumps(result, indent=2))
+    elif description:
+        print(f"Beschrijving: {description}")
+
+    print("Klaar!")
+    return url or filepath
+
+
+if __name__ == "__main__":
+    main()
