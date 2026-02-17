@@ -58,26 +58,22 @@ Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zon
 
 ### 3B — Excel lezen en namen matchen
 
+Gebruik `find` als primaire zoekmethode (betrouwbaarder dan hardcoded paden in Cowork):
+
 ```bash
 pip install openpyxl --break-system-packages -q 2>/dev/null
-python3 << 'PYEOF'
-import openpyxl, json, glob, os, sys
 
-paths = (
-    glob.glob("/sessions/*/mnt/*/data/ai-panda-team.xlsx") +
-    glob.glob("/sessions/*/mnt/*/ai-panda-team.xlsx") +
-    glob.glob("/sessions/*/mnt/Ai Panda/data/ai-panda-team.xlsx") +
-    glob.glob("/sessions/*/mnt/Ai Panda/ai-panda-team.xlsx") +
-    glob.glob(os.path.expanduser("~/Documents/Projecten/Ai Panda Klantpagina/data/ai-panda-team.xlsx")) +
-    glob.glob(os.path.expanduser("~/Documents/Projecten/Ai Panda Klantpagina/ai-panda-team.xlsx")) +
-    glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ai-panda-team.xlsx")) +
-    glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai-panda-team.xlsx"))
-)
-if not paths:
-    print(json.dumps({"error": "ai-panda-team.xlsx niet gevonden"}))
-    sys.exit(0)
+# Zoek Excel via find — werkt in Cowork (plugin/data/) én lokaal
+EXCEL_PATH=$(find /sessions ~ -maxdepth 10 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
 
-wb = openpyxl.load_workbook(paths[0])
+if [ -z "$EXCEL_PATH" ]; then
+    echo '{"error": "ai-panda-team.xlsx niet gevonden"}'
+else
+    EXCEL_PATH="$EXCEL_PATH" python3 << 'PYEOF'
+import openpyxl, json, os, sys
+
+path = os.environ["EXCEL_PATH"]
+wb = openpyxl.load_workbook(path)
 ws = wb.active
 team = []
 for row in ws.iter_rows(min_row=2, values_only=True):
@@ -91,6 +87,7 @@ for row in ws.iter_rows(min_row=2, values_only=True):
         })
 print(json.dumps(team, indent=2, ensure_ascii=False))
 PYEOF
+fi
 ```
 
 Match de getypte namen uit CONSULTANT_INPUT aan teamleden (case-insensitief, gedeeltelijke match is ok).
@@ -136,13 +133,10 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ### 5A — AI Panda-afbeelding genereren
 
-Zoek het script:
+Zoek het script (werkt in Cowork via plugin/scripts/ én lokaal):
 ```bash
-SCRIPT=$(find /sessions -name "generate_notion_image.py" 2>/dev/null | head -1)
-if [ -z "$SCRIPT" ]; then
-  SCRIPT=$(find ~ -maxdepth 6 -name "generate_notion_image.py" 2>/dev/null | head -1)
-fi
-echo "$SCRIPT"
+SCRIPT=$(find /sessions ~ -maxdepth 10 -name "generate_notion_image.py" 2>/dev/null | head -1)
+echo "Script gevonden: $SCRIPT"
 ```
 
 Genereer de afbeelding:
