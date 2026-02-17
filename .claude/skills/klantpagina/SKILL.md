@@ -23,7 +23,7 @@ Gebruik TodoWrite om voortgang te tonen:
 Gebruik AskUserQuestion:
 - question: "Voor welk bedrijf maak je een klantpagina? Geef de naam of website-URL."
 - header: "Klant"
-- options: drie voorbeeldbedrijven zoals "Coolblue", "bol.com", "Jumbo" — de gebruiker kan via "Other" een eigen naam of URL typen
+- options: exact drie voorbeelden: "Coolblue", "bol.com", "Jumbo" — gebruik GEEN optie als "Ander bedrijf". De gebruiker typt het eigen bedrijf via het "Other"-tekstveld.
 - multiSelect: false
 
 Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
@@ -64,9 +64,13 @@ python3 << 'PYEOF'
 import openpyxl, json, glob, os, sys
 
 paths = (
+    glob.glob("/sessions/*/mnt/*/data/ai-panda-team.xlsx") +
     glob.glob("/sessions/*/mnt/*/ai-panda-team.xlsx") +
+    glob.glob("/sessions/*/mnt/Ai Panda/data/ai-panda-team.xlsx") +
     glob.glob("/sessions/*/mnt/Ai Panda/ai-panda-team.xlsx") +
+    glob.glob(os.path.expanduser("~/Documents/Projecten/Ai Panda Klantpagina/data/ai-panda-team.xlsx")) +
     glob.glob(os.path.expanduser("~/Documents/Projecten/Ai Panda Klantpagina/ai-panda-team.xlsx")) +
+    glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "ai-panda-team.xlsx")) +
     glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "ai-panda-team.xlsx"))
 )
 if not paths:
