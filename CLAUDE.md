@@ -25,7 +25,7 @@
 Skills staan in `.claude/skills/[naam]/SKILL.md` en volgen het YAML frontmatter + Markdown format. Elke skill beschrijft stapsgewijs de workflow.
 
 ### MCP Integraties
-- Notion: pagina's aanmaken via `notion-create-pages` (zonder parent parameter vanwege MCP-bug)
+- Notion: pagina's aanmaken via `notion-create-pages` (parent parameter werkt: gebruik `page_id` om onder een bestaande pagina aan te maken, of laat weg voor workspace-niveau)
 - Gemini: beeldgeneratie via `generate_image` MCP tool of Python fallback
 - Catbox.moe: tijdelijke image hosting via cURL upload
 
@@ -54,7 +54,6 @@ Dit is een opleidingsproject bij AI Panda. Drie contributors werken samen aan di
 
 ### Don't
 - Commit nooit .env of API keys
-- Gebruik nooit `parent` parameter bij `notion-create-pages` (MCP-bug)
 - Stop nooit de klantpagina-flow bij een fout
 
 ## Overschrijvingen

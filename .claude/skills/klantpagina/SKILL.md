@@ -116,7 +116,7 @@ Meld kort dat een placeholder is gebruikt. GA ALTIJD DOOR.
 
 ## Stap 6: Maak de Notion-pagina aan
 
-Gebruik `notion-create-pages` ZONDER parent parameter (die geeft validatiefouten in de huidige MCP-versie).
+Gebruik `notion-create-pages`. De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een `page_id` mee om de pagina onder een bestaande Notion-pagina aan te maken.
 
 ```json
 {
