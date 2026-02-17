@@ -1,75 +1,87 @@
 # AI Panda - Klantpagina Generator
 
-Toolset voor AI Panda (onderdeel van Marnit) om automatisch professionele Notion-klantpagina's te genereren, inclusief AI-gegenereerde afbeeldingen via Google Gemini.
+> Van klantnaam naar complete Notion-pagina in een paar seconden.
 
-## Wat zit erin?
+AI Panda helpt consultants van **Marnit** om razendsnel professionele klantpagina's aan te maken in Notion. Geen handmatig kopieerwerk, geen losse templates. Je geeft een bedrijfsnaam op en de rest gebeurt automatisch.
 
-### Nano Banana Pro (Image Pipeline)
+---
 
-Een pipeline om via Google Gemini afbeeldingen te genereren, optimaliseren en uploaden:
+## Wat doet het?
 
-- **`prompt-optimizer.py`** - Neemt een simpele beschrijving en maakt er een geoptimaliseerde Gemini-prompt van. Ondersteunt stijlen: cartoon, foto, logo, artistiek.
-- **`generate_notion_image.py`** - Genereert afbeeldingen via de Gemini API. Ondersteunt meerdere modellen, aspect ratio's en resoluties. Optioneel uploaden naar catbox.moe.
-- **`nano-banana-generate.sh`** - One-click generator: voert het laatst gegenereerde prompt uit, accepteert directe prompts, of draait in watch-mode.
-- **`banana.sh`** - De ultieme one-liner: combineert prompt-optimalisatie en image generatie in een enkel commando.
+**Het probleem:** Voor elke nieuwe klant maak je handmatig een Notion-pagina aan. Bedrijfsinfo opzoeken, afbeelding zoeken of maken, template invullen, roadmap aanmaken. Dat kost tijd en ziet er niet altijd consistent uit.
 
-### Claude Code Skills
+**De oplossing:** Deze tool automatiseert het hele proces:
 
-- **Klantpagina Skill** - Claude Code skill die bedrijfsinfo ophaalt van een website, consultants uit een Excel leest, een AI Panda-afbeelding genereert en een complete Notion-pagina aanmaakt met roadmap.
+1. **Bedrijfsinfo ophalen** - Haalt automatisch relevante informatie op van de website van de klant
+2. **Team koppelen** - Leest de beschikbare consultants uit het teambestand en koppelt de juiste mensen
+3. **Unieke afbeelding genereren** - Maakt met AI (Google Gemini) een op maat gemaakte afbeelding in de AI Panda-stijl
+4. **Notion-pagina bouwen** - Zet alles samen in een professionele klantpagina, compleet met roadmap en projectstructuur
 
-### MCP Server
+Het resultaat: een consistente, professionele uitstraling voor elke klant, zonder handwerk.
 
-- **`setup-nano-banana-mcp.sh`** - Configuratiescript om de Nano Banana Pro MCP server in te stellen voor Claude Desktop.
-- **`ai-panda-klantpagina.plugin`** - Plugin package met MCP server, skills, commands en hooks.
+---
 
-## Installatie
+## Hoe werkt het?
+
+### Via Claude Code (aanbevolen)
+
+Typ simpelweg `/klantpagina` in Claude Code en volg de stappen. Claude vraagt om de klantnaam, haalt alles op en maakt de pagina aan.
+
+### De afbeeldingen-tool los gebruiken
+
+Wil je alleen een afbeelding genereren (bijvoorbeeld voor een presentatie of social post)? Dat kan ook los:
+
+```
+./banana.sh "een panda die code schrijft"
+```
+
+Je kunt kiezen uit verschillende stijlen: **cartoon**, **foto**, **logo** of **artistiek**. En verschillende formaten: vierkant, liggend of staand.
+
+---
+
+## Onderdelen
+
+| Onderdeel | Wat het doet |
+|---|---|
+| **Klantpagina Skill** | Het hoofdproces: van klantnaam naar complete Notion-pagina |
+| **Nano Banana Pro** | AI-afbeeldingen genereren via Google Gemini |
+| **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele prompt voor de beste resultaten |
+| **MCP Plugin** | Integratie met Claude Desktop zodat je de tools direct vanuit Claude kunt gebruiken |
+
+---
+
+## Aan de slag
+
+### Wat heb je nodig?
+
+- **Python 3.8+** (voor de afbeeldingen-tool)
+- **Google Gemini API key** ([gratis aanmaken](https://aistudio.google.com/apikey))
+- **Node.js** (alleen als je de Claude Desktop plugin wilt gebruiken)
+
+### Installatie
 
 ```bash
-# 1. Clone de repository
+# Repository ophalen
 git clone https://github.com/MarnieX/AiPanda-Klantpagina.git
 
-# 2. Kopieer .env.example naar .env en vul je keys in
+# API key instellen
 cp .env.example .env
+# Open .env en vul je Gemini API key in
 
-# 3. Installeer Python dependencies
+# Python packages installeren
 pip install google-genai Pillow python-dotenv requests
+```
 
-# 4. (Optioneel) MCP server setup voor Claude Desktop
-chmod +x setup-nano-banana-mcp.sh
+### Claude Desktop plugin (optioneel)
+
+```bash
 ./setup-nano-banana-mcp.sh
 ```
 
-## Gebruik
+Dit script configureert alles automatisch. Na het herstarten van Claude Desktop kun je direct afbeeldingen genereren vanuit een gesprek.
 
-```bash
-# Simpel: prompt optimaliseren + genereren in een stap
-./banana.sh "een panda die code schrijft"
+---
 
-# Met opties
-./banana.sh "berglandschap bij zonsopgang" --stijl foto --ratio 16:9
-./banana.sh "koffieshop logo" --stijl logo --tekst "Morning Brew"
+## Gemaakt door
 
-# Alleen afbeelding genereren
-python generate_notion_image.py "een panda in een bamboe bos" --upload
-
-# Alleen prompt optimaliseren
-python prompt-optimizer.py "een panda" --stijl cartoon
-```
-
-## Vereisten
-
-- Python 3.8+
-- Google Gemini API key ([aanmaken](https://aistudio.google.com/apikey))
-- Node.js (voor MCP server setup)
-
-## Configuratie
-
-Maak een `.env` bestand aan op basis van `.env.example`:
-
-```
-GEMINI_API_KEY=jouw-gemini-api-key
-```
-
-## Licentie
-
-Intern project van AI Panda / Marnit.
+Intern project van **AI Panda / Marnit** voor het automatiseren van klantprocessen.
