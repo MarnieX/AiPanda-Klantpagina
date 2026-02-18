@@ -45,7 +45,7 @@ rm -f "$PLUGIN_FILE"
 echo "  Packaging..."
 cd "$PLUGIN_SRC" && zip -r "$PLUGIN_FILE" . \
   --exclude "*.DS_Store" \
-  --exclude "__pycache__/*" \
+  --exclude "*__pycache__*" \
   --exclude "*.pyc"
 
 echo "Done: ai-panda-klantpagina.zip"
