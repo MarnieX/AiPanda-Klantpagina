@@ -29,29 +29,17 @@ except ImportError:
 
 mcp = FastMCP("gemini-image-generator")
 
-# Load GEMINI_API_KEY. Priority:
-# 1. Environment variable (set by Claude Code settings.json, Cowork, or shell)
-# 2. .env file fallback (local development)
-#
-# Recommended: configure via ~/.claude/settings.json:
-#   {"env": {"GEMINI_API_KEY": "your-key"}}
+# GEMINI_API_KEY is passed via .mcp.json from the environment.
+# In Cowork/CLI this is set by ~/.claude/settings.json.
+# Fallback: .env in project root (local development only).
 if not os.environ.get("GEMINI_API_KEY"):
     try:
         from dotenv import load_dotenv
-        _env_paths = [
-            Path(__file__).parent.parent.parent / ".env",  # plugin project root
-            Path(__file__).parent.parent / ".env",          # plugin/
-            Path(__file__).parent / ".env",                 # servers/
-            Path.home() / ".env",                           # home directory
-            Path.home() / ".claude" / ".env",               # claude config dir
-        ]
-        for _p in _env_paths:
-            if _p.exists():
-                load_dotenv(_p)
-                if os.environ.get("GEMINI_API_KEY"):
-                    break
+        _env = Path(__file__).parent.parent.parent / ".env"
+        if _env.exists():
+            load_dotenv(_env)
     except ImportError:
-        pass  # dotenv is optional
+        pass
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-2.0-flash-exp"

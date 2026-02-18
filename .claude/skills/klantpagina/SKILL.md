@@ -146,17 +146,10 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 **Pre-check: controleer of GEMINI_API_KEY beschikbaar is.**
 ```bash
-echo "[DIAG 5A] GEMINI_API_KEY check: ${GEMINI_API_KEY:+OK (beschikbaar)}"
-if [ -z "$GEMINI_API_KEY" ]; then
-    echo "[DIAG 5A] WARNING: GEMINI_API_KEY is NIET beschikbaar in de shell-omgeving."
-    echo "[DIAG 5A] Configureer de key via Claude Code settings:"
-    echo '  ~/.claude/settings.json -> {"env": {"GEMINI_API_KEY": "jouw-key"}}'
-    echo "  Of project-level: .claude/settings.local.json"
-    echo "  Key aanmaken: https://aistudio.google.com/apikey"
-fi
+echo "[DIAG 5A] GEMINI_API_KEY check: ${GEMINI_API_KEY:+OK}"
 ```
 
-Als de pre-check NIET "OK" toont, instrueer de gebruiker om `GEMINI_API_KEY` te configureren via `~/.claude/settings.json` (of `.claude/settings.local.json` in het project). Ga daarna door met de fallback-afbeelding als de key niet beschikbaar is. Stop NOOIT de flow.
+Als dit NIET "OK" print, meld de gebruiker dat de key ontbreekt en verwijs naar de README voor configuratie. Ga daarna door met de fallback-afbeelding. Stop NOOIT de flow.
 
 Zoek het script (werkt in Cowork via plugin/scripts/ én lokaal):
 ```bash
