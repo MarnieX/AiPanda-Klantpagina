@@ -149,7 +149,18 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 echo "[DIAG 5A] GEMINI_API_KEY check: ${GEMINI_API_KEY:+OK}"
 ```
 
-Als dit NIET "OK" print, meld de gebruiker dat de key ontbreekt en verwijs naar de README voor configuratie. Ga daarna door met de fallback-afbeelding. Stop NOOIT de flow.
+Als dit NIET "OK" print:
+1. Vraag de gebruiker om de key via AskUserQuestion:
+   - question: "GEMINI_API_KEY ontbreekt. Plak je Gemini API key hieronder (aanmaken op https://aistudio.google.com/apikey)."
+   - header: "API Key"
+   - options: twee opties: "Ik heb geen key, sla over" en "Key komt eraan" (de gebruiker plakt de key via het Other-tekstveld)
+2. Als de gebruiker een key plakt, sla deze op en maak beschikbaar:
+```bash
+echo "GEMINI_API_KEY=[GEPLAKTE_KEY]" > "$(dirname "$SCRIPT")/../.env"
+export GEMINI_API_KEY="[GEPLAKTE_KEY]"
+echo "[DIAG 5A] Key opgeslagen en geactiveerd"
+```
+3. Als de gebruiker geen key heeft, ga door met de fallback-afbeelding. Stop NOOIT de flow.
 
 Zoek het script (werkt in Cowork via plugin/scripts/ én lokaal):
 ```bash
