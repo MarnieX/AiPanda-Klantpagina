@@ -16,12 +16,14 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - Panda-reference.png permanent gehost op catbox.moe (`https://files.catbox.moe/23dzti.png`)
 - `gemini-image` skill: generieke standalone image generation via curl en Nano Banana Pro (nano-banana-pro-preview)
 - Curl-fallback in klantpagina stap 5A: als Python script faalt (httpx SOCKS proxy in Cowork), valt de skill terug op directe curl naar Gemini API + catbox.moe upload
-- AI-Readiness Quickscan geintegreerd in klantpagina flow: quiz sub-pagina met Notion database en score-formules
+- Interactieve AI-Readiness Quickscan: quiz draait nu als klikbare GitHub Pages app (JSON + base64 in URL), direct gelinkt op de klantpagina
+- `ai-quiz` skill: standalone skill die quizvragen genereert als JSON, base64-encodeert en een klikbare quiz-URL bouwt
 - Consultantfoto's geupload en team Excel bijgewerkt met foto-URL's
 - Interactieve API key setup in Cowork: skill vraagt om GEMINI_API_KEY wanneer deze ontbreekt en slaat op als .env
 - README met duidelijke configuratie-instructies (settings.json als primaire methode, .env als fallback)
 
 ### Changed
+- Quiz-flow vereenvoudigd: stappen 6B/6C/6D (Notion sub-pagina, database, pre-fill) vervangen door een enkele interactieve quiz-URL op de klantpagina zelf
 - Klantpagina paginastructuur herschreven: van 10 naar 9 secties, toekomstvisie als wow-moment na bedrijfsinfo
 - Losse `AI-toekomstvisie.zip` verwijderd (content geintegreerd in klantpagina-skill)
 - `gemini-image` skill herschreven met twee flows: lokaal (curl) en Cowork (browser MCP via Chrome)
@@ -35,6 +37,7 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - Env loading vereenvoudigd: van 5 .env zoekpaden naar 1-2 (projectroot + working dir)
 
 ### Removed
+- Quiz sub-pagina, Notion database en pre-fill rij (stappen 6B/6C/6D) uit klantpagina-skill: vervangen door interactieve quiz-URL
 - Secties "De AI Panda Aanpak (3 pijlers)", "7-Sterren AI-Maturity Model" en "Handige Links & Kennisbronnen" uit klantpagina template (generiek, lage wowfactor, vervangen door persoonlijke toekomstvisie)
 - Generieke quote ("Wij bouwen aan 7-sterren organisaties") vervangen door persoonlijke pull quote uit toekomstvisie
 - `AI-toekomstvisie.zip` skill (geintegreerd in klantpagina-skill)

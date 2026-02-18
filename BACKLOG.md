@@ -12,8 +12,9 @@
 ## Fase 2: Features uitbouwen
 - [x] ✅ Notion-pagina template bouwen met strakke opmaak en AI Panda huisstijl — hero banner, 3 pijlers, teamtabel, roadmap met quotes, 7-sterren model, kennislinks (Marnix)
 - [x] ✅ Klantpagina skill volledig uitwerken met alle stappen — skill bijgewerkt met logo compositing, lokale paden, --client mode (Marnix)
-- [x] ✅ AI-quiz geintegreerd in klantpagina flow: 5 sector-specifieke vragen, Notion database met score-formules, automatische sub-pagina (Marnix)
-- [x] ✅ Quiz technisch opgelost via Notion database met select-properties en formula's voor scoring (Marnix)
+- [x] ✅ AI-quiz geintegreerd in klantpagina flow: 5 sector-specifieke vragen, interactieve GitHub Pages quiz-URL direct op de klantpagina (Marnix)
+- [x] ✅ Interactieve quiz vervangt Notion database: JSON + base64 in URL, geen sub-pagina/database meer nodig (Marnix)
+- [x] ✅ Standalone `ai-quiz` skill: genereert quiz JSON, bouwt klikbare URL, optioneel Notion-pagina (Marnix)
 - [x] ✅ Toekomstvisie geintegreerd in klantpagina-skill: pull quote, 10-jaar verhaal, gebrandde visie-afbeelding, kerngetallen. Losse AI-toekomstvisie.zip verwijderd (Marnix)
 - [ ] 🟡 Prompt Optimizer valideren en finetunen (Marnix)
 - [x] ✅ Fallback-systeem implementeren voor elke externe call — fallbacks gedocumenteerd in skill voor alle stappen (Marnix)
