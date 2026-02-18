@@ -12,8 +12,8 @@ Gebruik TodoWrite om voortgang te tonen:
 2. Bedrijfsinfo + merkidentiteit + Excel laden (parallel), daarna sectorprobleem
 3. Consultants selecteren
 4. Bevestiging vragen (incl. merkidentiteit + sectorprobleem)
-5. Panda-afbeelding + roadmap + quizvragen + toekomstverhaal (parallel), daarna visie-afbeelding
-6. Notion-pagina + quiz sub-pagina aanmaken
+5. Panda-afbeelding + roadmap + quiz-URL + toekomstverhaal (parallel), daarna visie-afbeelding
+6. Notion-pagina aanmaken (quiz is geintegreerd als link)
 
 ---
 
@@ -399,15 +399,16 @@ Maak elke fase specifiek voor SECTOR en BEDRIJFSNAAM. Vermijd generieke tekst. V
 
 Sla op als ROADMAP_CONTENT (markdown tekst voor fase 1 t/m 4).
 
-### 5C — Quizvragen genereren
+### 5C — Interactieve quiz genereren (JSON + URL)
 
 Input: BEDRIJFSNAAM, SECTOR (beschikbaar na stap 2A)
 
 Genereer 5 sector-specifieke meerkeuzevragen. Volg exact dezelfde instructies als in `.claude/skills/ai-quiz/SKILL.md` stap 1.
 
 **Structuur per vraag:**
-- Vraagstelling (Bold)
+- Vraagstelling (helder en direct)
 - 3 Antwoordopties (A/B/C) oplopend in volwassenheid (A=Start, B=Groei, C=Leider)
+- Scoring: A = 1 punt, B = 2 punten, C = 3 punten
 
 **Inhoudelijke focus:**
 1. **Algemeen:** Hoe wordt AI nu gebruikt in dagelijkse processen?
@@ -422,7 +423,49 @@ Genereer 5 sector-specifieke meerkeuzevragen. Volg exact dezelfde instructies al
 - Antwoord A is niet 'fout', maar een startpunt met potentie
 - Gebruik vakterminologie die past bij de sector
 
-Sla op als QUIZ_VRAGEN (markdown met 5 vragen, A/B/C per vraag).
+**Structureer als JSON** (exact dit format):
+
+```json
+{
+  "bedrijf": "[BEDRIJFSNAAM]",
+  "sector": "[SECTOR]",
+  "vragen": [
+    {
+      "vraag": "Hoe wordt AI nu gebruikt in jullie dagelijkse processen?",
+      "opties": [
+        {"label": "A", "tekst": "We gebruiken nog geen AI-tools", "score": 1},
+        {"label": "B", "tekst": "Enkele medewerkers experimenteren", "score": 2},
+        {"label": "C", "tekst": "AI is structureel ingebed", "score": 3}
+      ]
+    }
+  ]
+}
+```
+
+**Base64-encode en bouw de quiz-URL:**
+
+```bash
+QUIZ_BASE_URL="https://marniex.github.io/aipanda-quiz"
+QUIZ_JSON='[DE GEGENEREERDE JSON]'
+
+# Base64-encode (URL-safe)
+B64=$(echo -n "$QUIZ_JSON" | base64 | tr -d '\n')
+
+# Bouw de volledige URL
+QUIZ_URL="${QUIZ_BASE_URL}/#data=${B64}"
+
+echo "$QUIZ_URL"
+
+# Verificatie: decodeer terug om te controleren dat JSON intact is
+echo "$B64" | base64 -d | python3 -m json.tool
+```
+
+**Fallback als base64-encoding faalt:** Gebruik Python:
+```bash
+python3 -c "import base64, json; print(base64.b64encode(json.dumps([DATA]).encode()).decode())"
+```
+
+Sla op als QUIZ_URL.
 
 ### 5D — Toekomstverhaal schrijven
 
@@ -484,7 +527,7 @@ Sla op: VISIE_IMAGE_URL
 
 ---
 
-## Stap 6: Notion-pagina + quiz sub-pagina aanmaken
+## Stap 6: Notion-pagina aanmaken
 
 Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
 
@@ -619,9 +662,17 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 
 ## AI-Readiness Quickscan
 
-Wil je weten hoe ver jouw organisatie staat met AI? Beantwoord 5 korte vragen en ontdek je AI-volwassenheidsniveau op de schaal van starter tot koploper.
+Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vragen en krijg direct je profiel.
 
-Open de sub-pagina **AI-Readiness Quickscan** hieronder om te starten.
+[Start de AI-Readiness Quickscan]([QUIZ_URL])
+
+| Score | Profiel | Wat dit betekent |
+|---|---|---|
+| 5-7 | De Starter | Focus op bewustwording en laaghangend fruit. |
+| 8-9 | De Verkenner | Tijd voor structuur en strategie. |
+| 10-11 | De Groeier | Klaar voor serieuze pilot-projecten. |
+| 12-13 | De Versneller | Opschalen van successen naar bedrijfsbreed. |
+| 14-15 | De Koploper | Focus op innovatie en voorsprong. |
 
 ---
 
@@ -632,73 +683,6 @@ Open de sub-pagina **AI-Readiness Quickscan** hieronder om te starten.
 
 **Sla het `id` uit de response op als KLANTPAGINA_ID** (UUID met dashes, bijv. `abc123-...`).
 
-### 6B — Quiz sub-pagina aanmaken
-
-Tool: `notion-create-pages`
-- Parent: `page_id: KLANTPAGINA_ID`
-- Titel: `AI-Readiness Quickscan — [BEDRIJFSNAAM]`
-- Content (vervang [QUIZ_VRAGEN] met de volledige markdown uit stap 5C):
-
-```markdown
-# AI-Readiness Quickscan
-
-Vul deze korte scan in om te ontdekken waar jullie staan op het gebied van AI.
-Bespreek de antwoorden tijdens de kickoff met het AI Panda team.
-
----
-
-[QUIZ_VRAGEN]
-
----
-
-## Score-indicatie
-
-| Je antwoorden | Profiel | Wat dit betekent |
-|---|---|---|
-| Vooral A | De Starter | Jullie staan aan het begin. Focus nu op bewustwording en laaghangend fruit. |
-| Mix van A & B | De Verkenner | De interesse is er en er zijn losse tools. Tijd voor structuur en strategie. |
-| Vooral B | De Groeier | De basis staat. Jullie zijn klaar voor serieuze pilot-projecten en data-integratie. |
-| Mix van B & C | De Versneller | Jullie gaan hard. De uitdaging is nu: opschalen van losse successen naar bedrijfsbreed. |
-| Vooral C | De Koploper | AI zit in jullie DNA. Focus op innovatie en het voorblijven van de concurrentie. |
-
----
-
-*Vul je antwoorden in via de database hieronder. Je profiel verschijnt automatisch.*
-```
-
-**Sla het `id` uit de response op als QUIZ_PAGE_ID.**
-
-### 6C — Quiz database aanmaken
-
-Tool: `notion-create-database`
-- Parent: `page_id: QUIZ_PAGE_ID`
-- Titel: `Jouw antwoorden`
-- Properties:
-  - `Naam` — type: title
-  - `V1 - AI gebruik` — type: select, opties: `A`, `B`, `C`
-  - `V2 - Data` — type: select, opties: `A`, `B`, `C`
-  - `V3 - Automatisering` — type: select, opties: `A`, `B`, `C`
-  - `V4 - Team` — type: select, opties: `A`, `B`, `C`
-  - `V5 - Strategie` — type: select, opties: `A`, `B`, `C`
-  - `Score /15` — type: formula, expression:
-    ```
-    toNumber(if(prop("V1 - AI gebruik") == "C", "3", if(prop("V1 - AI gebruik") == "B", "2", "1"))) + toNumber(if(prop("V2 - Data") == "C", "3", if(prop("V2 - Data") == "B", "2", "1"))) + toNumber(if(prop("V3 - Automatisering") == "C", "3", if(prop("V3 - Automatisering") == "B", "2", "1"))) + toNumber(if(prop("V4 - Team") == "C", "3", if(prop("V4 - Team") == "B", "2", "1"))) + toNumber(if(prop("V5 - Strategie") == "C", "3", if(prop("V5 - Strategie") == "B", "2", "1")))
-    ```
-  - `Profiel` — type: formula, expression:
-    ```
-    if(prop("Score /15") >= 14, "De Koploper", if(prop("Score /15") >= 12, "De Versneller", if(prop("Score /15") >= 10, "De Groeier", if(prop("Score /15") >= 8, "De Verkenner", "De Starter"))))
-    ```
-
-**Fallback als formula-properties niet ondersteund worden:** Maak de database aan zonder `Score /15` en `Profiel`, en voeg een callout toe aan de sub-pagina met tekst: "Tel je score: A=1, B=2, C=3. Totaal 5-7 = Starter, 8-9 = Verkenner, 10-11 = Groeier, 12-13 = Versneller, 14-15 = Koploper."
-
-**Sla het `id` uit de response op als QUIZ_DB_ID.**
-
-### 6D — Pre-fill eerste rij
-
-Tool: `notion-create-pages`
-- Parent: `database_id: QUIZ_DB_ID`
-- Properties: `Naam` = `[BEDRIJFSNAAM]`
-
 ---
 
 ## Stap 7: Bevestig het resultaat
@@ -706,8 +690,8 @@ Tool: `notion-create-pages`
 Toon:
 1. Klantpagina aangemaakt
 2. Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
-3. Quiz sub-pagina: `[QUIZ_PAGE_URL]` (klikbaar)
-4. Korte samenvatting: bedrijf, toekomstvisie (met pull quote preview), consultants, roadmap en quiz gegenereerd
+3. Interactieve quiz: `[QUIZ_URL]` (klikbaar)
+4. Korte samenvatting: bedrijf, toekomstvisie (met pull quote preview), consultants, roadmap en interactieve quiz gegenereerd
 5. Geef de visie-afbeelding prompt weer zodat de gebruiker die kan beoordelen
 
 ---
@@ -723,6 +707,5 @@ De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow s
 - Toekomstverhaal generatie faalt → schrijf een korter verhaal (150-200 woorden) als fallback
 - Visie-afbeelding generatie faalt → placeholder URL, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken
-- Quiz sub-pagina aanmaken faalt → doorgaan zonder, meld het resultaat
-- Database formula niet ondersteund → database zonder formules met callout als fallback
-- Stap 6B/6C/6D falen → klantpagina alsnog tonen als eindresultaat
+- Quiz base64-encoding faalt → Python fallback gebruiken
+- Quiz-URL te lang → vraagteksten verkorten
