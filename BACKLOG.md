@@ -10,7 +10,7 @@
 - [x] ✅ End-to-end flow testen: van klantnaam tot Notion-pagina — bol.com klantpagina aangemaakt (Marnix)
 
 ## Fase 2: Features uitbouwen
-- [ ] 🔴 Notion-pagina template bouwen met strakke opmaak en AI Panda huisstijl (Marnix)
+- [x] ✅ Notion-pagina template bouwen met strakke opmaak en AI Panda huisstijl — hero banner, 3 pijlers, teamtabel, roadmap met quotes, 7-sterren model, kennislinks (Marnix)
 - [x] ✅ Klantpagina skill volledig uitwerken met alle stappen — skill bijgewerkt met logo compositing, lokale paden, --client mode (Marnix)
 - [ ] 🟡 AI-quiz skill bouwen: 5 vragen, sector-specifiek, bepaalt AI-niveau klant (Noud)
 - [ ] 🟡 Onderzoeken hoe een quiz technisch in/via Notion kan werken (embed, form, of apart) (Noud)

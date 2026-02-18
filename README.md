@@ -48,12 +48,38 @@ De plugin gebruikt Google Gemini voor beeldgeneratie. Je hebt een (gratis) API-k
 |---|---|---|
 | `GEMINI_API_KEY` | AI-beeldgeneratie | [Google AI Studio](https://aistudio.google.com/apikey) |
 
-Stel de key in als environment variable, of maak een `.env` bestand aan (zie `.env.example`):
+**Methode 1: Claude Code settings.json (aanbevolen)**
+
+Dit is de meest betrouwbare methode en werkt in alle omgevingen (Cowork, CLI, hooks, Bash).
+
+User-level (geldt voor alle projecten):
+```json
+// ~/.claude/settings.json
+{
+  "env": {
+    "GEMINI_API_KEY": "jouw-key-hier"
+  }
+}
+```
+
+Of project-level (alleen dit project):
+```json
+// .claude/settings.local.json (staat in .gitignore)
+{
+  "env": {
+    "GEMINI_API_KEY": "jouw-key-hier"
+  }
+}
+```
+
+**Methode 2: .env bestand (fallback)**
 
 ```bash
 cp .env.example .env
 # Vul je GEMINI_API_KEY in
 ```
+
+> **Let op:** In Cowork (Claude Desktop) wordt het `.env` bestand niet automatisch geladen door de SessionStart hook vanwege een bekende beperking. Gebruik in dat geval methode 1.
 
 Zonder API-key werkt de plugin nog steeds, maar met een placeholder-afbeelding.
 

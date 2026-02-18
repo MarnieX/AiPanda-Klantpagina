@@ -144,6 +144,20 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ### 5A — AI Panda-afbeelding genereren
 
+**Pre-check: controleer of GEMINI_API_KEY beschikbaar is.**
+```bash
+echo "[DIAG 5A] GEMINI_API_KEY check: ${GEMINI_API_KEY:+OK (beschikbaar)}"
+if [ -z "$GEMINI_API_KEY" ]; then
+    echo "[DIAG 5A] WARNING: GEMINI_API_KEY is NIET beschikbaar in de shell-omgeving."
+    echo "[DIAG 5A] Configureer de key via Claude Code settings:"
+    echo '  ~/.claude/settings.json -> {"env": {"GEMINI_API_KEY": "jouw-key"}}'
+    echo "  Of project-level: .claude/settings.local.json"
+    echo "  Key aanmaken: https://aistudio.google.com/apikey"
+fi
+```
+
+Als de pre-check NIET "OK" toont, instrueer de gebruiker om `GEMINI_API_KEY` te configureren via `~/.claude/settings.json` (of `.claude/settings.local.json` in het project). Ga daarna door met de fallback-afbeelding als de key niet beschikbaar is. Stop NOOIT de flow.
+
 Zoek het script (werkt in Cowork via plugin/scripts/ én lokaal):
 ```bash
 echo "[DIAG 5A] Zoeken naar generate_notion_image.py via find /sessions ~ (maxdepth 10)..."
@@ -194,20 +208,40 @@ Wacht tot zowel 5A als 5B klaar zijn. Gebruik dan `notion-create-pages`.
 
 De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een `page_id` mee als je de pagina onder een bestaande pagina wilt plaatsen.
 
-**Foto's:** Als foto_url leeg is → gebruik `https://ui-avatars.com/api/?name=[VOORNAAM]&size=150&background=10B981&color=ffffff&bold=true&rounded=true`
+**Paginatitel:** Gebruik `🐼 AI Panda × [BEDRIJFSNAAM]` als paginatitel.
+
+**Foto's:** Als foto_url leeg is → gebruik `https://ui-avatars.com/api/?name=[VOORNAAM]&size=150&background=2EA3F2&color=ffffff&bold=true&rounded=true`
 
 **Datum:** Gebruik formaat "DD maand YYYY" (bijv. "17 februari 2026").
 
-### Content template (simpele versie — definitief template volgt later):
+### Content template (AI Panda huisstijl):
 
 ```markdown
-![AI Panda x [BEDRIJFSNAAM]]([PANDA_IMAGE_URL])
+![AI Panda × [BEDRIJFSNAAM] — Jouw AI-traject]([PANDA_IMAGE_URL])
+
+# 🐼 AI Panda × [BEDRIJFSNAAM]
+
+*Jouw persoonlijke AI-trajectpagina — [DATUM]*
+
+---
+
+> 💬 **"Wij bouwen aan 7-sterren organisaties: effectiever, efficiënter én leuker."** — AI Panda
+
+---
 
 ## 🏢 Over [BEDRIJFSNAAM]
 
 [OMSCHRIJVING]
 
 **Sector:** [SECTOR] | **Website:** [WEBSITE_DOMEIN]
+
+---
+
+## ✨ De AI Panda Aanpak
+
+| 🚀 Effectiever | ⚡ Efficiënter | 🎉 Leuker |
+|---|---|---|
+| Betere besluiten, snellere processen en slimmere samenwerking met AI als copiloot voor jouw team. | Routinewerk automatiseren zodat jij en je collega's tijd overhouden voor wat écht telt. | AI neemt het saaie uit je werk. Meer energie voor creativiteit, groei en échte impact. |
 
 ---
 
@@ -219,21 +253,29 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 | ![foto]([FOTO_URL_2]) | **[NAAM_2]** | [FUNCTIE_2] | [EMAIL_2] |
 | ![foto]([FOTO_URL_3]) | **[NAAM_3]** | [FUNCTIE_3] | [EMAIL_3] |
 
+*Heb je een vraag? Stuur gerust een berichtje via het emailadres hierboven.*
+
 ---
 
 ## 🗺️ AI Implementatie Roadmap
 
-### 🔍 Fase 1: Discovery (Week 1-2)
-[ROADMAP_FASE_1]
+Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in de [SECTOR]-sector. Elke fase bouwt voort op de vorige.
 
-### 🧪 Fase 2: Pilot (Week 3-6)
-[ROADMAP_FASE_2]
+> 🔍 **Fase 1 — Discovery** *(Week 1-2)*
+>
+> [ROADMAP_FASE_1]
 
-### 🚀 Fase 3: Implementatie (Week 7-12)
-[ROADMAP_FASE_3]
+> 🧪 **Fase 2 — Pilot** *(Week 3-6)*
+>
+> [ROADMAP_FASE_2]
 
-### 📈 Fase 4: Schaling & Optimalisatie (Week 13+)
-[ROADMAP_FASE_4]
+> 🚀 **Fase 3 — Implementatie** *(Week 7-12)*
+>
+> [ROADMAP_FASE_3]
+
+> 📈 **Fase 4 — Schaling & Optimalisatie** *(Week 13+)*
+>
+> [ROADMAP_FASE_4]
 
 ---
 
@@ -242,13 +284,34 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 - [ ] Kickoff meeting plannen met [BEDRIJFSNAAM]
 - [ ] Toegang tot relevante data en systemen regelen
 - [ ] Discovery-interviews inplannen met key stakeholders
-- [ ] Eerste AI-kansen rapport opleveren
+- [ ] Eerste AI-kansen rapport opleveren aan directie
 
 ---
 
-## 🤖 Over AI Panda Cowork
+## 🔗 Handige Links & Kennisbronnen
 
-*Meer weten over het platform waarmee dit traject wordt begeleid? Een volledige uitleg volgt binnenkort op een aparte pagina.*
+- 🌐 [AI Panda website](https://aipanda.nl) — Meer weten over onze aanpak?
+- 💬 [Snel contact via WhatsApp](https://aipanda.nl/afspraakbevestigd/) — Direct een vraag stellen
+- 📚 [AI in het MKB](https://aipanda.nl/ai-in-het-mkb/) — Hoe AI jouw sector verandert
+- 📧 Contact: info@aipanda.nl
+
+---
+
+## ⭐ Het 7-Sterren AI-Maturity Model
+
+AI Panda werkt met zeven niveaus van AI-volwassenheid. Hoe hoger jouw ster, hoe beter je organisatie AI inzet om te groeien, te besparen en te vernieuwen.
+
+| Niveau | Naam | Wat betekent dit? |
+|---|---|---|
+| ⭐ 1 | Onbewust | Geen bewustzijn van AI-mogelijkheden in de organisatie |
+| ⭐⭐ 2 | Bewust | Bekend met AI, maar nog geen actief gebruik |
+| ⭐⭐⭐ 3 | Experimenterend | Eerste experimenten met AI-tools door vroege adopters |
+| ⭐⭐⭐⭐ 4 | Structureel | AI structureel ingezet in dagelijkse processen |
+| ⭐⭐⭐⭐⭐ 5 | Strategisch | AI als strategisch concurrentievoordeel ingezet |
+| ⭐⭐⭐⭐⭐⭐ 6 | AI-gedreven | De organisatie is volledig AI-first ingericht |
+| ⭐⭐⭐⭐⭐⭐⭐ 7 | Meester | Meester in het ontwikkelen en implementeren van AI |
+
+*Het doel van dit traject: [BEDRIJFSNAAM] naar een structureel hoger niveau tillen.*
 
 ---
 
