@@ -8,6 +8,9 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 ## [Unreleased]
 
 ### Added
+- Browser MCP flow voor image generation in Cowork: automatische omgevingsdetectie, Chrome MCP-bridge voor Gemini API calls via `tabs_context_mcp`, `navigate`, `javascript_tool` en `computer` (screenshot)
+- Catbox.moe upload vanuit browser JS (Cowork): gegenereerde afbeeldingen uploaden voor publieke URL zonder sandbox-restricties
+- Panda-reference.png permanent gehost op catbox.moe (`https://files.catbox.moe/23dzti.png`)
 - `gemini-image` skill: generieke standalone image generation via curl en Nano Banana Pro (nano-banana-pro-preview)
 - Curl-fallback in klantpagina stap 5A: als Python script faalt (httpx SOCKS proxy in Cowork), valt de skill terug op directe curl naar Gemini API + catbox.moe upload
 - AI-Readiness Quickscan geintegreerd in klantpagina flow: quiz sub-pagina met Notion database en score-formules
@@ -16,8 +19,10 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - README met duidelijke configuratie-instructies (settings.json als primaire methode, .env als fallback)
 
 ### Changed
+- `gemini-image` skill herschreven met twee flows: lokaal (curl) en Cowork (browser MCP via Chrome)
+- Klantpagina stap 5A herschreven met omgevingsdetectie en browser MCP flow voor Cowork
+- Gemini model geupdate naar `gemini-3-pro-image-preview` in alle skills
 - `build.sh` synct nu ook `gemini-image` skill naar plugin/
-- Gemini model geupdate naar `nano-banana-pro-preview` (Nano Banana Pro) in alle skills
 - Projectstructuur geherorganiseerd: scripts naar `scripts/`, teamdata naar `data/`, referentiemateriaal naar `docs/`
 - Plugin-bestand hernoemd van `.plugin` naar `.zip`
 - Skill herschreven met nieuwe UX-flow (parallelle stappen, bevestigingsscherm)

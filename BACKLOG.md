@@ -19,13 +19,14 @@
 - [x] ✅ Fallback-systeem implementeren voor elke externe call — fallbacks gedocumenteerd in skill voor alle stappen (Marnix)
 - [x] ✅ Generieke `gemini-image` skill: standalone image generation via curl en Nano Banana Pro, werkt in Cowork (Marnix)
 - [x] ✅ Curl-fallback voor image generation in klantpagina: omzeilt httpx SOCKS proxy probleem in Cowork (Marnix)
+- [x] ✅ Browser MCP flow voor image generation: omgevingsdetectie (local/Cowork), Chrome MCP-bridge voor Gemini API calls wanneer sandbox curl blokkeert (Marnix)
 - [x] ✅ Consultantfoto's geupload en team Excel bijgewerkt met URL's (Marnix)
 
 ## Fase 3: Polish & distributie
 - [x] ✅ Plugin ombouwen en packaging voor Cowork — `build.sh` assembleert .plugin bestand vanuit bronmap (Marnix)
 - [x] ✅ GEMINI_API_KEY loading waterdicht gemaakt — settings.json als primaire methode, interactieve setup in Cowork, obsolete load-env.sh hook verwijderd (Marnix)
 - [x] ✅ README bijgewerkt met settings.json configuratie-instructies (Marnix)
-- [ ] 🟡 Plugin installatie testen in Cowork met gemini-image skill en curl-fallback (Marnix)
+- [ ] 🟡 Plugin installatie testen in Cowork met browser MCP image generation flow (Marnix)
 - [ ] 🟡 Verhaal rondom Claude Cowork uitwerken voor de demonstratie (Rick)
 - [ ] 🟡 Onboarding documentatie voor medestudenten: installatie, setup, hoe bij te dragen (Marnix)
 - [ ] 🟡 Branch protection instellen op main: PR-reviews verplicht (Marnix)
