@@ -7,11 +7,22 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 ## [Unreleased]
 
+### Added
+- Interactieve API key setup in Cowork: skill vraagt om GEMINI_API_KEY wanneer deze ontbreekt en slaat op als .env
+- README met duidelijke configuratie-instructies (settings.json als primaire methode, .env als fallback)
+
 ### Changed
 - Projectstructuur geherorganiseerd: scripts naar `scripts/`, teamdata naar `data/`, referentiemateriaal naar `docs/`
 - Plugin-bestand hernoemd van `.plugin` naar `.zip`
 - Skill herschreven met nieuwe UX-flow (parallelle stappen, bevestigingsscherm)
 - PLAN.md, README.md en CLAUDE.md bijgewerkt naar huidige staat
+- Env loading vereenvoudigd: van 5 .env zoekpaden naar 1-2 (projectroot + working dir)
+
+### Removed
+- `load-env.sh` SessionStart hook verwijderd (werkte niet in Cowork vanwege bug #11649)
+
+### Fixed
+- GEMINI_API_KEY niet beschikbaar in Cowork opgelost via interactieve setup en settings.json documentatie
 
 ## [0.1.0] - 2026-02-17
 

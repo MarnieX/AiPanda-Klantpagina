@@ -20,11 +20,9 @@
 
 ## Fase 3: Polish & distributie
 - [x] ✅ Plugin ombouwen en packaging voor Cowork — `build.sh` assembleert .plugin bestand vanuit bronmap (Marnix)
+- [x] ✅ GEMINI_API_KEY loading waterdicht gemaakt — settings.json als primaire methode, interactieve setup in Cowork, obsolete load-env.sh hook verwijderd (Marnix)
+- [x] ✅ README bijgewerkt met settings.json configuratie-instructies (Marnix)
 - [ ] 🟡 Plugin installatie testen in Cowork (nieuw) (Marnix)
 - [ ] 🟡 Verhaal rondom Claude Cowork uitwerken voor de demonstratie (Rick)
 - [ ] 🟡 Onboarding documentatie voor medestudenten: installatie, setup, hoe bij te dragen (Marnix)
 - [ ] 🟡 Branch protection instellen op main: PR-reviews verplicht (Marnix)
-- [ ] 🟢 README bijwerken na eerste werkende versie (Allen)
-
-## Project Setup
-- [ ] 🔴 .env.example up-to-date houden met alle benodigde variabelen (Marnix)
