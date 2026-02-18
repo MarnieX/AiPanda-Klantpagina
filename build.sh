@@ -18,12 +18,18 @@ PLUGIN_FILE="$SCRIPT_DIR/ai-panda-klantpagina.zip"
 PLUGIN_SRC="$SCRIPT_DIR/plugin"
 SKILL_SRC="$SCRIPT_DIR/.claude/skills/klantpagina/SKILL.md"
 SKILL_DEST="$PLUGIN_SRC/skills/klantpagina/SKILL.md"
+GEMINI_SKILL_SRC="$SCRIPT_DIR/.claude/skills/gemini-image/SKILL.md"
+GEMINI_SKILL_DEST="$PLUGIN_SRC/skills/gemini-image/SKILL.md"
 
 echo "Building ai-panda-klantpagina.plugin..."
 
-# Sync latest SKILL.md from .claude/skills (canonical source)
-echo "  Syncing SKILL.md..."
+# Sync latest SKILL.md files from .claude/skills (canonical source)
+echo "  Syncing klantpagina SKILL.md..."
 cp "$SKILL_SRC" "$SKILL_DEST"
+
+echo "  Syncing gemini-image SKILL.md..."
+mkdir -p "$(dirname "$GEMINI_SKILL_DEST")"
+cp "$GEMINI_SKILL_SRC" "$GEMINI_SKILL_DEST"
 
 # Bundle runtime dependencies into plugin/
 echo "  Bundling scripts..."
