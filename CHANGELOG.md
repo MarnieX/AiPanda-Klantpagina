@@ -8,10 +8,16 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 ## [Unreleased]
 
 ### Added
+- `gemini-image` skill: generieke standalone image generation via curl en Nano Banana Pro (nano-banana-pro-preview)
+- Curl-fallback in klantpagina stap 5A: als Python script faalt (httpx SOCKS proxy in Cowork), valt de skill terug op directe curl naar Gemini API + catbox.moe upload
+- AI-Readiness Quickscan geintegreerd in klantpagina flow: quiz sub-pagina met Notion database en score-formules
+- Consultantfoto's geupload en team Excel bijgewerkt met foto-URL's
 - Interactieve API key setup in Cowork: skill vraagt om GEMINI_API_KEY wanneer deze ontbreekt en slaat op als .env
 - README met duidelijke configuratie-instructies (settings.json als primaire methode, .env als fallback)
 
 ### Changed
+- `build.sh` synct nu ook `gemini-image` skill naar plugin/
+- Gemini model geupdate naar `nano-banana-pro-preview` (Nano Banana Pro) in alle skills
 - Projectstructuur geherorganiseerd: scripts naar `scripts/`, teamdata naar `data/`, referentiemateriaal naar `docs/`
 - Plugin-bestand hernoemd van `.plugin` naar `.zip`
 - Skill herschreven met nieuwe UX-flow (parallelle stappen, bevestigingsscherm)
@@ -22,6 +28,7 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - `load-env.sh` SessionStart hook verwijderd (werkte niet in Cowork vanwege bug #11649)
 
 ### Fixed
+- Image generation in Cowork opgelost via curl-fallback (Python httpx faalde door SOCKS proxy restricties)
 - GEMINI_API_KEY niet beschikbaar in Cowork opgelost via interactieve setup en settings.json documentatie
 
 ## [0.1.0] - 2026-02-17

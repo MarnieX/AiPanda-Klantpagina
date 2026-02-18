@@ -12,17 +12,20 @@
 ## Fase 2: Features uitbouwen
 - [x] ✅ Notion-pagina template bouwen met strakke opmaak en AI Panda huisstijl — hero banner, 3 pijlers, teamtabel, roadmap met quotes, 7-sterren model, kennislinks (Marnix)
 - [x] ✅ Klantpagina skill volledig uitwerken met alle stappen — skill bijgewerkt met logo compositing, lokale paden, --client mode (Marnix)
-- [ ] 🟡 AI-quiz skill bouwen: 5 vragen, sector-specifiek, bepaalt AI-niveau klant (Noud)
-- [ ] 🟡 Onderzoeken hoe een quiz technisch in/via Notion kan werken (embed, form, of apart) (Noud)
+- [x] ✅ AI-quiz geintegreerd in klantpagina flow: 5 sector-specifieke vragen, Notion database met score-formules, automatische sub-pagina (Marnix)
+- [x] ✅ Quiz technisch opgelost via Notion database met select-properties en formula's voor scoring (Marnix)
 - [ ] 🟡 Toekomstbeeld/AI-visie skill bouwen: gepersonaliseerd per bedrijf en sector (Rick)
 - [ ] 🟡 Prompt Optimizer valideren en finetunen (Marnix)
 - [x] ✅ Fallback-systeem implementeren voor elke externe call — fallbacks gedocumenteerd in skill voor alle stappen (Marnix)
+- [x] ✅ Generieke `gemini-image` skill: standalone image generation via curl en Nano Banana Pro, werkt in Cowork (Marnix)
+- [x] ✅ Curl-fallback voor image generation in klantpagina: omzeilt httpx SOCKS proxy probleem in Cowork (Marnix)
+- [x] ✅ Consultantfoto's geupload en team Excel bijgewerkt met URL's (Marnix)
 
 ## Fase 3: Polish & distributie
 - [x] ✅ Plugin ombouwen en packaging voor Cowork — `build.sh` assembleert .plugin bestand vanuit bronmap (Marnix)
 - [x] ✅ GEMINI_API_KEY loading waterdicht gemaakt — settings.json als primaire methode, interactieve setup in Cowork, obsolete load-env.sh hook verwijderd (Marnix)
 - [x] ✅ README bijgewerkt met settings.json configuratie-instructies (Marnix)
-- [ ] 🟡 Plugin installatie testen in Cowork (nieuw) (Marnix)
+- [ ] 🟡 Plugin installatie testen in Cowork met gemini-image skill en curl-fallback (Marnix)
 - [ ] 🟡 Verhaal rondom Claude Cowork uitwerken voor de demonstratie (Rick)
 - [ ] 🟡 Onboarding documentatie voor medestudenten: installatie, setup, hoe bij te dragen (Marnix)
 - [ ] 🟡 Branch protection instellen op main: PR-reviews verplicht (Marnix)
