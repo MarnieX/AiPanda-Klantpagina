@@ -1,11 +1,13 @@
 ---
 name: gemini-image
-description: "Genereer afbeeldingen via Google Gemini API. Geef een beschrijving of laat een prompt bouwen op basis van context. Retourneert een publieke URL. Werkt in Cowork en lokaal."
+description: "Genereer afbeeldingen via Google Gemini API. Geef een beschrijving of laat een prompt bouwen op basis van context. Retourneert een publieke URL. Werkt in Cowork (via browser MCP) en lokaal (via curl)."
 ---
 
 # Gemini Image Generator
 
-Genereer afbeeldingen via Google Gemini API. Werkt met elke prompt: panda's, productfoto's, illustraties, diagrammen, etc. Gebruikt curl (geen Python httpx), dus werkt ook in Cowork.
+Genereer afbeeldingen via Google Gemini API. Werkt met elke prompt: panda's, productfoto's, illustraties, diagrammen, etc. Detecteert automatisch de omgeving en kiest de juiste methode.
+
+**Referentiebeeld panda:** `https://files.catbox.moe/23dzti.png`
 
 ---
 
@@ -82,7 +84,18 @@ Als de gebruiker geen key heeft: meld dit en stop. Zonder key kan er geen afbeel
 
 ---
 
-## Stap 3: Genereer en upload
+## Stap 3: Omgeving detecteren
+
+```bash
+if [ -d "/sessions" ]; then echo "ENVIRONMENT=cowork"; else echo "ENVIRONMENT=local"; fi
+```
+
+- **cowork** → Ga naar Stap 4B (browser MCP)
+- **local** → Ga naar Stap 4A (curl)
+
+---
+
+## Stap 4A: Lokaal (curl)
 
 Combineer IMAGE_PROMPT met eventuele FORMAT_INSTRUCTION in de uiteindelijke prompt.
 
@@ -90,9 +103,9 @@ Combineer IMAGE_PROMPT met eventuele FORMAT_INSTRUCTION in de uiteindelijke prom
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 OUTPUT="/tmp/gemini_${TIMESTAMP}.png"
 
-# Gemini API via curl (werkt in Cowork, geen httpx nodig)
+# Gemini API via curl
 RESPONSE=$(curl -s -m 120 \
-  "https://generativelanguage.googleapis.com/v1beta/models/nano-banana-pro-preview:generateContent?key=$GEMINI_API_KEY" \
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=$GEMINI_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "contents": [{"parts": [{"text": "[IMAGE_PROMPT]. [FORMAT_INSTRUCTION]"}]}],
@@ -110,7 +123,6 @@ for part in data.get('candidates', [{}])[0].get('content', {}).get('parts', []):
         print('OK: afbeelding opgeslagen als $OUTPUT')
         sys.exit(0)
 print('FAIL: geen afbeelding in response')
-# Toon response voor debugging
 print(json.dumps(data, indent=2)[:500], file=sys.stderr)
 sys.exit(1)
 " <<< "$RESPONSE"
@@ -133,13 +145,190 @@ Lokaal bestand: [OUTPUT]
 
 ---
 
+## Stap 4B: Cowork (browser MCP)
+
+In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer. De enige route naar buiten is via de Chrome MCP-bridge: Claude bestuurt de lokale Chrome van de gebruiker.
+
+### 4B.1 — Tab verkrijgen
+
+MCP tool: `tabs_context_mcp` met `createIfEmpty: true`
+Sla het `tabId` op.
+
+### 4B.2 — Navigeer naar JS-context
+
+MCP tool: `navigate` naar `https://example.com` met het tabId.
+Dit geeft een schone pagina om JavaScript uit te voeren.
+
+### 4B.3 — Genereer image via Gemini API
+
+MCP tool: `javascript_tool` in het tabId. Voer dit script uit:
+
+```javascript
+(async () => {
+  try {
+    const API_KEY = '[GEMINI_API_KEY]';
+    const MODEL = 'gemini-3-pro-image-preview';
+    const PROMPT = '[IMAGE_PROMPT]. [FORMAT_INSTRUCTION]';
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+    const resp = await fetch(URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: PROMPT }] }],
+        generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+      })
+    });
+
+    const data = await resp.json();
+    if (!resp.ok) return JSON.stringify({ error: data.error?.message });
+
+    const parts = data.candidates?.[0]?.content?.parts || [];
+    for (const part of parts) {
+      if (part.inlineData) {
+        window._geminiB64 = part.inlineData.data;
+        window._geminiMime = part.inlineData.mimeType;
+      }
+    }
+
+    return JSON.stringify({
+      success: true,
+      hasImage: !!window._geminiB64,
+      imageSize: window._geminiB64?.length || 0
+    });
+  } catch(e) {
+    return JSON.stringify({ error: e.message });
+  }
+})()
+```
+
+Als `success: true` en `hasImage: true`: ga door naar 4B.4.
+Als er een fout is: meld de fout en ga naar de fallback (placeholder URL).
+
+### 4B.4 — Download naar lokale machine
+
+MCP tool: `javascript_tool` in het tabId:
+
+```javascript
+(() => {
+  const a = document.createElement('a');
+  a.href = 'data:' + window._geminiMime + ';base64,' + window._geminiB64;
+  a.download = 'gemini-image.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  return 'Download triggered';
+})()
+```
+
+### 4B.5 — Render + screenshot als bewijs
+
+MCP tool: `javascript_tool` in het tabId:
+
+```javascript
+(() => {
+  const img = document.createElement('img');
+  img.src = 'data:' + window._geminiMime + ';base64,' + window._geminiB64;
+  img.style.cssText = 'max-width:90%;max-height:80vh';
+  document.body.innerHTML = '';
+  document.body.appendChild(img);
+  return 'Image rendered';
+})()
+```
+
+Daarna: MCP tool `computer` (screenshot) om de afbeelding als bewijs in het gesprek te tonen.
+
+### 4B.6 — (Optioneel) Upload naar catbox.moe voor publieke URL
+
+Alleen nodig als een publieke URL gewenst is (bijv. vanuit klantpagina flow).
+
+MCP tool: `javascript_tool` in het tabId:
+
+```javascript
+(async () => {
+  try {
+    const b64 = window._geminiB64;
+    const mime = window._geminiMime || 'image/png';
+    const byteChars = atob(b64);
+    const byteArray = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArray], { type: mime });
+
+    const form = new FormData();
+    form.append('reqtype', 'fileupload');
+    form.append('fileToUpload', blob, 'panda.png');
+    const resp = await fetch('https://catbox.moe/user/api.php', {
+      method: 'POST',
+      body: form
+    });
+    const url = await resp.text();
+    return JSON.stringify({ success: true, url: url.trim() });
+  } catch(e) {
+    return JSON.stringify({ error: e.message, note: 'CORS blocked? Try same-origin.' });
+  }
+})()
+```
+
+**Als CORS blokkeert:** Navigeer naar `https://catbox.moe` (same-origin) en voer de upload daar uit:
+
+1. MCP tool: `navigate` naar `https://catbox.moe`
+2. MCP tool: `javascript_tool`:
+```javascript
+(async () => {
+  try {
+    const b64 = window._geminiB64;
+    // b64 data overleeft navigatie niet, dus moet opnieuw worden doorgegeven
+    // Als window._geminiB64 undefined is, geef een foutmelding terug
+    if (!b64) return JSON.stringify({ error: 'Image data lost after navigation. Use placeholder.' });
+
+    const mime = window._geminiMime || 'image/png';
+    const byteChars = atob(b64);
+    const byteArray = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArray], { type: mime });
+
+    const form = new FormData();
+    form.append('reqtype', 'fileupload');
+    form.append('fileToUpload', blob, 'panda.png');
+    const resp = await fetch('/user/api.php', {
+      method: 'POST',
+      body: form
+    });
+    const url = await resp.text();
+    return JSON.stringify({ success: true, url: url.trim() });
+  } catch(e) {
+    return JSON.stringify({ error: e.message });
+  }
+})()
+```
+
+**Let op:** Na navigatie gaat `window._geminiB64` verloren. Om dit op te lossen, sla de base64 data op in een JS-variabele VOORDAT je navigeert, of voer generatie + upload op dezelfde pagina uit. Als de data verloren is, gebruik de placeholder URL.
+
+**Output voor standalone gebruik:** Toon de screenshot en meld dat het bestand gedownload is naar de lokale Downloads-map.
+
+---
+
+## Fallback-keten
+
+```
+Lokaal:
+  Curl naar Gemini API → Catbox upload → Publieke URL
+  Fallback: Placeholder URL
+
+Cowork:
+  Browser JS fetch (Gemini API) → Download + Screenshot
+  Voor publieke URL: + Catbox upload vanuit browser JS → URL
+  Als catbox CORS faalt: navigeer naar catbox.moe → same-origin upload
+  Laatste fallback: Placeholder URL (flow stopt nooit)
+```
+
+---
+
 ## Gebruik vanuit andere skills
 
-Deze skill kan aangeroepen worden als referentie vanuit andere skills. Het curl-patroon (stap 3) is het kernmechanisme dat hergebruikt kan worden:
+Deze skill kan aangeroepen worden als referentie vanuit andere skills. Het patroon verschilt per omgeving:
 
-1. Bouw een prompt
-2. Curl naar Gemini API met `responseModalities: ["TEXT", "IMAGE"]`
-3. Decodeer base64 response naar PNG
-4. Upload naar catbox.moe
+**Lokaal:** Het curl-patroon (stap 4A) is het kernmechanisme.
+**Cowork:** De browser MCP flow (stap 4B) met 5 MCP-calls.
 
-Andere skills hoeven niet de volledige flow te doorlopen (AskUserQuestion etc.), maar kunnen direct het curl-patroon gebruiken met een zelfgebouwde prompt.
+Andere skills hoeven niet de volledige flow te doorlopen (AskUserQuestion etc.), maar kunnen direct het juiste patroon gebruiken met een zelfgebouwde prompt.
