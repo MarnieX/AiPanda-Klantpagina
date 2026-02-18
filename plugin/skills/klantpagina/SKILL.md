@@ -11,9 +11,9 @@ Gebruik TodoWrite om voortgang te tonen:
 1. Klant en consultants ophalen
 2. Bedrijfsinfo + Excel matchen (parallel)
 3. Bevestiging vragen
-4. Afbeelding genereren + content voorbereiden (parallel)
+4. Afbeelding, roadmap + quizvragen voorbereiden (parallel)
 5. Image uploaden
-6. Notion-pagina aanmaken
+6. Notion-pagina + quiz sub-pagina aanmaken
 7. Resultaat bevestigen
 
 ---
@@ -140,7 +140,7 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ---
 
-## Stap 5: Parallel uitvoeren (start beide tegelijk na bevestiging)
+## Stap 5: Parallel uitvoeren (start alle drie tegelijk na bevestiging)
 
 ### 5A — AI Panda-afbeelding genereren
 
@@ -175,7 +175,7 @@ else
 fi
 ```
 
-Genereer de afbeelding:
+Genereer de afbeelding (methode 1: Python script, volledige pipeline met logo/referentie):
 ```bash
 SAFE_NAME=$(echo "[BEDRIJFSNAAM]" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
 cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
@@ -189,7 +189,52 @@ cd "$(dirname "$SCRIPT")" && python3 generate_notion_image.py \
 
 De `url` uit de JSON-output is PANDA_IMAGE_URL.
 
-Fallback: gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
+**Fallback (methode 2): curl-aanpak (werkt in Cowork waar Python httpx faalt):**
+
+Als methode 1 faalt (connectiefout, httpx SOCKS proxy error, script niet gevonden), gebruik de curl-aanpak:
+
+```bash
+SAFE_NAME=$(echo "[BEDRIJFSNAAM]" | tr '[:upper:]' '[:lower:]' | tr ' ' '_')
+OUTPUT="/tmp/panda_${SAFE_NAME}.png"
+
+# Bouw een panda-prompt op basis van bedrijfscontext
+# Claude bouwt hier zelf een beschrijvende Engelse prompt, bijvoorbeeld:
+# "A friendly cartoon panda wearing a business suit, standing at a whiteboard presenting AI solutions.
+#  The whiteboard shows '[BEDRIJFSNAAM]' logo. Professional, clean illustration style, white background."
+
+RESPONSE=$(curl -s -m 120 \
+  "https://generativelanguage.googleapis.com/v1beta/models/nano-banana-pro-preview:generateContent?key=$GEMINI_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "contents": [{"parts": [{"text": "[PANDA_PROMPT_HIER]"}]}],
+    "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}
+  }')
+
+# Decodeer base64 naar PNG
+python3 -c "
+import json, base64, sys
+data = json.loads(sys.stdin.read())
+for part in data.get('candidates', [{}])[0].get('content', {}).get('parts', []):
+    if 'inlineData' in part:
+        with open('$OUTPUT', 'wb') as f:
+            f.write(base64.b64decode(part['inlineData']['data']))
+        print('OK')
+        sys.exit(0)
+print('FAIL')
+sys.exit(1)
+" <<< "$RESPONSE"
+
+# Upload naar catbox.moe
+PANDA_IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
+echo "[DIAG 5A] Curl-fallback URL: $PANDA_IMAGE_URL"
+```
+
+**Diagnostics:** Meld altijd welke methode gebruikt is:
+- `[DIAG 5A] Python script geslaagd`
+- `[DIAG 5A] Python script faalde → curl-fallback gebruikt`
+- `[DIAG 5A] Curl-fallback ook gefaald → placeholder URL`
+
+**Laatste fallback:** gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
 
 ### 5B — Roadmap content voorbereiden
 
@@ -204,11 +249,40 @@ Maak elke fase specifiek voor SECTOR en BEDRIJFSNAAM. Vermijd generieke tekst. V
 
 Sla op als ROADMAP_CONTENT (markdown tekst voor fase 1 t/m 4).
 
+### 5C — Quizvragen genereren
+
+Input: BEDRIJFSNAAM, SECTOR (beschikbaar na stap 3A)
+
+Genereer 5 sector-specifieke meerkeuzevragen. Volg exact dezelfde instructies als in `.claude/skills/ai-quiz/SKILL.md` stap 1.
+
+**Structuur per vraag:**
+- Vraagstelling (Bold)
+- 3 Antwoordopties (A/B/C) oplopend in volwassenheid (A=Start, B=Groei, C=Leider)
+
+**Inhoudelijke focus:**
+1. **Algemeen:** Hoe wordt AI nu gebruikt in dagelijkse processen?
+2. **Data:** Hoe is data in de [SECTOR] georganiseerd? (Noem specifieke data zoals patiëntdossiers, kassabonnen of logistieke logs).
+3. **Proces:** Welke [SECTOR]-processen zijn geautomatiseerd? (Noem specifieke processen zoals roostering, orderpicking of triage).
+4. **Team:** Hoe staat het team tegenover werken met AI-tools?
+5. **Strategie:** Wat is de strategische visie op AI?
+
+**Tone-of-voice:**
+- Schrijf de vragen en antwoorden direct aan de klant
+- Zorg dat de toon uitnodigend is en niet als een examen aanvoelt
+- Antwoord A is niet 'fout', maar een startpunt met potentie
+- Gebruik vakterminologie die past bij de sector
+
+Sla op als QUIZ_VRAGEN (markdown met 5 vragen, A/B/C per vraag).
+
 ---
 
-## Stap 6: Notion-pagina aanmaken
+## Stap 6: Notion-pagina + quiz sub-pagina aanmaken
 
-Wacht tot zowel 5A als 5B klaar zijn. Gebruik dan `notion-create-pages`.
+Wacht tot 5A, 5B én 5C klaar zijn.
+
+### 6A — Klantpagina aanmaken
+
+Gebruik `notion-create-pages`.
 
 De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een `page_id` mee als je de pagina onder een bestaande pagina wilt plaatsen.
 
@@ -301,6 +375,15 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 
 ---
 
+## 🎯 AI-Readiness Quickscan
+
+Wil je weten hoe ver jouw organisatie staat met AI? Beantwoord 5 korte vragen en
+ontdek je AI-volwassenheidsniveau op de schaal van starter tot koploper.
+
+👉 Open de sub-pagina **🧠 AI-Readiness Quickscan** hieronder om te starten.
+
+---
+
 ## ⭐ Het 7-Sterren AI-Maturity Model
 
 AI Panda werkt met zeven niveaus van AI-volwassenheid. Hoe hoger jouw ster, hoe beter je organisatie AI inzet om te groeien, te besparen en te vernieuwen.
@@ -322,14 +405,84 @@ AI Panda werkt met zeven niveaus van AI-volwassenheid. Hoe hoger jouw ster, hoe 
 *Gegenereerd door AI Panda Cowork — [DATUM]*
 ```
 
+**Sla het `id` uit de response op als KLANTPAGINA_ID** (UUID met dashes, bijv. `abc123-...`).
+
+### 6B — Quiz sub-pagina aanmaken
+
+Tool: `notion-create-pages`
+- Parent: `page_id: KLANTPAGINA_ID`
+- Titel: `🧠 AI-Readiness Quickscan — [BEDRIJFSNAAM]`
+- Content (vervang [QUIZ_VRAGEN] met de volledige markdown uit stap 5C):
+
+```markdown
+# 🧠 AI-Readiness Quickscan
+
+Vul deze korte scan in om te ontdekken waar jullie staan op het gebied van AI.
+Bespreek de antwoorden tijdens de kickoff met het AI Panda team.
+
+---
+
+[QUIZ_VRAGEN]
+
+---
+
+## 📊 Score-indicatie
+
+| Je antwoorden | Profiel | Wat dit betekent |
+|---|---|---|
+| Vooral A | 🌱 De Starter | Jullie staan aan het begin. Focus nu op bewustwording en laaghangend fruit. |
+| Mix van A & B | 🔭 De Verkenner | De interesse is er en er zijn losse tools. Tijd voor structuur en strategie. |
+| Vooral B | 🌿 De Groeier | De basis staat. Jullie zijn klaar voor serieuze pilot-projecten en data-integratie. |
+| Mix van B & C | 🚀 De Versneller | Jullie gaan hard. De uitdaging is nu: opschalen van losse successen naar bedrijfsbreed. |
+| Vooral C | 💎 De Koploper | AI zit in jullie DNA. Focus op innovatie en het voorblijven van de concurrentie. |
+
+---
+
+*Vul je antwoorden in via de database hieronder. Je profiel verschijnt automatisch.*
+```
+
+**Sla het `id` uit de response op als QUIZ_PAGE_ID.**
+
+### 6C — Quiz database aanmaken
+
+Tool: `notion-create-database`
+- Parent: `page_id: QUIZ_PAGE_ID`
+- Titel: `Jouw antwoorden`
+- Properties:
+  - `Naam` — type: title
+  - `V1 - AI gebruik` — type: select, opties: `A`, `B`, `C`
+  - `V2 - Data` — type: select, opties: `A`, `B`, `C`
+  - `V3 - Automatisering` — type: select, opties: `A`, `B`, `C`
+  - `V4 - Team` — type: select, opties: `A`, `B`, `C`
+  - `V5 - Strategie` — type: select, opties: `A`, `B`, `C`
+  - `Score /15` — type: formula, expression:
+    ```
+    toNumber(if(prop("V1 - AI gebruik") == "C", "3", if(prop("V1 - AI gebruik") == "B", "2", "1"))) + toNumber(if(prop("V2 - Data") == "C", "3", if(prop("V2 - Data") == "B", "2", "1"))) + toNumber(if(prop("V3 - Automatisering") == "C", "3", if(prop("V3 - Automatisering") == "B", "2", "1"))) + toNumber(if(prop("V4 - Team") == "C", "3", if(prop("V4 - Team") == "B", "2", "1"))) + toNumber(if(prop("V5 - Strategie") == "C", "3", if(prop("V5 - Strategie") == "B", "2", "1")))
+    ```
+  - `Profiel` — type: formula, expression:
+    ```
+    if(prop("Score /15") >= 14, "💎 De Koploper", if(prop("Score /15") >= 12, "🚀 De Versneller", if(prop("Score /15") >= 10, "🌿 De Groeier", if(prop("Score /15") >= 8, "🔭 De Verkenner", "🌱 De Starter"))))
+    ```
+
+**Fallback als formula-properties niet ondersteund worden:** Maak de database aan zonder `Score /15` en `Profiel`, en voeg een callout toe aan de sub-pagina met tekst: "Tel je score: A=1, B=2, C=3. Totaal 5-7 = Starter, 8-9 = Verkenner, 10-11 = Groeier, 12-13 = Versneller, 14-15 = Koploper."
+
+**Sla het `id` uit de response op als QUIZ_DB_ID.**
+
+### 6D — Pre-fill eerste rij
+
+Tool: `notion-create-pages`
+- Parent: `database_id: QUIZ_DB_ID`
+- Properties: `Naam` = `[BEDRIJFSNAAM]`
+
 ---
 
 ## Stap 7: Bevestig het resultaat
 
 Toon:
-1. ✅ Notion-pagina aangemaakt
-2. 🔗 De Notion-URL (klikbaar)
-3. 📋 Korte samenvatting: bedrijf, consultants, roadmap gegenereerd
+1. ✅ Klantpagina aangemaakt
+2. 🔗 Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
+3. 🧠 Quiz sub-pagina: `[QUIZ_PAGE_URL]` (klikbaar)
+4. 📋 Korte samenvatting: bedrijf, consultants, roadmap en quiz gegenereerd
 
 ---
 
@@ -340,3 +493,6 @@ De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow s
 - Excel niet gevonden → namen gebruiken zoals ingetypt
 - Image-generatie faalt → placeholder URL, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken
+- Quiz sub-pagina aanmaken faalt → doorgaan zonder, meld het resultaat
+- Database formula niet ondersteund → database zonder formules met callout als fallback
+- Stap 6B/6C/6D falen → klantpagina alsnog tonen als eindresultaat
