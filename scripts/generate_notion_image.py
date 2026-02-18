@@ -31,34 +31,48 @@ from google.genai import types
 
 
 def load_api_key():
-    """Laad API key uit environment variable of lokaal .env bestand.
+    """Laad API key uit environment variable of .env bestand.
 
     Volgorde:
-    1. Os environment (wordt al gevuld door Cowork vanuit .env in projectmap)
-    2. Lokale .env naast het script of in de projectroot (voor lokale ontwikkeling)
+    1. Os environment (gevuld door Claude Code settings.json, Cowork, of shell)
+    2. .env bestanden op diverse locaties (fallback voor lokale ontwikkeling)
+
+    De aanbevolen manier om de key beschikbaar te maken is via Claude Code
+    settings.json (werkt altijd, ook in Cowork):
+      ~/.claude/settings.json -> {"env": {"GEMINI_API_KEY": "..."}}
     """
     # Stap 1: al beschikbaar als env var? Dan klaar.
     key = os.getenv("GEMINI_API_KEY")
     if key:
+        print("[ENV] GEMINI_API_KEY geladen uit environment variable")
         return key
 
-    # Stap 2: lokale .env laden (alleen voor lokale ontwikkeling)
-    for p in [
+    # Stap 2: .env bestanden proberen (fallback)
+    env_paths = [
         Path(__file__).parent.parent / ".env",  # project root
         Path(__file__).parent / ".env",          # scripts/
         Path(".env"),                             # working directory
-    ]:
+        Path.home() / ".env",                    # home directory
+        Path.home() / ".claude" / ".env",        # claude config dir
+    ]
+
+    for p in env_paths:
         if p.exists():
             load_dotenv(p)
-            break
+            key = os.getenv("GEMINI_API_KEY")
+            if key:
+                print(f"[ENV] GEMINI_API_KEY geladen uit {p}")
+                return key
 
-    key = os.getenv("GEMINI_API_KEY")
-    if not key:
-        print("ERROR: GEMINI_API_KEY niet gevonden.")
-        print("Maak een .env bestand met: GEMINI_API_KEY=jouw-key")
-        print("Key aanmaken op: https://aistudio.google.com/apikey")
-        sys.exit(1)
-    return key
+    print("ERROR: GEMINI_API_KEY niet gevonden.")
+    print("")
+    print("Configureer de key op een van deze manieren:")
+    print("  1. (Aanbevolen) Claude Code settings.json:")
+    print('     ~/.claude/settings.json -> {"env": {"GEMINI_API_KEY": "jouw-key"}}')
+    print("  2. .env bestand in de projectroot met: GEMINI_API_KEY=jouw-key")
+    print("")
+    print("Key aanmaken op: https://aistudio.google.com/apikey")
+    sys.exit(1)
 
 
 SECTOR_BACKGROUNDS = {
