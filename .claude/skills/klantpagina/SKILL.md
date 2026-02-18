@@ -1,6 +1,6 @@
 ---
 name: klantpagina
-description: "Genereer een professionele Notion-klantpagina voor AI Panda. Haalt bedrijfsinfo op van de website, leest consultants uit een Excel, genereert een AI Panda-afbeelding en maakt een complete Notion-pagina met roadmap."
+description: "Genereer een professionele Notion-klantpagina voor AI Panda met persoonlijke toekomstvisie. Haalt bedrijfsinfo en merkidentiteit op, leest consultants uit een Excel, genereert een AI Panda-afbeelding, schrijft een visionair toekomstverhaal en maakt een complete Notion-pagina met roadmap en wow-factor."
 ---
 
 # AI Panda Klantpagina Generator
@@ -9,10 +9,10 @@ Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen
 
 Gebruik TodoWrite om voortgang te tonen:
 1. Bedrijfsnaam ophalen
-2. Bedrijfsinfo + Excel laden (parallel)
+2. Bedrijfsinfo + merkidentiteit + Excel laden (parallel), daarna sectorprobleem
 3. Consultants selecteren
-4. Bevestiging vragen
-5. Afbeelding, roadmap + quizvragen voorbereiden (parallel)
+4. Bevestiging vragen (incl. merkidentiteit + sectorprobleem)
+5. Panda-afbeelding + roadmap + quizvragen + toekomstverhaal (parallel), daarna visie-afbeelding
 6. Notion-pagina + quiz sub-pagina aanmaken
 
 ---
@@ -27,24 +27,35 @@ Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
 ---
 
-## Stap 2: Parallel ophalen (start beide tegelijk)
+## Stap 2: Parallel ophalen (2A + 2B tegelijk, daarna 2A2)
 
 ### 2A — Bedrijfsinfo ophalen
 
 Als KLANT_INPUT een URL bevat (http of een domein), gebruik WebFetch direct op die URL.
 Anders, bouw de URL op als `https://www.[klant].nl` of zoek via WebSearch.
 
-WebFetch prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschrijving in 2-3 zinnen (wat doet het bedrijf, sector, wat maakt het uniek), 3) De sector in één woord"
+WebFetch prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschrijving in 2-3 zinnen (wat doet het bedrijf, sector, wat maakt het uniek), 3) De sector in één woord, 4) Huisstijl/merkidentiteit: primaire en secundaire merkkleur(en) inclusief hex-codes indien zichtbaar, tagline of pay-off, visuele stijl (zakelijk/warm/technisch/menselijk), kenmerkende visuele elementen (voertuigen, uniformen, logo-stijl, fotografie-stijl)"
 
-Fallback: als WebFetch faalt (403/timeout) → WebSearch met query "[klant] Nederland bedrijfsprofiel"
-Fallback 2: als beide falen → gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap
+Fallback: als WebFetch faalt (403/timeout) → WebSearch met query "[klant] Nederland bedrijfsprofiel huisstijl kleuren"
+Fallback 2: als beide falen → gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap. Gebruik voor MERKIDENTITEIT generieke waarden (donkerblauw #1a365d, zakelijke stijl) en meld dit in het bevestigingsscherm.
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
 - `[DIAG 2A] WebFetch geslaagd op [URL]`
 - `[DIAG 2A] WebFetch faalde (403/timeout) → WebSearch gebruikt`
 - `[DIAG 2A] WebSearch ook gefaald → handmatige invoer`
 
-Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
+Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://), MERKIDENTITEIT (kleuren met hex-codes, tagline, visuele stijl, kenmerkende elementen)
+
+### 2A2 — Sectorprobleem identificeren
+
+**Wacht op 2A** (SECTOR moet beschikbaar zijn). Voer uit zodra 2A klaar is, via WebSearch:
+- Query: "[SECTOR] grootste structurele probleem AI oplossing komende 10 jaar"
+- Zoek naar fundamentele knelpunten die de hele sector raken (capaciteitstekorten, informatiefragmentatie, veiligheidsvraagstukken, regulatoire complexiteit, etc.)
+- Denk niet aan kleine efficiëntiewinsten maar aan structurele verschuivingen
+
+**Diagnostics:** `[DIAG 2A2] Sectorprobleem gevonden: [korte omschrijving]`
+
+Sla op: SECTORPROBLEEM (het kernprobleem dat AI in 10 jaar fundamenteel kan oplossen voor deze sector)
 
 ### 2B — Excel lezen (alle teamleden laden)
 
@@ -134,6 +145,9 @@ Sector: [SECTOR]
 Over het bedrijf:
 [OMSCHRIJVING]
 
+Merkidentiteit: [MERKIDENTITEIT — kleuren, tagline, visuele stijl]
+Sectorprobleem voor toekomstvisie: [SECTORPROBLEEM — kort]
+
 Consultants:
 - [NAAM_1] — [FUNCTIE_1]
 - [NAAM_2] — [FUNCTIE_2]
@@ -152,7 +166,7 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ---
 
-## Stap 5: Parallel uitvoeren (start alle drie tegelijk na bevestiging)
+## Stap 5: Parallel uitvoeren (5A + 5B + 5C + 5D tegelijk, daarna 5E na 5D)
 
 ### 5A — AI Panda-afbeelding genereren
 
@@ -410,11 +424,69 @@ Genereer 5 sector-specifieke meerkeuzevragen. Volg exact dezelfde instructies al
 
 Sla op als QUIZ_VRAGEN (markdown met 5 vragen, A/B/C per vraag).
 
+### 5D — Toekomstverhaal schrijven
+
+Input: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, SECTORPROBLEEM (beschikbaar na stap 2)
+
+Schrijf een visionair verhaal van **350-500 woorden** in het Nederlands over hoe [BEDRIJFSNAAM] er over 10 jaar uitziet dankzij AI.
+
+**Structuur** (schrijf als doorlopend proza, geen kopjes of bullets):
+
+1. **Opening met een persoon** — Begin met een concreet, levendig beeld van een medewerker op een gewone werkdag in 2035. Wie is dit? Wat doet ze? Wat ziet ze? Maak het zo specifiek dat het voelt als een scene, niet als een beschrijving.
+
+2. **Het sectorprobleem dat opgelost is** — Laat zien hoe het SECTORPROBLEEM er destijds uitzag en hoe AI dat nu fundamenteel heeft opgelost. Dit is het visionaire hart: niet "processen zijn efficienter", maar een echte structurele verschuiving die 10 jaar geleden ondenkbaar was.
+
+3. **Bedrijfsbrede transformatie** — Zoom uit naar het bedrijf als geheel. Hoe staat het er voor in de markt? Wat kunnen ze nu wat niemand anders kan? Hoe ziet de klantrelatie eruit?
+
+4. **Terug naar de mens** — Eindig bij de persoon uit de opening. Hoe ervaart zij haar werk? Wat heeft de transformatie voor haar betekend? Kort, concreet, menselijk.
+
+**Toon**: Warm, zelfverzekerd, visionair. Niet wollig of generiek. Niet vol jargon. Geen sciencefiction. Ambitieus maar aards.
+
+**Visionair betekent**: dingen beschrijven die vandaag nog niet bestaan of niet op deze schaal werken. Autonome systemen, AI die sectorbrede coordinatieproblemen oplost, nieuwe samenwerkingsvormen, diensten die vijf jaar geleden conceptueel ondenkbaar waren.
+
+**Wat je vermijdt**:
+- Generieke uitspraken die voor elk bedrijf gelden ("AI maakt processen efficienter")
+- Dingen die vandaag al bestaan en als toekomstvisie worden gepresenteerd
+- Opsommingen of bullets — het moet een verhaal zijn
+- Techno-utopisme dat de menselijke kern mist
+
+**Genereer ook:**
+- **PULL_QUOTE**: De slotquote van de persoon uit het verhaal, als blockquote. Formaat: `"[Quote]" — [Naam], [functie] bij [BEDRIJFSNAAM], 2035`
+- **KERNGETALLEN**: Vier feitelijke highlights uit het verhaal. Kies getallen en feiten die echt in het verhaal voorkomen. Formaat per regel: `[emoji] **[getal of feit]** — [korte duiding]`. Kies passende emoji's op basis van het thema.
+
+Sla op: TOEKOMSTVERHAAL, PULL_QUOTE, KERNGETALLEN
+
+### 5E — Gebrandde toekomstvisie-afbeelding genereren
+
+Input: BEDRIJFSNAAM, SECTOR, MERKIDENTITEIT, TOEKOMSTVERHAAL (beschikbaar na 5D)
+
+**Belangrijk:** 5E wacht op 5D (het toekomstverhaal) en op 5A (in Cowork gebruiken beide dezelfde browser-tab). Start 5E pas als zowel 5D als 5A klaar zijn. In Cowork: hergebruik dezelfde tab als 5A maar gebruik `window._geminiB64_visie` en `window._geminiMime_visie` als variabelen (niet dezelfde als 5A).
+
+Schrijf een gedetailleerde Engelse prompt voor Gemini image generation. De afbeelding moet onmiskenbaar van dit bedrijf zijn. Verwerk altijd:
+- **Merkkleur(en)** als dominant kleuraccent (gebruik hex-codes uit MERKIDENTITEIT)
+- **Kenmerkende visuele elementen** van het merk: logo op kleding/voertuigen, herkenbare uniformen, gebouwen of materialen
+- **Tagline of wordmark** subtiel maar zichtbaar in de scene
+- **Sfeer passend bij de merkidentiteit**: warm/zakelijk/technisch afhankelijk van MERKIDENTITEIT
+
+Aanvullende eisen:
+- **Stijl**: hyperrealistisch, fotografisch, 8K, cinematische diepte
+- **Persoon centraal**: een herkenbare medewerker in beeld, niet abstract
+- **Natuur + technologie + bedrijf in synergie**: natuur aanwezig maar ondersteunend (groene daken, plantenwand, zonlicht door bomen)
+- **Geen cliches**: geen robotarmen, blauwe hologrammen, Matrix-visuals, stockfoto-poses
+
+Genereer de afbeelding via dezelfde methode als 5A (omgevingsdetectie: lokaal via curl, Cowork via browser MCP). Gebruik het Gemini model `gemini-3-pro-image-preview`.
+
+**Fallback:** Als generatie faalt, gebruik placeholder: `https://ui-avatars.com/api/?name=[BEDRIJFSNAAM]+2035&size=400&background=1a1a2e&color=e94560&bold=true&format=png`
+
+**Diagnostics:** `[DIAG 5E] Visie-afbeelding: [methode gebruikt] → [URL of FAIL]`
+
+Sla op: VISIE_IMAGE_URL
+
 ---
 
 ## Stap 6: Notion-pagina + quiz sub-pagina aanmaken
 
-Wacht tot 5A, 5B en 5C klaar zijn.
+Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
 
 ### Notion Markdown — verplichte syntax
 
@@ -449,7 +521,7 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 ---
 
-<callout icon="💬">**"Wij bouwen aan 7-sterren organisaties: effectiever, efficienter en leuker."** — AI Panda</callout>
+<callout icon="💬">**"[PULL_QUOTE]"**</callout>
 
 ---
 
@@ -461,20 +533,24 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 ---
 
-## De AI Panda Aanpak
+## Jouw Toekomstvisie: [BEDRIJFSNAAM] in 2035
+
+[TOEKOMSTVERHAAL]
+
+<image source="[VISIE_IMAGE_URL]">[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie</image>
 
 <columns>
 	<column>
-### Effectiever
-Betere besluiten, snellere processen en slimmere samenwerking met AI als copiloot voor jouw team.
+[KERNGETAL_1]
 	</column>
 	<column>
-### Efficienter
-Routinewerk automatiseren zodat jij en je collega's tijd overhouden voor wat echt telt.
+[KERNGETAL_2]
 	</column>
 	<column>
-### Leuker
-AI neemt het saaie uit je werk. Meer energie voor creativiteit, groei en echte impact.
+[KERNGETAL_3]
+	</column>
+	<column>
+[KERNGETAL_4]
 	</column>
 </columns>
 
@@ -541,38 +617,11 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 
 ---
 
-## Handige Links & Kennisbronnen
-
-- [AI Panda website](https://aipanda.nl) — Meer weten over onze aanpak?
-- [Snel contact via WhatsApp](https://aipanda.nl/afspraakbevestigd/) — Direct een vraag stellen
-- [AI in het MKB](https://aipanda.nl/ai-in-het-mkb/) — Hoe AI jouw sector verandert
-- Contact: info@aipanda.nl
-
----
-
 ## AI-Readiness Quickscan
 
 Wil je weten hoe ver jouw organisatie staat met AI? Beantwoord 5 korte vragen en ontdek je AI-volwassenheidsniveau op de schaal van starter tot koploper.
 
 Open de sub-pagina **AI-Readiness Quickscan** hieronder om te starten.
-
----
-
-## Het 7-Sterren AI-Maturity Model
-
-AI Panda werkt met zeven niveaus van AI-volwassenheid. Hoe hoger jouw ster, hoe beter je organisatie AI inzet om te groeien, te besparen en te vernieuwen.
-
-| Niveau | Naam | Wat betekent dit? |
-|---|---|---|
-| 1 | Onbewust | Geen bewustzijn van AI-mogelijkheden in de organisatie |
-| 2 | Bewust | Bekend met AI, maar nog geen actief gebruik |
-| 3 | Experimenterend | Eerste experimenten met AI-tools door vroege adopters |
-| 4 | Structureel | AI structureel ingezet in dagelijkse processen |
-| 5 | Strategisch | AI als strategisch concurrentievoordeel ingezet |
-| 6 | AI-gedreven | De organisatie is volledig AI-first ingericht |
-| 7 | Meester | Meester in het ontwikkelen en implementeren van AI |
-
-*Het doel van dit traject: [BEDRIJFSNAAM] naar een structureel hoger niveau tillen.*
 
 ---
 
@@ -658,7 +707,8 @@ Toon:
 1. Klantpagina aangemaakt
 2. Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
 3. Quiz sub-pagina: `[QUIZ_PAGE_URL]` (klikbaar)
-4. Korte samenvatting: bedrijf, consultants, roadmap en quiz gegenereerd
+4. Korte samenvatting: bedrijf, toekomstvisie (met pull quote preview), consultants, roadmap en quiz gegenereerd
+5. Geef de visie-afbeelding prompt weer zodat de gebruiker die kan beoordelen
 
 ---
 
@@ -666,8 +716,12 @@ Toon:
 
 De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
 - WebFetch faalt → WebSearch → gebruiker vragen
+- Merkidentiteit niet gevonden → gebruik generieke waarden (donkerblauw, zakelijke stijl) en meld dit
+- Sectorprobleem niet gevonden via WebSearch → gebruik eigen kennis over de sector, meld dit
 - Excel niet gevonden → namen gebruiken zoals ingetypt
-- Image-generatie faalt → placeholder URL, doorgaan
+- Panda-afbeelding generatie faalt → placeholder URL, doorgaan
+- Toekomstverhaal generatie faalt → schrijf een korter verhaal (150-200 woorden) als fallback
+- Visie-afbeelding generatie faalt → placeholder URL, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken
 - Quiz sub-pagina aanmaken faalt → doorgaan zonder, meld het resultaat
 - Database formula niet ondersteund → database zonder formules met callout als fallback
