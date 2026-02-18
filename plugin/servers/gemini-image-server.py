@@ -29,6 +29,17 @@ except ImportError:
 
 mcp = FastMCP("gemini-image-generator")
 
+# Load .env fallback for local development (Cowork passes env via .mcp.json)
+if not os.environ.get("GEMINI_API_KEY"):
+    try:
+        from dotenv import load_dotenv
+        for _p in [Path(__file__).parent.parent.parent / ".env", Path(__file__).parent / ".env"]:
+            if _p.exists():
+                load_dotenv(_p)
+                break
+    except ImportError:
+        pass  # dotenv is optional
+
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-2.0-flash-exp"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
