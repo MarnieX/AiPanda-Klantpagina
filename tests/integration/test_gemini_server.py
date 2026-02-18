@@ -1,7 +1,9 @@
 """Tests for the Gemini MCP image server (plugin/servers/gemini-image-server.py)."""
 
 import json
+import os
 import sys
+import importlib
 from pathlib import Path
 from unittest.mock import patch, AsyncMock, MagicMock
 import base64
@@ -12,6 +14,26 @@ import pytest_asyncio
 # Add plugin/servers to path
 SERVERS_DIR = Path(__file__).parent.parent.parent / "plugin" / "servers"
 sys.path.insert(0, str(SERVERS_DIR))
+
+
+def _import_server():
+    """Helper to (re-)import gemini-image-server with mocked MCP dependency."""
+    mock_mcp = MagicMock()
+    mock_mcp.server.fastmcp.FastMCP = MagicMock()
+    mock_mcp_instance = MagicMock()
+    mock_mcp_instance.tool = MagicMock(return_value=lambda f: f)
+    mock_mcp.server.fastmcp.FastMCP.return_value = mock_mcp_instance
+
+    if "gemini-image-server" in sys.modules:
+        del sys.modules["gemini-image-server"]
+
+    with patch.dict("sys.modules", {
+        "mcp": mock_mcp,
+        "mcp.server": mock_mcp.server,
+        "mcp.server.fastmcp": mock_mcp.server.fastmcp,
+    }):
+        server = importlib.import_module("gemini-image-server")
+    return server
 
 
 @pytest.mark.integration
@@ -211,3 +233,62 @@ class TestGenerateCustomImage:
                 data = json.loads(result)
                 assert data["success"] is False
                 assert "fallback_url" not in data
+
+
+@pytest.mark.integration
+class TestServerEnvLoading:
+    """Test that the MCP server loads GEMINI_API_KEY correctly."""
+
+    def test_dotenv_fallback_when_env_var_missing(self, tmp_path):
+        """Server should load key from .env when env var is not set."""
+        env_file = tmp_path / ".env"
+        env_file.write_text("GEMINI_API_KEY=dotenv-server-key\n")
+
+        with patch.dict(os.environ, {}, clear=True):
+            mock_mcp = MagicMock()
+            mock_mcp.server.fastmcp.FastMCP = MagicMock()
+
+            if "gemini-image-server" in sys.modules:
+                del sys.modules["gemini-image-server"]
+
+            # Patch Path(__file__) resolution so it finds our tmp .env
+            original_path = Path
+
+            def patched_path(*args, **kwargs):
+                return original_path(*args, **kwargs)
+
+            with patch.dict("sys.modules", {
+                "mcp": mock_mcp,
+                "mcp.server": mock_mcp.server,
+                "mcp.server.fastmcp": mock_mcp.server.fastmcp,
+                "dotenv": MagicMock(),
+            }):
+                # Simulate: dotenv is available and sets the key
+                import dotenv as mock_dotenv
+                def fake_load_dotenv(path):
+                    os.environ["GEMINI_API_KEY"] = "dotenv-server-key"
+                mock_dotenv.load_dotenv = fake_load_dotenv
+
+                # Make one of the .env paths "exist"
+                with patch("pathlib.Path.exists", return_value=True):
+                    server = importlib.import_module("gemini-image-server")
+                    assert server.GEMINI_API_KEY == "dotenv-server-key"
+
+        os.environ.pop("GEMINI_API_KEY", None)
+
+    def test_env_passthrough_has_priority(self):
+        """When env var is already set (Cowork), dotenv should not be loaded."""
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "cowork-passed-key"}, clear=False):
+            mock_mcp = MagicMock()
+            mock_mcp.server.fastmcp.FastMCP = MagicMock()
+
+            if "gemini-image-server" in sys.modules:
+                del sys.modules["gemini-image-server"]
+
+            with patch.dict("sys.modules", {
+                "mcp": mock_mcp,
+                "mcp.server": mock_mcp.server,
+                "mcp.server.fastmcp": mock_mcp.server.fastmcp,
+            }):
+                server = importlib.import_module("gemini-image-server")
+                assert server.GEMINI_API_KEY == "cowork-passed-key"
