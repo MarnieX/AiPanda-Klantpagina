@@ -31,18 +31,17 @@ Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
 ### 2A — Bedrijfsinfo ophalen
 
-Als KLANT_INPUT een URL bevat (http of een domein), gebruik WebFetch direct op die URL.
-Anders, bouw de URL op als `https://www.[klant].nl` of zoek via WebSearch.
+Gebruik WebSearch met twee queries (parallel als mogelijk):
+1. `"[klant] Nederland bedrijf sector omschrijving"` — voor BEDRIJFSNAAM, OMSCHRIJVING, SECTOR
+2. `"[klant] huisstijl merkidentiteit kleuren tagline"` — voor MERKIDENTITEIT
 
-WebFetch prompt: "Geef in het Nederlands: 1) Officiële bedrijfsnaam, 2) Omschrijving in 2-3 zinnen (wat doet het bedrijf, sector, wat maakt het uniek), 3) De sector in één woord, 4) Huisstijl/merkidentiteit: primaire en secundaire merkkleur(en) inclusief hex-codes indien zichtbaar, tagline of pay-off, visuele stijl (zakelijk/warm/technisch/menselijk), kenmerkende visuele elementen (voertuigen, uniformen, logo-stijl, fotografie-stijl)"
+Als KLANT_INPUT een URL of domein bevat, gebruik dat als WEBSITE_DOMEIN. Anders, leid het domein af uit de WebSearch-resultaten.
 
-Fallback: als WebFetch faalt (403/timeout) → WebSearch met query "[klant] Nederland bedrijfsprofiel huisstijl kleuren"
-Fallback 2: als beide falen → gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap. Gebruik voor MERKIDENTITEIT generieke waarden (donkerblauw #1a365d, zakelijke stijl) en meld dit in het bevestigingsscherm.
+Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap. Gebruik voor MERKIDENTITEIT generieke waarden (donkerblauw #1a365d, zakelijke stijl) en meld dit in het bevestigingsscherm.
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
-- `[DIAG 2A] WebFetch geslaagd op [URL]`
-- `[DIAG 2A] WebFetch faalde (403/timeout) → WebSearch gebruikt`
-- `[DIAG 2A] WebSearch ook gefaald → handmatige invoer`
+- `[DIAG 2A] WebSearch geslaagd`
+- `[DIAG 2A] WebSearch gefaald → handmatige invoer`
 
 Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://), MERKIDENTITEIT (kleuren met hex-codes, tagline, visuele stijl, kenmerkende elementen)
 
@@ -699,7 +698,7 @@ Toon:
 ## Foutafhandeling
 
 De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
-- WebFetch faalt → WebSearch → gebruiker vragen
+- WebSearch faalt → gebruiker vragen
 - Merkidentiteit niet gevonden → gebruik generieke waarden (donkerblauw, zakelijke stijl) en meld dit
 - Sectorprobleem niet gevonden via WebSearch → gebruik eigen kennis over de sector, meld dit
 - Excel niet gevonden → namen gebruiken zoals ingetypt
