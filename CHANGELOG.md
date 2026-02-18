@@ -8,6 +8,9 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 ## [Unreleased]
 
 ### Added
+- Toekomstvisie geintegreerd in klantpagina-skill: persoonlijke pull quote (vervangt generieke 7-sterren quote), 10-jaar transformatieverhaal (350-500 woorden visionair proza), gebrandde toekomstvisie-afbeelding via Gemini, en 4 kerngetallen
+- Research-fase uitgebreid met merkidentiteit (kleuren, tagline, visuele stijl) en sectorprobleem-identificatie
+- Kwaliteitscheck uitgebreid met toekomstverhaal, kerngetallen, visie-afbeelding en pull quote validatie
 - Browser MCP flow voor image generation in Cowork: automatische omgevingsdetectie, Chrome MCP-bridge voor Gemini API calls via `tabs_context_mcp`, `navigate`, `javascript_tool` en `computer` (screenshot)
 - Catbox.moe upload vanuit browser JS (Cowork): gegenereerde afbeeldingen uploaden voor publieke URL zonder sandbox-restricties
 - Panda-reference.png permanent gehost op catbox.moe (`https://files.catbox.moe/23dzti.png`)
@@ -19,6 +22,8 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - README met duidelijke configuratie-instructies (settings.json als primaire methode, .env als fallback)
 
 ### Changed
+- Klantpagina paginastructuur herschreven: van 10 naar 9 secties, toekomstvisie als wow-moment na bedrijfsinfo
+- Losse `AI-toekomstvisie.zip` verwijderd (content geintegreerd in klantpagina-skill)
 - `gemini-image` skill herschreven met twee flows: lokaal (curl) en Cowork (browser MCP via Chrome)
 - Klantpagina stap 5A herschreven met omgevingsdetectie en browser MCP flow voor Cowork
 - Gemini model geupdate naar `gemini-3-pro-image-preview` in alle skills
@@ -30,6 +35,9 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 - Env loading vereenvoudigd: van 5 .env zoekpaden naar 1-2 (projectroot + working dir)
 
 ### Removed
+- Secties "De AI Panda Aanpak (3 pijlers)", "7-Sterren AI-Maturity Model" en "Handige Links & Kennisbronnen" uit klantpagina template (generiek, lage wowfactor, vervangen door persoonlijke toekomstvisie)
+- Generieke quote ("Wij bouwen aan 7-sterren organisaties") vervangen door persoonlijke pull quote uit toekomstvisie
+- `AI-toekomstvisie.zip` skill (geintegreerd in klantpagina-skill)
 - `load-env.sh` SessionStart hook verwijderd (werkte niet in Cowork vanwege bug #11649)
 
 ### Fixed
