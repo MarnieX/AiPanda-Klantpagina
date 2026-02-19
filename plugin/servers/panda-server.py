@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-MCP server voor AI-beeldgeneratie via Google Gemini.
-Genereert afbeeldingen en upload ze naar 0x0.st (primair) of catbox.moe (fallback) voor publieke URLs.
+MCP server voor AI Panda plugin.
+- AI-beeldgeneratie via Google Gemini
+- Image upload naar 0x0.st / catbox.moe
+- Team Excel uitlezen
 """
 
 import asyncio
@@ -26,8 +28,14 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "httpx", "httpcore[socks]", "--break-system-packages", "-q"])
     import httpx
 
+try:
+    import openpyxl
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "openpyxl", "--break-system-packages", "-q"])
+    import openpyxl
 
-mcp = FastMCP("gemini-image-generator")
+
+mcp = FastMCP("panda-server")
 
 # GEMINI_API_KEY is passed via .mcp.json from the environment.
 # In Cowork/CLI this is set by ~/.claude/settings.json.
@@ -201,6 +209,76 @@ async def upload_image_base64(image_base64: str, filename: str = "image.png") ->
         return json.dumps({"success": True, "image_url": url})
     except Exception as e:
         return json.dumps({"success": False, "error": str(e)})
+
+
+@mcp.tool()
+async def read_team_excel() -> str:
+    """
+    Lees het AI Panda teambestand (ai-panda-team.xlsx) en retourneer alle teamleden als JSON.
+    Zoekt automatisch op de juiste locatie (CLAUDE_PLUGIN_ROOT of find fallback).
+
+    Retourneert: JSON array met objecten: [{naam, functie, foto_url, telefoon, email}, ...]
+    Bij fout: JSON object met error en searched_paths.
+    """
+    searched_paths = []
+
+    # Primary: CLAUDE_PLUGIN_ROOT (most reliable in Cowork)
+    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+    if plugin_root:
+        candidate = Path(plugin_root) / "data" / "ai-panda-team.xlsx"
+        searched_paths.append(str(candidate))
+        if candidate.exists():
+            return _read_excel(candidate)
+
+    # Fallback: relative to this script (local development)
+    script_relative = Path(__file__).parent.parent / "data" / "ai-panda-team.xlsx"
+    searched_paths.append(str(script_relative))
+    if script_relative.exists():
+        return _read_excel(script_relative)
+
+    # Fallback: find with timeout
+    try:
+        result = subprocess.run(
+            ["find", "/sessions", str(Path.home()), "-maxdepth", "3", "-name", "ai-panda-team.xlsx"],
+            capture_output=True, text=True, timeout=5,
+        )
+        for line in result.stdout.strip().splitlines():
+            path = Path(line.strip())
+            searched_paths.append(str(path))
+            if path.exists():
+                return _read_excel(path)
+    except (subprocess.TimeoutExpired, Exception):
+        pass
+
+    return json.dumps({
+        "error": "ai-panda-team.xlsx niet gevonden",
+        "searched_paths": searched_paths,
+    })
+
+
+def _read_excel(path: Path) -> str:
+    """Parse the team Excel file and return JSON."""
+    try:
+        wb = openpyxl.load_workbook(path)
+        ws = wb.active
+
+        headers = [str(cell or "").strip().lower() for cell in next(ws.iter_rows(min_row=1, max_row=1, values_only=True))]
+        team = []
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            if row[0]:
+                entry = {}
+                for i, h in enumerate(headers):
+                    entry[h] = str(row[i] or "") if i < len(row) else ""
+                team.append({
+                    "naam": entry.get("naam", ""),
+                    "functie": entry.get("functie", ""),
+                    "foto_url": entry.get("foto-url", entry.get("foto_url", "")),
+                    "telefoon": entry.get("telefoon", ""),
+                    "email": entry.get("e-mail", entry.get("email", "")),
+                })
+        return json.dumps(team, ensure_ascii=False)
+    except Exception as e:
+        return json.dumps({"error": f"Excel lezen mislukt: {e}", "path": str(path)})
 
 
 if __name__ == "__main__":
