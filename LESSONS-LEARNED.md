@@ -95,7 +95,7 @@ Vanuit de Cowork browser-sandbox kun je niet uploaden naar catbox.moe (geen `Acc
 
 catbox.moe geeft regelmatig 504 Gateway Timeout errors. Dit is een gratis dienst zonder SLA.
 
-**Oplossing:** Gebruik `0x0.st` als fallback. Beide zijn tijdelijke hostingdiensten (bestanden verlopen). Voor productie zou een permanente hostingoplossing (Cloudinary, S3) beter zijn.
+**Oplossing:** Gebruik `tmpfiles.org` als fallback naast catbox. Beide zijn tijdelijke hostingdiensten (bestanden verlopen). Voor productie is een permanente hostingoplossing (Cloudinary/S3) beter.
 
 ---
 
@@ -117,13 +117,13 @@ Notion heeft geen `<embed>` block type. De `<video>` tag accepteert elke URL en 
 
 Getest met de AI-Readiness Quickscan (GitHub Pages app). De `<video>` tag toont een klikbaar embed-blok dat de webapp laadt. De caption wordt als koptekst boven het blok getoond.
 
-### 12. 0x0.st is betrouwbaarder dan catbox.moe als primaire uploadhost
+### 12. Gebruik een dubbele upload-fallback (catbox + tmpfiles)
 
-catbox.moe geeft regelmatig 504 Gateway Timeout terug. 0x0.st is sneller, minder gevoelig voor storingen, en ondersteunt bestanden tot 512 MiB.
+catbox.moe geeft soms 504/instabiliteit terug. Een tweede uploadprovider voorkomt dat image-generatie stukloopt.
 
 **Volgorde in de MCP server:**
-1. Probeer 0x0.st (primair, via `curl -F "file=@{path}" https://0x0.st`)
-2. Als dat faalt, probeer catbox.moe (fallback)
+1. Probeer catbox.moe (primair)
+2. Als dat faalt, probeer tmpfiles.org (fallback)
 3. Als beide falen, retourneer lege string en gebruik placeholder
 
 Beide diensten zijn tijdelijk (bestanden verlopen). Notion kopieert afbeeldingen bij aanmaken naar zijn eigen CDN, waardoor verlopen URLs geen probleem zijn voor bestaande pagina's.
