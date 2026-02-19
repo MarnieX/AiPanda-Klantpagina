@@ -8,34 +8,37 @@ MCP server voor AI Panda plugin.
 - Team Excel uitlezen
 """
 
-import asyncio
 import base64
 import json
+import logging
 import os
 import subprocess
-import sys
 import tempfile
 import urllib.request
+import uuid
 from pathlib import Path
 
-# Ensure dependencies
 try:
     from mcp.server.fastmcp import FastMCP
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "mcp[cli]", "--break-system-packages", "-q"])
-    from mcp.server.fastmcp import FastMCP
+    raise RuntimeError("Missing dependency: mcp[cli]. Install project/runtime dependencies first.")
 
 try:
     import httpx
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "httpx", "httpcore[socks]", "--break-system-packages", "-q"])
-    import httpx
+    raise RuntimeError("Missing dependency: httpx (+ httpcore[socks] in Cowork).")
 
 try:
     import openpyxl
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "openpyxl", "--break-system-packages", "-q"])
-    import openpyxl
+    raise RuntimeError("Missing dependency: openpyxl.")
+
+
+logging.basicConfig(
+    level=os.environ.get("PANDA_LOG_LEVEL", "INFO"),
+    format="%(asctime)s %(levelname)s panda-server %(message)s",
+)
+logger = logging.getLogger("panda-server")
 
 
 mcp = FastMCP("panda-server")
@@ -50,7 +53,7 @@ if not os.environ.get("GEMINI_API_KEY") or not os.environ.get("OPENAI_API_KEY"):
         if _env.exists():
             load_dotenv(_env)
     except ImportError:
-        pass
+        logger.warning("python-dotenv not installed; skipping .env fallback loading.")
 
 _gemini_api_key = os.environ.get("GEMINI_API_KEY", "")
 _openai_api_key = os.environ.get("OPENAI_API_KEY", "")
@@ -78,6 +81,10 @@ def _load_panda_reference() -> str | None:
     return None
 
 _panda_reference_b64 = _load_panda_reference()
+if _panda_reference_b64:
+    logger.info("Loaded panda reference image.")
+else:
+    logger.warning("Panda reference image not found; generation will continue without it.")
 
 # --- Panda character prompt (photorealistic, based on reference) ---
 PANDA_PROMPT_BASE = (
@@ -143,8 +150,11 @@ def _fetch_logo_b64(domain: str) -> str | None:
                 capture_output=True, timeout=10,
             )
             if result.returncode == 0 and len(result.stdout) > 100:
+                logger.info("Logo resolved for domain '%s' via %s", domain, url.split("?")[0])
                 return base64.b64encode(result.stdout).decode()
+            logger.warning("Logo fetch attempt failed for domain '%s' via %s", domain, url.split("?")[0])
         except Exception:
+            logger.exception("Logo fetch crashed for domain '%s' via %s", domain, url.split("?")[0])
             continue
     return None
 
@@ -279,6 +289,8 @@ async def upload_to_catbox(tmp_path: str) -> str:
         capture_output=True, text=True, timeout=30,
     )
     url = result.stdout.strip()
+    if not url.startswith("http"):
+        logger.warning("catbox upload failed for %s", tmp_path)
     return url if url.startswith("http") else ""
 
 
@@ -295,7 +307,7 @@ async def upload_to_tmpfiles(tmp_path: str) -> str:
             page_url = data["data"]["url"]
             return page_url.replace("tmpfiles.org/", "tmpfiles.org/dl/", 1).replace("http://", "https://")
     except (json.JSONDecodeError, KeyError):
-        pass
+        logger.warning("tmpfiles upload response parse failed for %s", tmp_path)
     return ""
 
 
@@ -308,10 +320,13 @@ async def upload_image(image_bytes: bytes, filename: str = "image.png") -> str:
     try:
         url = await upload_to_catbox(tmp_path)
         if url:
+            logger.info("Image upload succeeded via catbox.")
             return url
         url = await upload_to_tmpfiles(tmp_path)
         if url:
+            logger.info("Image upload succeeded via tmpfiles.")
             return url
+        logger.warning("Image upload failed for both providers.")
         return ""
     finally:
         Path(tmp_path).unlink(missing_ok=True)
@@ -330,7 +345,12 @@ async def generate_panda_image(bedrijfsnaam: str, sector: str = "", website: str
         sector: De sector van het bedrijf (optioneel, voor sector-specifieke omgeving).
         website: Het domein van het bedrijf (optioneel, voor logo ophalen, bijv. "bol.com").
     """
-    fallback_url = f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png"
+    request_id = uuid.uuid4().hex[:8]
+    fallback_url = "https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png"
+    logger.info(
+        "[%s] generate_panda_image start bedrijf='%s' sector='%s' website='%s'",
+        request_id, bedrijfsnaam, sector, website
+    )
 
     # Fetch company logo
     logo_b64 = _fetch_logo_b64(website)
@@ -344,9 +364,11 @@ async def generate_panda_image(bedrijfsnaam: str, sector: str = "", website: str
         if image_bytes:
             url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
             if url:
+                logger.info("[%s] generate_panda_image success provider=gemini", request_id)
                 return json.dumps({"success": True, "image_url": url, "provider": "gemini", "bedrijfsnaam": bedrijfsnaam})
+        logger.warning("[%s] generate_panda_image gemini produced no image or upload url", request_id)
     except Exception:
-        pass
+        logger.exception("[%s] generate_panda_image gemini failed", request_id)
 
     # Try OpenAI (prompt-only, no reference images)
     try:
@@ -354,10 +376,13 @@ async def generate_panda_image(bedrijfsnaam: str, sector: str = "", website: str
         if image_bytes:
             url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
             if url:
+                logger.info("[%s] generate_panda_image success provider=openai", request_id)
                 return json.dumps({"success": True, "image_url": url, "provider": "openai", "bedrijfsnaam": bedrijfsnaam})
+        logger.warning("[%s] generate_panda_image openai produced no image or upload url", request_id)
     except Exception:
-        pass
+        logger.exception("[%s] generate_panda_image openai failed", request_id)
 
+    logger.warning("[%s] generate_panda_image failed; returning fallback url", request_id)
     return json.dumps({
         "success": False,
         "error": "Beide providers (Gemini en OpenAI) hebben gefaald.",
@@ -374,15 +399,20 @@ async def generate_custom_image(prompt: str) -> str:
     Args:
         prompt: Beschrijving van de gewenste afbeelding (in het Engels voor beste resultaten).
     """
+    request_id = uuid.uuid4().hex[:8]
+    logger.info("[%s] generate_custom_image start", request_id)
+
     # Try Gemini
     try:
         image_bytes = await generate_with_gemini(prompt)
         if image_bytes:
             url = await upload_image(image_bytes)
             if url:
+                logger.info("[%s] generate_custom_image success provider=gemini", request_id)
                 return json.dumps({"success": True, "image_url": url, "provider": "gemini"})
+        logger.warning("[%s] generate_custom_image gemini produced no image or upload url", request_id)
     except Exception:
-        pass
+        logger.exception("[%s] generate_custom_image gemini failed", request_id)
 
     # Try OpenAI
     try:
@@ -390,10 +420,13 @@ async def generate_custom_image(prompt: str) -> str:
         if image_bytes:
             url = await upload_image(image_bytes)
             if url:
+                logger.info("[%s] generate_custom_image success provider=openai", request_id)
                 return json.dumps({"success": True, "image_url": url, "provider": "openai"})
+        logger.warning("[%s] generate_custom_image openai produced no image or upload url", request_id)
     except Exception:
-        pass
+        logger.exception("[%s] generate_custom_image openai failed", request_id)
 
+    logger.warning("[%s] generate_custom_image failed", request_id)
     return json.dumps({"success": False, "error": "Geen afbeelding gegenereerd (Gemini en OpenAI beide gefaald)."})
 
 
@@ -434,12 +467,14 @@ async def read_team_excel() -> str:
         candidate = Path(plugin_root) / "data" / "ai-panda-team.xlsx"
         searched_paths.append(str(candidate))
         if candidate.exists():
+            logger.info("read_team_excel resolved via CLAUDE_PLUGIN_ROOT.")
             return _read_excel(candidate)
 
     # Fallback: relative to this script (local development)
     script_relative = Path(__file__).parent.parent / "data" / "ai-panda-team.xlsx"
     searched_paths.append(str(script_relative))
     if script_relative.exists():
+        logger.info("read_team_excel resolved via server-relative path.")
         return _read_excel(script_relative)
 
     # Fallback: find with timeout
@@ -452,6 +487,7 @@ async def read_team_excel() -> str:
             path = Path(line.strip())
             searched_paths.append(str(path))
             if path.exists():
+                logger.info("read_team_excel resolved via find fallback at %s", path)
                 return _read_excel(path)
     except (subprocess.TimeoutExpired, Exception):
         pass
@@ -482,8 +518,10 @@ def _read_excel(path: Path) -> str:
                     "telefoon": entry.get("telefoon", ""),
                     "email": entry.get("e-mail", entry.get("email", "")),
                 })
+        logger.info("read_team_excel parsed %d team members from %s", len(team), path)
         return json.dumps(team, ensure_ascii=False)
     except Exception as e:
+        logger.exception("read_team_excel failed for %s", path)
         return json.dumps({"error": f"Excel lezen mislukt: {e}", "path": str(path)})
 
 

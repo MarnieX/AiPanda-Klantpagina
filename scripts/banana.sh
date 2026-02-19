@@ -33,15 +33,10 @@ fi
 echo "🍌 === Nano Banana Pro Pipeline ==="
 echo ""
 
-# Stap 1: Optimaliseer prompt
+# Stap 1 + 2: Optimaliseer prompt en genereer direct
 echo "📝 Stap 1: Prompt optimaliseren..."
-python3 "$SCRIPT_DIR/prompt-optimizer.py" "$@"
-
-echo ""
-
-# Stap 2: Genereer afbeelding
 echo "🎨 Stap 2: Afbeelding genereren..."
-"$SCRIPT_DIR/nano-banana-generate.sh"
+python3 "$SCRIPT_DIR/prompt-optimizer.py" "$@" --generate
 
 echo ""
 echo "🍌 === Pipeline compleet! ==="

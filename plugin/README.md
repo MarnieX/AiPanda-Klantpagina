@@ -1,4 +1,4 @@
-# AI Panda Klantpagina Generator v2.1
+# AI Panda Klantpagina Generator v2.2
 
 Genereer professionele Notion-klantpagina's voor AI Panda met een interactieve wizard.
 
@@ -32,7 +32,6 @@ De plugin begeleidt je stap voor stap bij het aanmaken van een klantpagina in No
 ### Vereist
 
 - **Notion-connector** in Cowork (voor het aanmaken van pagina's)
-- **ai-panda-team.xlsx** in je werkmap (Excel met teamleden)
 
 ### API Keys
 
@@ -74,8 +73,7 @@ Zeg iets als "maak een klantpagina voor Coolblue" en de skill wordt automatisch 
 ```
 Gemini + referentie-image + bedrijfslogo (multimodal)
   → OpenAI gpt-image-1.5 (prompt-only)
-    → Browser JS Gemini (Cowork)
-      → Lege string (flow stopt nooit)
+    → Placeholder/fallback URL (flow stopt nooit)
 ```
 
 ## Excel-formaat (ai-panda-team.xlsx)

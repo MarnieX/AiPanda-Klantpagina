@@ -10,13 +10,14 @@ Gebruik:
   python prompt-optimizer.py "berglandschap" --stijl foto --ratio 16:9
   python prompt-optimizer.py "logo voor koffieshop" --stijl logo --tekst "Morning Brew"
 
-Dit script slaat het resultaat op als .txt in de prompts/ map,
-zodat nano-banana-generate.sh het automatisch oppikt.
+Dit script slaat het resultaat op als .txt in de prompts/ map
+en kan optioneel direct de image-generator aanroepen.
 """
 
 import argparse
 import os
 import sys
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -183,7 +184,7 @@ def main():
     parser.add_argument(
         "--generate", "-g",
         action="store_true",
-        help="Direct genereren na optimalisatie (voert nano-banana-generate.sh uit)",
+        help="Direct genereren na optimalisatie (roept generate_notion_image.py aan)",
     )
 
     args = parser.parse_args()
@@ -216,11 +217,18 @@ def main():
     if args.generate:
         print()
         script_dir = Path(__file__).parent
-        generate_script = script_dir / "nano-banana-generate.sh"
+        generate_script = script_dir / "generate_notion_image.py"
         if generate_script.exists():
-            os.system(f'"{generate_script}"')
+            cmd = [
+                sys.executable,
+                str(generate_script),
+                prompt,
+                "--ratio", args.ratio,
+                "--model", args.model,
+            ]
+            subprocess.run(cmd, check=False)
         else:
-            print("⚠️  nano-banana-generate.sh niet gevonden. Voer handmatig uit:")
+            print("⚠️  generate_notion_image.py niet gevonden. Voer handmatig uit:")
             print(f'   python generate_notion_image.py "{prompt}" --ratio {args.ratio} --model {args.model}')
 
     return prompt

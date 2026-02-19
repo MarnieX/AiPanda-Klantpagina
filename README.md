@@ -43,11 +43,12 @@ Download `ai-panda-klantpagina.zip` uit deze repository en installeer het in Cla
 
 ### 2. API-key instellen
 
-De plugin gebruikt Google Gemini voor beeldgeneratie. Je hebt een (gratis) API-key nodig:
+De plugin gebruikt Google Gemini (primair) en optioneel OpenAI (fallback) voor beeldgeneratie:
 
 | Key | Waarvoor | Aanmaken |
 |---|---|---|
-| `GEMINI_API_KEY` | AI-beeldgeneratie | [Google AI Studio](https://aistudio.google.com/apikey) |
+| `GEMINI_API_KEY` | AI-beeldgeneratie (primair) | [Google AI Studio](https://aistudio.google.com/apikey) |
+| `OPENAI_API_KEY` | AI-beeldgeneratie (fallback) | [OpenAI Platform](https://platform.openai.com/api-keys) |
 
 **Methode 1: Claude Code settings.json (aanbevolen)**
 
@@ -98,11 +99,11 @@ scripts/                  Python scripts voor beeldgeneratie
   prompt-optimizer.py         Prompt templates voor verschillende stijlen
   banana.sh                   CLI wrapper
 
-plugin/                   Plugin bronbestanden (wordt gezipt door build.sh)
+plugin/                   Plugin bronbestanden
   commands/klantpagina.md     /klantpagina slash command
-  servers/gemini-image-server.py  MCP server voor Gemini
-  hooks/hooks.json            Automatische kwaliteitscheck
-  skills/klantpagina/SKILL.md     Volledige skill-workflow
+  servers/panda-server.py     MCP server (Gemini + OpenAI + logo + Excel)
+  templates/klantpagina.md    Notion template
+  skills/klantpagina-v2/SKILL.md  Orchestrator-workflow
 
 assets/                   Referentiebestanden
   panda-reference.png         Panda character referentie voor Gemini
@@ -122,18 +123,17 @@ docs/                     Referentiemateriaal, vergaderverslagen, presentaties
 | **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina met toekomstvisie en quiz |
 | **AI-Quiz Skill** | Standalone skill: genereert interactieve AI-Readiness quiz als klikbare URL |
 | **Gemini Image Skill** | Standalone image generation via curl (lokaal) of browser MCP (Cowork) |
-| **Gemini MCP Server** | Beeldgeneratie via Google Gemini, upload naar 0x0.st (primair) of catbox.moe (fallback) |
+| **Panda MCP Server** | Beeldgeneratie via Gemini/OpenAI, logo-resolutie, Excel parsing, upload via catbox/tmpfiles |
 | **Nano Banana Pro** | Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
 | **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele Gemini-prompt |
-| **Kwaliteitscheck Hook** | Controleert automatisch of de gegenereerde pagina compleet en specifiek is |
 
 ---
 
 ## Status
 
-Fase 1 (MVP), Fase 2 (Features) en Fase 3 (Component Review) zijn afgerond. De volledige flow werkt: van bedrijfsnaam tot Notion-klantpagina met 2028-quote, twee-koloms bedrijfsprofiel, team, roadmap en interactieve quiz.
+Fase 1 (MVP), Fase 2 (Features) en Fase 3 (Component Review) zijn afgerond. v2.2 draait end-to-end: van bedrijfsnaam tot Notion-klantpagina met 2028-quote, roadmap, quiz en Gamma-toekomstvisie.
 
-Openstaand: Gamma.app toekomstvisie-presentatie integreren, prompt optimizer finetunen, onboarding documentatie.
+Openstaand: prompt optimizer finetunen, onboarding documentatie, plugin-installatie validatie in Cowork.
 
 Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
 
@@ -147,6 +147,21 @@ Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
 | [BACKLOG.md](./BACKLOG.md) | Openstaande taken per fase |
 | [CHANGELOG.md](./CHANGELOG.md) | Versiegeschiedenis |
 | [CLAUDE.md](./CLAUDE.md) | AI-agent instructies voor dit project |
+
+---
+
+## Cowork Readiness Test (zonder Cowork)
+
+Voor een snelle gate op de kritieke flow "afbeelding genereren -> in Notion-content opnemen":
+
+```bash
+./scripts/cowork-readiness.sh
+```
+
+Dit script draait Cowork-simulatie-tests en rapporteert:
+- `IMAGE_GENERATION`
+- `NOTION_IMAGE_EMBED`
+- `OVERALL`
 
 ---
 
