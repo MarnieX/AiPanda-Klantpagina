@@ -93,7 +93,7 @@ PANDA_PROMPT_BASE = (
     "crisp white dress shirt, and a bold orange necktie. The panda has black "
     "furry paws instead of human hands. Confident posture, striding forward as "
     "a leader. Cinematic photography style, natural lighting, sharp focus, "
-    "shallow depth of field."
+    "shallow depth of field. Wide landscape banner format, 16:9 aspect ratio."
 )
 
 LOGO_PROMPT_WITH_REF = (
@@ -222,6 +222,7 @@ async def generate_with_gemini(prompt: str, logo_b64: str | None = None) -> byte
         "contents": [{"parts": parts}],
         "generationConfig": {
             "responseModalities": ["TEXT", "IMAGE"],
+            "aspectRatio": "16:9",
         },
     }
 
@@ -250,7 +251,7 @@ async def generate_with_openai(prompt: str) -> bytes | None:
         "model": "gpt-image-1.5",
         "prompt": prompt,
         "n": 1,
-        "size": "1024x1024",
+        "size": "1792x1024",
         "quality": "high",
     }
 
