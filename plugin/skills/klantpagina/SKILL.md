@@ -8,7 +8,6 @@ description: "Genereer een professionele Notion-klantpagina voor AI Panda. Haalt
 Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde. Start parallelstappen altijd tegelijk om snelheid te winnen.
 
 Gebruik TodoWrite om voortgang te tonen:
-0. Health check (omgeving, API key, Excel, MCP's)
 1. Bedrijfsnaam ophalen
 2. Bedrijfsinfo + Excel laden (parallel)
 3. Consultants selecteren
@@ -17,64 +16,6 @@ Gebruik TodoWrite om voortgang te tonen:
 6. Notion-pagina aanmaken (quiz als embed)
 8. Toon Notion-URL + Quiz-URL direct
 7. Toekomstvisie presentatie genereren (Gamma, na de finish)
-
----
-
-## Stap 0: Health check
-
-Voer dit direct uit. Dit geeft de gebruiker meteen feedback en vangt problemen vroeg op.
-
-```bash
-echo "=== AI Panda Health Check ==="
-echo "[HEALTH] Datum: $(date '+%d %b %Y %H:%M')"
-echo "[HEALTH] Omgeving: $(if [ -d '/sessions' ]; then echo 'Claude Cowork'; else echo 'Lokaal'; fi)"
-echo "[HEALTH] Python: $(python3 --version 2>&1)"
-
-# GEMINI_API_KEY
-if [ -n "$GEMINI_API_KEY" ]; then
-    echo "[HEALTH] GEMINI_API_KEY: aanwezig (${#GEMINI_API_KEY} tekens) ✅"
-else
-    echo "[HEALTH] GEMINI_API_KEY: ONTBREEKT ⚠️  (afbeelding valt terug op placeholder)"
-fi
-
-# Excel bestand
-HEALTH_EXCEL=""
-if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/data/ai-panda-team.xlsx" ]; then
-    HEALTH_EXCEL="$CLAUDE_PLUGIN_ROOT/data/ai-panda-team.xlsx"
-else
-    HEALTH_EXCEL=$(timeout 5 find /sessions ~ -maxdepth 3 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
-fi
-if [ -n "$HEALTH_EXCEL" ]; then
-    echo "[HEALTH] Excel (ai-panda-team.xlsx): gevonden ✅  → $HEALTH_EXCEL"
-else
-    echo "[HEALTH] Excel (ai-panda-team.xlsx): NIET GEVONDEN ⚠️  (consultants handmatig invoeren)"
-    echo "[HEALTH] /sessions inhoud (voor debug):"
-    ls /sessions 2>/dev/null | head -10
-fi
-
-# Python dependency
-python3 -c "import openpyxl" 2>/dev/null \
-    && echo "[HEALTH] openpyxl: beschikbaar ✅" \
-    || echo "[HEALTH] openpyxl: ontbreekt (wordt in stap 2B geïnstalleerd)"
-
-echo "=== Health check klaar ==="
-```
-
-Controleer daarna welke MCP tools beschikbaar zijn en toon een compacte status:
-
-- `notion-create-pages` beschikbaar? → Notion ✅ / Notion ⚠️ (pagina kan niet aangemaakt worden)
-- `mcp__claude_ai_Gamma__generate` beschikbaar? → Gamma ✅ / Gamma ⚠️ (toekomstvisie als Markdown-fallback)
-
-Toon aan de gebruiker (compacte samenvattingsregel):
-
-```
-Health check klaar:
-✅/⚠️ GEMINI_API_KEY  ✅/⚠️ Excel  ✅/⚠️ Notion MCP  ✅/⚠️ Gamma MCP
-```
-
-Sla op: ENVIRONMENT (`cowork` of `local`), HEALTH_EXCEL_PATH (voor hergebruik in stap 2B).
-
-Ga altijd door, ook bij waarschuwingen. Kritieke problemen worden opgelost in de relevante stap.
 
 ---
 
