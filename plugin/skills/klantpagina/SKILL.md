@@ -1,6 +1,6 @@
 ---
 name: klantpagina
-description: "Genereer een professionele Notion-klantpagina voor AI Panda met persoonlijke toekomstvisie. Haalt bedrijfsinfo en merkidentiteit op, leest consultants uit een Excel, genereert een AI Panda-afbeelding, schrijft een visionair toekomstverhaal en maakt een complete Notion-pagina met roadmap en wow-factor."
+description: "Genereer een professionele Notion-klantpagina voor AI Panda. Haalt bedrijfsinfo op, leest consultants uit een Excel, genereert een AI Panda-afbeelding en maakt een complete Notion-pagina met roadmap en interactieve quiz."
 ---
 
 # AI Panda Klantpagina Generator
@@ -9,11 +9,11 @@ Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen
 
 Gebruik TodoWrite om voortgang te tonen:
 1. Bedrijfsnaam ophalen
-2. Bedrijfsinfo + merkidentiteit + Excel laden (parallel), daarna sectorprobleem
+2. Bedrijfsinfo + Excel laden (parallel)
 3. Consultants selecteren
-4. Bevestiging vragen (incl. merkidentiteit + sectorprobleem)
-5. Panda-afbeelding + roadmap + quiz-URL + toekomstverhaal (parallel), daarna visie-afbeelding
-6. Notion-pagina aanmaken (quiz is geintegreerd als link)
+4. Bevestiging vragen
+5. Panda-afbeelding + roadmap + quiz-URL + 2028-quote (parallel)
+6. Notion-pagina aanmaken (quiz als embed)
 
 ---
 
@@ -27,34 +27,21 @@ Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
 ---
 
-## Stap 2: Parallel ophalen (2A + 2B tegelijk, daarna 2A2)
+## Stap 2: Parallel ophalen (2A + 2B tegelijk)
 
 ### 2A — Bedrijfsinfo ophalen
 
-Gebruik WebSearch met twee queries (parallel als mogelijk):
-1. `"[klant] Nederland bedrijf sector omschrijving"` — voor BEDRIJFSNAAM, OMSCHRIJVING, SECTOR
-2. `"[klant] huisstijl merkidentiteit kleuren tagline"` — voor MERKIDENTITEIT
+Gebruik WebSearch met query: `"[klant] Nederland bedrijf sector omschrijving"`
 
 Als KLANT_INPUT een URL of domein bevat, gebruik dat als WEBSITE_DOMEIN. Anders, leid het domein af uit de WebSearch-resultaten.
 
-Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap. Gebruik voor MERKIDENTITEIT generieke waarden (donkerblauw #1a365d, zakelijke stijl) en meld dit in het bevestigingsscherm.
+Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap.
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
 - `[DIAG 2A] WebSearch geslaagd`
 - `[DIAG 2A] WebSearch gefaald → handmatige invoer`
 
-Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://), MERKIDENTITEIT (kleuren met hex-codes, tagline, visuele stijl, kenmerkende elementen)
-
-### 2A2 — Sectorprobleem identificeren
-
-**Wacht op 2A** (SECTOR moet beschikbaar zijn). Voer uit zodra 2A klaar is, via WebSearch:
-- Query: "[SECTOR] grootste structurele probleem AI oplossing komende 10 jaar"
-- Zoek naar fundamentele knelpunten die de hele sector raken (capaciteitstekorten, informatiefragmentatie, veiligheidsvraagstukken, regulatoire complexiteit, etc.)
-- Denk niet aan kleine efficiëntiewinsten maar aan structurele verschuivingen
-
-**Diagnostics:** `[DIAG 2A2] Sectorprobleem gevonden: [korte omschrijving]`
-
-Sla op: SECTORPROBLEEM (het kernprobleem dat AI in 10 jaar fundamenteel kan oplossen voor deze sector)
+Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
 
 ### 2B — Excel lezen (alle teamleden laden)
 
@@ -103,6 +90,7 @@ for row in ws.iter_rows(min_row=2, values_only=True):
             "naam": entry.get("naam", ""),
             "functie": entry.get("functie", ""),
             "foto_url": entry.get("foto-url", entry.get("foto_url", "")),
+            "telefoon": entry.get("telefoon", ""),
             "email": entry.get("e-mail", entry.get("email", ""))
         })
 print(f"[DIAG 2B] {len(team)} teamleden geladen", file=sys.stderr)
@@ -112,7 +100,7 @@ PYEOF
 fi
 ```
 
-Sla op: ALLE_TEAMLEDEN (volledige lijst met naam, functie, foto_url, email per teamlid)
+Sla op: ALLE_TEAMLEDEN (volledige lijst met naam, functie, foto_url, telefoon, email per teamlid)
 
 Fallback als Excel niet gevonden: ga door zonder teamdata, vraag namen handmatig in stap 3. GA ALTIJD DOOR.
 
@@ -154,9 +142,6 @@ Sector: [SECTOR]
 Over het bedrijf:
 [OMSCHRIJVING]
 
-Merkidentiteit: [MERKIDENTITEIT — kleuren, tagline, visuele stijl]
-Sectorprobleem voor toekomstvisie: [SECTORPROBLEEM — kort]
-
 Consultants:
 - [NAAM_1] — [FUNCTIE_1]
 - [NAAM_2] — [FUNCTIE_2]
@@ -175,7 +160,7 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ---
 
-## Stap 5: Parallel uitvoeren (5A + 5B + 5C + 5D tegelijk, daarna 5E na 5D)
+## Stap 5: Parallel uitvoeren (5A + 5B + 5C + 5D tegelijk)
 
 ### 5A — AI Panda-afbeelding genereren
 
@@ -267,8 +252,11 @@ print('FAIL')
 sys.exit(1)
 " <<< "$RESPONSE"
 
-# Upload naar catbox.moe
-PANDA_IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
+# Upload naar 0x0.st (primair), catbox.moe (fallback)
+PANDA_IMAGE_URL=$(curl -s -F "file=@$OUTPUT" https://0x0.st)
+if [ -z "$PANDA_IMAGE_URL" ] || ! echo "$PANDA_IMAGE_URL" | grep -q "^http"; then
+    PANDA_IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
+fi
 echo "[DIAG 5A] Curl-fallback URL: $PANDA_IMAGE_URL"
 ```
 
@@ -280,7 +268,7 @@ In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer voor directe Python/c
 
 **Methode 1: MCP server tools (primair)**
 
-Gebruik de MCP tool `generate_custom_image` of `generate_panda_image` (afhankelijk van context). Deze tools genereren de afbeelding via Gemini EN uploaden naar catbox.moe server-side (geen CORS-problemen).
+Gebruik de MCP tool `generate_custom_image` of `generate_panda_image` (afhankelijk van context). Deze tools genereren de afbeelding via Gemini EN uploaden naar 0x0.st (primair) of catbox.moe (fallback), alles server-side (geen CORS-problemen).
 
 ```
 MCP tool: generate_panda_image
@@ -388,7 +376,7 @@ Lokaal:
 Cowork:
   1. MCP generate_custom_image / generate_panda_image (primair, server-side)
   2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
-  3. Browser JS fetch + catbox browser upload (laatste poging)
+  3. Browser JS fetch + browser upload naar 0x0.st (laatste poging)
   4. Placeholder URL
 ```
 
@@ -397,7 +385,7 @@ Cowork:
 - `[DIAG 5A] Lokaal: curl-fallback gebruikt`
 - `[DIAG 5A] Cowork: MCP generate_panda_image geslaagd`
 - `[DIAG 5A] Cowork: browser + upload_image_base64 fallback gebruikt`
-- `[DIAG 5A] Cowork: browser + catbox browser upload gebruikt`
+- `[DIAG 5A] Cowork: browser + 0x0.st browser upload gebruikt`
 - `[DIAG 5A] Placeholder URL (laatste fallback)`
 
 **Laatste fallback:** gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
@@ -483,69 +471,32 @@ python3 -c "import base64, json; print(base64.b64encode(json.dumps([DATA]).encod
 
 Sla op als QUIZ_URL.
 
-### 5D — Toekomstverhaal schrijven
+### 5D — Medewerker-quote 2028 genereren
 
-Input: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, SECTORPROBLEEM (beschikbaar na stap 2)
+Input: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING (beschikbaar na stap 2A)
 
-Schrijf een visionair verhaal van **350-500 woorden** in het Nederlands over hoe [BEDRIJFSNAAM] er over 10 jaar uitziet dankzij AI.
+Genereer een korte, pakkende quote (1-2 zinnen) van een fictieve medewerker van [BEDRIJFSNAAM], die beschrijft hoe hun werk er radicaal anders uitziet in 2028 dankzij AI.
 
-**Structuur** (schrijf als doorlopend proza, geen kopjes of bullets):
+**Instructies:**
+1. Kies een realistische functietitel die past bij de sector (geen CEO/directeur, maar iemand op de werkvloer)
+2. Beschrijf iets specifieks dat vandaag nog handmatig/tijdrovend is, maar in 2028 door AI wordt gedaan
+3. Eindig met een terloopse vergelijking met "hoe het vroeger was"
+4. Toon: nuchter, niet overdreven enthousiast, alsof het de normaalste zaak van de wereld is
+5. Max 2 zinnen
 
-1. **Opening met een persoon** — Begin met een concreet, levendig beeld van een medewerker op een gewone werkdag in 2035. Wie is dit? Wat doet ze? Wat ziet ze? Maak het zo specifiek dat het voelt als een scene, niet als een beschrijving.
+**Formaat:** `"[Quote]" — [Voornaam], [functie] bij [BEDRIJFSNAAM], 2028`
 
-2. **Het sectorprobleem dat opgelost is** — Laat zien hoe het SECTORPROBLEEM er destijds uitzag en hoe AI dat nu fundamenteel heeft opgelost. Dit is het visionaire hart: niet "processen zijn efficienter", maar een echte structurele verschuiving die 10 jaar geleden ondenkbaar was.
+**Voorbeelden:**
+- *Retail:* "Ik open 's ochtends mijn dashboard en zie dat het assortiment van drie filialen vannacht al is aangepast op basis van het weer en lokale evenementen. Vroeger was dat een weekproject." — Lisa, filiaalmanager bij Etos, 2028
+- *Logistiek:* "Onze AI plant nu routes die ik na twintig jaar ervaring niet had bedacht. Ik besteed mijn tijd aan de uitzonderingen die echt een mens nodig hebben." — Marco, operations lead bij DHL, 2028
 
-3. **Bedrijfsbrede transformatie** — Zoom uit naar het bedrijf als geheel. Hoe staat het er voor in de markt? Wat kunnen ze nu wat niemand anders kan? Hoe ziet de klantrelatie eruit?
-
-4. **Terug naar de mens** — Eindig bij de persoon uit de opening. Hoe ervaart zij haar werk? Wat heeft de transformatie voor haar betekend? Kort, concreet, menselijk.
-
-**Toon**: Warm, zelfverzekerd, visionair. Niet wollig of generiek. Niet vol jargon. Geen sciencefiction. Ambitieus maar aards.
-
-**Visionair betekent**: dingen beschrijven die vandaag nog niet bestaan of niet op deze schaal werken. Autonome systemen, AI die sectorbrede coordinatieproblemen oplost, nieuwe samenwerkingsvormen, diensten die vijf jaar geleden conceptueel ondenkbaar waren.
-
-**Wat je vermijdt**:
-- Generieke uitspraken die voor elk bedrijf gelden ("AI maakt processen efficienter")
-- Dingen die vandaag al bestaan en als toekomstvisie worden gepresenteerd
-- Opsommingen of bullets — het moet een verhaal zijn
-- Techno-utopisme dat de menselijke kern mist
-
-**Genereer ook:**
-- **PULL_QUOTE**: De slotquote van de persoon uit het verhaal, als blockquote. Formaat: `"[Quote]" — [Naam], [functie] bij [BEDRIJFSNAAM], 2035`
-- **KERNGETALLEN**: Vier feitelijke highlights uit het verhaal. Kies getallen en feiten die echt in het verhaal voorkomen. Formaat per regel: `[emoji] **[getal of feit]** — [korte duiding]`. Kies passende emoji's op basis van het thema.
-
-Sla op: TOEKOMSTVERHAAL, PULL_QUOTE, KERNGETALLEN
-
-### 5E — Gebrandde toekomstvisie-afbeelding genereren
-
-Input: BEDRIJFSNAAM, SECTOR, MERKIDENTITEIT, TOEKOMSTVERHAAL (beschikbaar na 5D)
-
-**Belangrijk:** 5E wacht op 5D (het toekomstverhaal) en op 5A (in Cowork gebruiken beide dezelfde browser-tab). Start 5E pas als zowel 5D als 5A klaar zijn. In Cowork: hergebruik dezelfde tab als 5A maar gebruik `window._geminiB64_visie` en `window._geminiMime_visie` als variabelen (niet dezelfde als 5A).
-
-Schrijf een gedetailleerde Engelse prompt voor Gemini image generation. De afbeelding moet onmiskenbaar van dit bedrijf zijn. Verwerk altijd:
-- **Merkkleur(en)** als dominant kleuraccent (gebruik hex-codes uit MERKIDENTITEIT)
-- **Kenmerkende visuele elementen** van het merk: logo op kleding/voertuigen, herkenbare uniformen, gebouwen of materialen
-- **Tagline of wordmark** subtiel maar zichtbaar in de scene
-- **Sfeer passend bij de merkidentiteit**: warm/zakelijk/technisch afhankelijk van MERKIDENTITEIT
-
-Aanvullende eisen:
-- **Stijl**: hyperrealistisch, fotografisch, 8K, cinematische diepte
-- **Persoon centraal**: een herkenbare medewerker in beeld, niet abstract
-- **Natuur + technologie + bedrijf in synergie**: natuur aanwezig maar ondersteunend (groene daken, plantenwand, zonlicht door bomen)
-- **Geen cliches**: geen robotarmen, blauwe hologrammen, Matrix-visuals, stockfoto-poses
-
-Genereer de afbeelding via dezelfde methode als 5A (omgevingsdetectie: lokaal via curl, Cowork via browser MCP). Gebruik het Gemini model `gemini-3-pro-image-preview`.
-
-**Fallback:** Als generatie faalt, gebruik placeholder: `https://ui-avatars.com/api/?name=[BEDRIJFSNAAM]+2035&size=400&background=1a1a2e&color=e94560&bold=true&format=png`
-
-**Diagnostics:** `[DIAG 5E] Visie-afbeelding: [methode gebruikt] → [URL of FAIL]`
-
-Sla op: VISIE_IMAGE_URL
+Sla op: MEDEWERKER_QUOTE
 
 ---
 
 ## Stap 6: Notion-pagina aanmaken
 
-Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
+Wacht tot 5A, 5B, 5C en 5D klaar zijn.
 
 ### Notion Markdown — verplichte syntax
 
@@ -594,7 +545,7 @@ FOUT: children zonder tab-inspringing worden niet gerenderd.
 </details>
 ```
 
-**GEEN embed block:** Notion heeft geen `<embed>` tag. Gebruik gewone links: `[Linktekst](URL)`
+**Embeds:** Notion heeft geen `<embed>` tag. Gebruik `<video src="URL">Caption</video>` om een URL te embedden (werkt ook voor niet-video content zoals webapps).
 
 ### 6A — Klantpagina aanmaken
 
@@ -611,46 +562,30 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 ### Content template (AI Panda huisstijl):
 
 ```markdown
-![AI Panda x [BEDRIJFSNAAM] — Jouw AI-traject]([PANDA_IMAGE_URL])
+![]([PANDA_IMAGE_URL])
 
 # AI Panda x [BEDRIJFSNAAM]
-
-*Jouw persoonlijke AI-trajectpagina — [DATUM]*
 
 ---
 
 ::: callout {icon="💬"}
-**"[PULL_QUOTE]"**
+**"[MEDEWERKER_QUOTE]"**
 :::
 
 ---
 
-## Over [BEDRIJFSNAAM]
-
-[OMSCHRIJVING]
-
-**Sector:** [SECTOR] | **Website:** [WEBSITE_DOMEIN]
-
----
-
-## Jouw Toekomstvisie: [BEDRIJFSNAAM] in 2035
-
-[TOEKOMSTVERHAAL]
-
-![[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie]([VISIE_IMAGE_URL])
-
 <columns>
 	<column>
-		[KERNGETAL_1]
+		## Over [BEDRIJFSNAAM]
+		[OMSCHRIJVING]
+		**Sector:** [SECTOR]
+		**Website:** [WEBSITE_DOMEIN]
 	</column>
 	<column>
-		[KERNGETAL_2]
-	</column>
-	<column>
-		[KERNGETAL_3]
-	</column>
-	<column>
-		[KERNGETAL_4]
+		## Over AI Panda
+		AI Panda begeleidt organisaties naar AI-volwassenheid. Geen technologie-eerst aanpak, maar mens-eerst: 80% van AI-succes zit in menselijk gedrag, 20% in technologie. Van strategie tot implementatie.
+		**Tagline:** Making AI Work For You
+		**Website:** aipanda.nl
 	</column>
 </columns>
 
@@ -716,28 +651,11 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 
 ---
 
-## Volgende Stappen
-
-- [ ] Kickoff meeting plannen met [BEDRIJFSNAAM]
-- [ ] Toegang tot relevante data en systemen regelen
-- [ ] Discovery-interviews inplannen met key stakeholders
-- [ ] Eerste AI-kansen rapport opleveren aan directie
-
----
-
 ## AI-Readiness Quickscan
 
 Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vragen en krijg direct je profiel.
 
-[Start de AI-Readiness Quickscan]([QUIZ_URL])
-
-| Score | Profiel | Wat dit betekent |
-|---|---|---|
-| 5-7 | De Starter | Focus op bewustwording en laaghangend fruit. |
-| 8-9 | De Verkenner | Tijd voor structuur en strategie. |
-| 10-11 | De Groeier | Klaar voor serieuze pilot-projecten. |
-| 12-13 | De Versneller | Opschalen van successen naar bedrijfsbreed. |
-| 14-15 | De Koploper | Focus op innovatie en voorsprong. |
+<video src="[QUIZ_URL]">AI-Readiness Quickscan</video>
 
 ---
 
@@ -746,7 +664,7 @@ Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vrag
 
 **Dynamische team-sectie:** Genereer zoveel `<column>` blokken als er geselecteerde consultants zijn. Het template hierboven toont 3 als voorbeeld, maar pas dit aan op het werkelijke aantal.
 
-**Quiz link:** Notion ondersteunt geen `<embed>` tag. De quiz wordt als klikbare link getoond.
+**Quiz embed:** De quiz wordt als `<video>` embed getoond (Notion workaround voor non-video embeds).
 
 **Sla het `id` uit de response op als KLANTPAGINA_ID** (UUID met dashes, bijv. `abc123-...`).
 
@@ -758,8 +676,7 @@ Toon:
 1. Klantpagina aangemaakt
 2. Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
 3. Interactieve quiz: `[QUIZ_URL]` (klikbaar)
-4. Korte samenvatting: bedrijf, toekomstvisie (met pull quote preview), consultants, roadmap en interactieve quiz gegenereerd
-5. Geef de visie-afbeelding prompt weer zodat de gebruiker die kan beoordelen
+4. Korte samenvatting: bedrijf, 2028-quote, consultants, roadmap en interactieve quiz gegenereerd
 
 ---
 
@@ -767,12 +684,9 @@ Toon:
 
 De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
 - WebSearch faalt → gebruiker vragen
-- Merkidentiteit niet gevonden → gebruik generieke waarden (donkerblauw, zakelijke stijl) en meld dit
-- Sectorprobleem niet gevonden via WebSearch → gebruik eigen kennis over de sector, meld dit
 - Excel niet gevonden → namen gebruiken zoals ingetypt
 - Panda-afbeelding generatie faalt → placeholder URL, doorgaan
-- Toekomstverhaal generatie faalt → schrijf een korter verhaal (150-200 woorden) als fallback
-- Visie-afbeelding generatie faalt → placeholder URL, doorgaan
+- Medewerker-quote generatie faalt → gebruik generieke quote, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken
 - Quiz base64-encoding faalt → Python fallback gebruiken
 - Quiz-URL te lang → vraagteksten verkorten
