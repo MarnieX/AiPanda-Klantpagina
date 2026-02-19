@@ -15,19 +15,27 @@ Een Claude Code plugin die het aanmaken van professionele Notion-klantpagina's v
 - Plugin packaging voor Cowork via build.sh
 - Klantpagina skill volledig uitgewerkt met logo compositing en lokale paden
 - Notion-pagina template met strakke opmaak en AI Panda huisstijl (hero banner, teamtabel, roadmap, 9 secties)
-- Interactieve AI-Readiness Quickscan: quiz als GitHub Pages app (JSON + base64 in URL), direct gelinkt op klantpagina
+- Interactieve AI-Readiness Quickscan: quiz als GitHub Pages app (JSON + base64 in URL), als `<video>` embed op klantpagina
 - Standalone `ai-quiz` skill: genereert quiz JSON, bouwt klikbare URL, optioneel Notion-pagina
-- Toekomstvisie geintegreerd in klantpagina-skill: pull quote, 10-jaar verhaal, gebrandde visie-afbeelding, kerngetallen
 - Generieke `gemini-image` skill: standalone image generation via curl en browser MCP
 - Browser MCP flow voor image generation in Cowork (omgevingsdetectie, Chrome MCP-bridge)
 - Curl-fallback voor image generation (omzeilt httpx SOCKS proxy in Cowork)
 - Consultantfoto's geupload en team Excel bijgewerkt met URL's
 - WebSearch vervangt WebFetch in bedrijfsinfo-ophaalfase
+- **Component review:** alle 10 klantpagina-componenten doorgelopen en verbeterd:
+  - Hero image caption verwijderd, 0x0.st als primaire uploadhost
+  - Subtitel verwijderd
+  - Toekomstvisie (verhaal + kerngetallen + visie-afbeelding) verwijderd (gaat naar Gamma.app)
+  - 2028 medewerker-quote toegevoegd als opening callout
+  - Twee-koloms layout: "Over Klant" + "Over AI Panda" naast elkaar
+  - Telefoon toegevoegd uit Excel voor teamleden
+  - "Volgende Stappen" to-do sectie verwijderd (intern gebruik)
+  - Quiz van link naar `<video>` embed gewijzigd
+  - MCP server: `upload_to_0x0` als primair, catbox.moe als fallback
 
 ### Openstaand
+- Toekomstvisie-presentatie via Gamma.app integreren
 - Prompt Optimizer valideren en finetunen (Marnix)
-- Plugin installatie testen in Cowork met browser MCP image generation flow (Marnix)
-- Verhaal rondom Claude Cowork uitwerken voor de demonstratie (Rick)
 - Onboarding documentatie voor medestudenten (Marnix)
 - Branch protection instellen op main (Marnix)
 
@@ -73,15 +81,13 @@ Gebruiker geeft bedrijfsnaam/URL op
 
 ### Notion-pagina structuur
 
-1. Hero-afbeelding (AI Panda x Bedrijf, gegenereerd door Gemini)
-2. Titel + datum
-3. Pull quote (persoonlijk citaat uit toekomstvisie)
-4. Over [Bedrijf]: omschrijving, sector en website
-5. Jouw Toekomstvisie [Bedrijf] in 2035: visionair verhaal + gebrandde visie-afbeelding + kerngetallen
-6. Jouw AI Panda Team: consultants met foto, functie, email in kolommen
-7. AI Implementatie Roadmap: 4 sector-specifieke fases in callouts
-8. Volgende stappen: checklist voor kickoff
-9. AI-Readiness Quickscan: interactieve quiz-link + scoretabel
+1. Hero-afbeelding (AI Panda x Bedrijf, gegenereerd door Gemini, geen caption)
+2. Titel (AI Panda x Bedrijfsnaam)
+3. 2028-quote: callout met fictieve medewerkerscitaat uit de toekomst
+4. Twee kolommen: "Over [Bedrijf]" (omschrijving, sector, website) | "Over AI Panda" (missie, tagline, website)
+5. Jouw AI Panda Team: consultants met foto, functie, telefoon en email in kolommen
+6. AI Implementatie Roadmap: 4 sector-specifieke fases in callouts
+7. AI-Readiness Quickscan: interactieve quiz als `<video>` embed
 
 ### Projectstructuur
 
@@ -117,7 +123,8 @@ Gebruiker geeft bedrijfsnaam/URL op
 |---|---|---|
 | Google Gemini | AI-beeldgeneratie | MCP server + Python SDK |
 | Notion | Klantpagina's aanmaken | MCP Server (notion-create-pages) |
-| catbox.moe | Tijdelijke image hosting | cURL upload |
+| 0x0.st | Tijdelijke image hosting (primair) | cURL upload |
+| catbox.moe | Tijdelijke image hosting (fallback) | cURL upload |
 | Cloudinary | Image hosting (optioneel) | Python SDK |
 
 ### Environment Variables

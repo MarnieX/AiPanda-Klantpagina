@@ -14,6 +14,7 @@ Gebruik TodoWrite om voortgang te tonen:
 4. Bevestiging vragen
 5. Panda-afbeelding + roadmap + quiz-URL + 2028-quote (parallel)
 6. Notion-pagina aanmaken (quiz als embed)
+7. Toekomstvisie presentatie genereren (Gamma)
 
 ---
 
@@ -670,13 +671,29 @@ Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vrag
 
 ---
 
-## Stap 7: Bevestig het resultaat
+## Stap 7: Toekomstvisie presentatie genereren (Gamma)
+
+Volg de instructies uit de `ai-toekomstvisie` skill. De benodigde variabelen zijn al beschikbaar:
+- BEDRIJFSNAAM, SECTOR, OMSCHRIJVING (verzameld in stap 2A)
+
+Voer stap 1 t/m 5 van de `ai-toekomstvisie` skill uit:
+1. Research: huisstijl + sectorprobleem (parallel)
+2. Verhaal schrijven
+3. Presentatie-outline opstellen (10 slides)
+4. Gamma presentatie genereren via MCP tool (themeId: `0r1msp6zfjh4o59`)
+5. GAMMA_URL opslaan
+
+Fallback: als Gamma faalt → toon de outline als Markdown in de chat, ga door.
+
+---
+
+## Stap 8: Bevestig het resultaat
 
 Toon:
-1. Klantpagina aangemaakt
-2. Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
-3. Interactieve quiz: `[QUIZ_URL]` (klikbaar)
-4. Korte samenvatting: bedrijf, 2028-quote, consultants, roadmap en interactieve quiz gegenereerd
+1. Notion-klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
+2. Interactieve quiz: `[QUIZ_URL]` (klikbaar)
+3. Gamma toekomstvisie: `[GAMMA_URL]` (klikbaar)
+4. Korte samenvatting: bedrijf, 2028-quote, consultants, roadmap, quiz en toekomstvisie-presentatie gegenereerd
 
 ---
 
@@ -690,3 +707,4 @@ De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow s
 - Notion parent faalt → pagina zonder parent aanmaken
 - Quiz base64-encoding faalt → Python fallback gebruiken
 - Quiz-URL te lang → vraagteksten verkorten
+- Gamma generatie faalt → toon outline als Markdown, ga door

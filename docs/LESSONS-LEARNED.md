@@ -101,6 +101,37 @@ catbox.moe geeft regelmatig 504 Gateway Timeout errors. Dit is een gratis dienst
 
 ## Proces en Werkwijze
 
+### 11. `<video>` tag werkt als embed-workaround voor webapps
+
+Notion heeft geen `<embed>` block type. De `<video>` tag accepteert elke URL en toont hem als embed-block, ook voor non-video content zoals GitHub Pages webapps.
+
+**Correct (werkt als interactieve embed):**
+```
+<video src="https://marniex.github.io/aipanda-quiz/#data=...">AI-Readiness Quickscan</video>
+```
+
+**Fout (stilzwijgend genegeerd):**
+```
+<embed src="https://..." />
+```
+
+Getest met de AI-Readiness Quickscan (GitHub Pages app). De `<video>` tag toont een klikbaar embed-blok dat de webapp laadt. De caption wordt als koptekst boven het blok getoond.
+
+### 12. 0x0.st is betrouwbaarder dan catbox.moe als primaire uploadhost
+
+catbox.moe geeft regelmatig 504 Gateway Timeout terug. 0x0.st is sneller, minder gevoelig voor storingen, en ondersteunt bestanden tot 512 MiB.
+
+**Volgorde in de MCP server:**
+1. Probeer 0x0.st (primair, via `curl -F "file=@{path}" https://0x0.st`)
+2. Als dat faalt, probeer catbox.moe (fallback)
+3. Als beide falen, retourneer lege string en gebruik placeholder
+
+Beide diensten zijn tijdelijk (bestanden verlopen). Notion kopieert afbeeldingen bij aanmaken naar zijn eigen CDN, waardoor verlopen URLs geen probleem zijn voor bestaande pagina's.
+
+---
+
+## Proces en Werkwijze
+
 ### 10. Skill templates zijn de bron van waarheid
 
 Als de Notion markdown syntax in het skill template fout is, produceert elke uitvoering dezelfde fout. Het fixen van alleen de output (de gegenereerde Notion-pagina) lost het probleem niet structureel op.

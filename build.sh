@@ -20,6 +20,8 @@ SKILL_SRC="$SCRIPT_DIR/.claude/skills/klantpagina/SKILL.md"
 SKILL_DEST="$PLUGIN_SRC/skills/klantpagina/SKILL.md"
 GEMINI_SKILL_SRC="$SCRIPT_DIR/.claude/skills/gemini-image/SKILL.md"
 GEMINI_SKILL_DEST="$PLUGIN_SRC/skills/gemini-image/SKILL.md"
+TOEKOMST_SKILL_SRC="$SCRIPT_DIR/.claude/skills/ai-toekomstvisie/SKILL.md"
+TOEKOMST_SKILL_DEST="$PLUGIN_SRC/skills/ai-toekomstvisie/SKILL.md"
 
 echo "Building ai-panda-klantpagina.plugin..."
 
@@ -30,6 +32,10 @@ cp "$SKILL_SRC" "$SKILL_DEST"
 echo "  Syncing gemini-image SKILL.md..."
 mkdir -p "$(dirname "$GEMINI_SKILL_DEST")"
 cp "$GEMINI_SKILL_SRC" "$GEMINI_SKILL_DEST"
+
+echo "  Syncing ai-toekomstvisie SKILL.md..."
+mkdir -p "$(dirname "$TOEKOMST_SKILL_DEST")"
+cp "$TOEKOMST_SKILL_SRC" "$TOEKOMST_SKILL_DEST"
 
 # Bundle runtime dependencies into plugin/
 echo "  Bundling scripts..."
