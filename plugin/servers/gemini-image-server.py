@@ -23,7 +23,7 @@ except ImportError:
 try:
     import httpx
 except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "httpx", "--break-system-packages", "-q"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "httpx", "httpcore[socks]", "--break-system-packages", "-q"])
     import httpx
 
 
@@ -159,6 +159,26 @@ async def generate_custom_image(prompt: str) -> str:
         if not url:
             return json.dumps({"success": False, "error": "Upload mislukt."})
 
+        return json.dumps({"success": True, "image_url": url})
+    except Exception as e:
+        return json.dumps({"success": False, "error": str(e)})
+
+
+@mcp.tool()
+async def upload_image_base64(image_base64: str, filename: str = "image.png") -> str:
+    """
+    Upload base64-encoded image data naar catbox.moe en retourneer een publieke URL.
+    Handig als fallback wanneer browser-side uploads geblokkeerd worden door CORS.
+
+    Args:
+        image_base64: Base64-encoded image data (zonder data:... prefix).
+        filename: Gewenste bestandsnaam (default: image.png).
+    """
+    try:
+        image_bytes = base64.b64decode(image_base64)
+        url = await upload_to_catbox(image_bytes, filename)
+        if not url:
+            return json.dumps({"success": False, "error": "Upload naar catbox.moe mislukt."})
         return json.dumps({"success": True, "image_url": url})
     except Exception as e:
         return json.dumps({"success": False, "error": str(e)})

@@ -58,13 +58,23 @@ Sla op: SECTORPROBLEEM (het kernprobleem dat AI in 10 jaar fundamenteel kan oplo
 
 ### 2B — Excel lezen (alle teamleden laden)
 
-Gebruik `find` als primaire zoekmethode (betrouwbaarder dan hardcoded paden in Cowork):
+Zoek het Excel-bestand via het plugin-pad (betrouwbaarst in Cowork) met find als fallback:
 
 ```bash
 pip install openpyxl --break-system-packages -q 2>/dev/null
 
-echo "[DIAG 2B] Zoeken naar ai-panda-team.xlsx via find /sessions ~ (maxdepth 10)..."
-EXCEL_PATH=$(find /sessions ~ -maxdepth 10 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
+# Primair: plugin-pad (werkt betrouwbaar in Cowork)
+EXCEL_PATH=""
+if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/data/ai-panda-team.xlsx" ]; then
+    EXCEL_PATH="$CLAUDE_PLUGIN_ROOT/data/ai-panda-team.xlsx"
+    echo "[DIAG 2B] Gevonden via CLAUDE_PLUGIN_ROOT: $EXCEL_PATH"
+fi
+
+# Fallback: find (voor lokale ontwikkeling of als plugin-pad niet werkt)
+if [ -z "$EXCEL_PATH" ]; then
+    echo "[DIAG 2B] CLAUDE_PLUGIN_ROOT niet beschikbaar, zoeken via find..."
+    EXCEL_PATH=$(find /sessions ~ -maxdepth 10 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
+fi
 
 if [ -z "$EXCEL_PATH" ]; then
     echo "[DIAG 2B] NIET GEVONDEN. Mapstructuur van /sessions voor debug:"
@@ -266,7 +276,24 @@ echo "[DIAG 5A] Curl-fallback URL: $PANDA_IMAGE_URL"
 
 #### Cowork (ENVIRONMENT=cowork)
 
-In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer. Gebruik de Chrome MCP-bridge.
+In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer voor directe Python/curl calls. Er zijn twee routes: de MCP server (primair, werkt nu dankzij socksio fix) en de Chrome MCP-bridge (fallback).
+
+**Methode 1: MCP server tools (primair)**
+
+Gebruik de MCP tool `generate_custom_image` of `generate_panda_image` (afhankelijk van context). Deze tools genereren de afbeelding via Gemini EN uploaden naar catbox.moe server-side (geen CORS-problemen).
+
+```
+MCP tool: generate_panda_image
+  bedrijfsnaam: "[BEDRIJFSNAAM]"
+```
+
+Parse de JSON-response:
+- `success: true` → `image_url` is PANDA_IMAGE_URL
+- `success: false` → ga naar Methode 2
+
+**Methode 2: Browser JS + upload_image_base64 MCP tool (fallback)**
+
+Als Methode 1 faalt, gebruik de Chrome MCP-bridge om de afbeelding te genereren in de browser, en upload via de MCP server tool `upload_image_base64` (server-side curl, geen CORS).
 
 **5A-C.1 — Tab verkrijgen:**
 MCP tool: `tabs_context_mcp` met `createIfEmpty: true`. Sla `tabId` op.
@@ -316,37 +343,25 @@ MCP tool: `javascript_tool` in het tabId:
 })()
 ```
 
-**5A-C.4 — Upload naar catbox.moe voor publieke URL:**
-MCP tool: `javascript_tool` in het tabId:
+**5A-C.4 — Upload via MCP server tool (geen CORS):**
 
+Haal de base64 data op uit de browser en geef deze door aan de MCP server tool `upload_image_base64`. Dit omzeilt CORS omdat de upload server-side via curl gebeurt.
+
+MCP tool: `javascript_tool` in het tabId om de base64 data op te halen:
 ```javascript
-(async () => {
-  try {
-    const b64 = window._geminiB64;
-    const mime = window._geminiMime || 'image/png';
-    const byteChars = atob(b64);
-    const byteArray = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
-    const blob = new Blob([byteArray], { type: mime });
-
-    const form = new FormData();
-    form.append('reqtype', 'fileupload');
-    form.append('fileToUpload', blob, 'panda.png');
-    const resp = await fetch('https://catbox.moe/user/api.php', {
-      method: 'POST',
-      body: form
-    });
-    const url = await resp.text();
-    return JSON.stringify({ success: true, url: url.trim() });
-  } catch(e) {
-    return JSON.stringify({ error: e.message, note: 'CORS blocked? Try same-origin.' });
-  }
-})()
+(() => window._geminiB64 ? window._geminiB64.substring(0, 50000) : 'NO_DATA')()
 ```
 
-Als `success: true`: de URL is PANDA_IMAGE_URL.
+**Let op:** Als de base64 string te groot is voor een enkele MCP call, splits dan in chunks of gebruik `generate_custom_image` (Methode 1) in plaats daarvan.
 
-**Als CORS blokkeert:** Navigeer naar `https://catbox.moe` en voer upload uit als same-origin request (gebruik `/user/api.php` als pad). **Let op:** na navigatie gaat `window._geminiB64` verloren. Sla de base64 data daarom op in een lokale variabele of voer generatie + upload op dezelfde pagina uit.
+Geef de volledige base64 string door aan:
+```
+MCP tool: upload_image_base64
+  image_base64: "[BASE64_DATA]"
+  filename: "panda_[bedrijfsnaam].png"
+```
+
+Parse de JSON-response: `success: true` → `image_url` is PANDA_IMAGE_URL.
 
 **5A-C.5 — Screenshot als bewijs:**
 MCP tool: `javascript_tool` om de afbeelding te renderen:
@@ -371,16 +386,18 @@ Lokaal:
   Python script → Curl fallback → Placeholder URL
 
 Cowork:
-  Browser JS fetch (Gemini API) → Catbox upload vanuit browser → Publieke URL
-  Als catbox CORS faalt: navigeer naar catbox.moe → same-origin upload
-  Laatste fallback: Placeholder URL
+  1. MCP generate_custom_image / generate_panda_image (primair, server-side)
+  2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
+  3. Browser JS fetch + catbox browser upload (laatste poging)
+  4. Placeholder URL
 ```
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
 - `[DIAG 5A] Lokaal: Python script geslaagd`
 - `[DIAG 5A] Lokaal: curl-fallback gebruikt`
-- `[DIAG 5A] Cowork: browser MCP flow geslaagd`
-- `[DIAG 5A] Cowork: catbox CORS fallback gebruikt`
+- `[DIAG 5A] Cowork: MCP generate_panda_image geslaagd`
+- `[DIAG 5A] Cowork: browser + upload_image_base64 fallback gebruikt`
+- `[DIAG 5A] Cowork: browser + catbox browser upload gebruikt`
 - `[DIAG 5A] Placeholder URL (laatste fallback)`
 
 **Laatste fallback:** gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
@@ -663,6 +680,8 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 
 Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vragen en krijg direct je profiel.
 
+<embed source="[QUIZ_URL]">AI-Readiness Quickscan voor [BEDRIJFSNAAM]</embed>
+
 [Start de AI-Readiness Quickscan]([QUIZ_URL])
 
 | Score | Profiel | Wat dit betekent |
@@ -679,6 +698,8 @@ Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vrag
 ```
 
 **Dynamische team-sectie:** Genereer zoveel `<column>` blokken als er geselecteerde consultants zijn. Het template hierboven toont 3 als voorbeeld, maar pas dit aan op het werkelijke aantal.
+
+**Quiz embed:** Het template bevat zowel een `<embed>` blok als een tekstlink voor de quiz. Als Notion de embed niet ondersteunt (GitHub Pages URL niet in whitelist), wordt de link automatisch als fallback getoond. Verwijder de `<embed>` tag als je weet dat het niet werkt, zodat er geen lege embed op de pagina staat.
 
 **Sla het `id` uit de response op als KLANTPAGINA_ID** (UUID met dashes, bijv. `abc123-...`).
 
