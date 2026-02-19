@@ -550,10 +550,10 @@ Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
 ### Notion Markdown — verplichte syntax
 
 De content MOET Notion-flavored markdown gebruiken:
-- Afbeeldingen: `<image source="URL">caption</image>` (NIET `![alt](url)`)
+- Afbeeldingen: `![Caption](URL)` (NIET `<image>` tags)
 - Tabellen: `<table>` XML, cellen ALLEEN rich text (geen images/blocks)
-- Kolommen: `<columns><column>...</column></columns>`
-- Callouts: `<callout icon="emoji">tekst</callout>`
+- Kolommen: `<columns><column>` met children ingesprongen via tabs `</column></columns>`
+- Callouts: `::: callout {icon="emoji"}\ntekst\n:::`
 - To-do's: `- [ ] tekst`
 - Haal NOOIT apart de Notion markdown spec op via ReadMcpResourceTool
 
@@ -572,7 +572,7 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 ### Content template (AI Panda huisstijl):
 
 ```markdown
-<image source="[PANDA_IMAGE_URL]">AI Panda x [BEDRIJFSNAAM] — Jouw AI-traject</image>
+![AI Panda x [BEDRIJFSNAAM] — Jouw AI-traject]([PANDA_IMAGE_URL])
 
 # AI Panda x [BEDRIJFSNAAM]
 
@@ -596,7 +596,7 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 [TOEKOMSTVERHAAL]
 
-<image source="[VISIE_IMAGE_URL]">[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie</image>
+![[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie]([VISIE_IMAGE_URL])
 
 <columns>
 	<column>
@@ -619,25 +619,25 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 <columns>
 	<column>
-<image source="[FOTO_URL_1]">[NAAM_1]</image>
-
-**[NAAM_1]**
-[FUNCTIE_1]
-[EMAIL_1]
+		![[NAAM_1]]([FOTO_URL_1])
+		**[NAAM_1]**
+		[FUNCTIE_1]
+		[TELEFOON_1]
+		[EMAIL_1]
 	</column>
 	<column>
-<image source="[FOTO_URL_2]">[NAAM_2]</image>
-
-**[NAAM_2]**
-[FUNCTIE_2]
-[EMAIL_2]
+		![[NAAM_2]]([FOTO_URL_2])
+		**[NAAM_2]**
+		[FUNCTIE_2]
+		[TELEFOON_2]
+		[EMAIL_2]
 	</column>
 	<column>
-<image source="[FOTO_URL_3]">[NAAM_3]</image>
-
-**[NAAM_3]**
-[FUNCTIE_3]
-[EMAIL_3]
+		![[NAAM_3]]([FOTO_URL_3])
+		**[NAAM_3]**
+		[FUNCTIE_3]
+		[TELEFOON_3]
+		[EMAIL_3]
 	</column>
 </columns>
 

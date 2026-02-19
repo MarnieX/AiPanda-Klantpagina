@@ -550,10 +550,10 @@ Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
 ### Notion Markdown — verplichte syntax
 
 De content MOET Notion-flavored markdown gebruiken:
-- Afbeeldingen: `<image source="URL">caption</image>` (NIET `![alt](url)`)
+- Afbeeldingen: `![Caption](URL)` (NIET `<image>` tags)
 - Tabellen: `<table>` XML, cellen ALLEEN rich text (geen images/blocks)
-- Kolommen: `<columns><column>...</column></columns>`
-- Callouts: `<callout icon="emoji">tekst</callout>`
+- Kolommen: `<columns><column>` met children ingesprongen via tabs `</column></columns>`
+- Callouts: `::: callout {icon="emoji"}\ntekst\n:::`
 - To-do's: `- [ ] tekst`
 - Haal NOOIT apart de Notion markdown spec op via ReadMcpResourceTool
 
@@ -572,7 +572,7 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 ### Content template (AI Panda huisstijl):
 
 ```markdown
-<image source="[PANDA_IMAGE_URL]">AI Panda x [BEDRIJFSNAAM] — Jouw AI-traject</image>
+![AI Panda x [BEDRIJFSNAAM] — Jouw AI-traject]([PANDA_IMAGE_URL])
 
 # AI Panda x [BEDRIJFSNAAM]
 
