@@ -215,6 +215,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
+  model: "flux-2-pro"
   style: "photorealistic, cinematic, modern corporate, accent color [MERKKLEUR_PRIMAIR]"
 ```
 
