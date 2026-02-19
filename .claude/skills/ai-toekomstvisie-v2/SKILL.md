@@ -33,6 +33,11 @@ Output: GAMMA_URL (of "niet beschikbaar" bij fallback)
 
 Als alle input-variabelen al beschikbaar zijn: ga direct naar stap 1 (research).
 
+Bekende themeId's (fallback als get_themes timet out):
+- AI Panda thema: `0r1msp6zfjh4o59`
+
+Stel bij start in: `GAMMA_THEME_ID = "0r1msp6zfjh4o59"` (startwaarde, wordt eventueel bijgewerkt in Stap 1C).
+
 ---
 
 ## Input (alleen standalone)
@@ -43,6 +48,8 @@ bedrijfsnaam en lei ze af.
 ---
 
 ## Stap 1: Research (parallel uitvoeren)
+
+Voer 1A, 1B en 1C tegelijkertijd uit.
 
 ### 1A — Huisstijl en merkidentiteit
 
@@ -71,6 +78,18 @@ kan oplossen. Zoek naar fundamentele knelpunten (capaciteitstekorten, informatie
 veiligheidsvraagstukken, regulatoire complexiteit), niet naar kleine efficiëntiewinsten.
 
 Sla op als: SECTORPROBLEEM (één zin die de kern beschrijft)
+
+### 1C — Gamma thema opzoeken
+
+Stel direct in: `GAMMA_THEME_ID = "0r1msp6zfjh4o59"` (het AI Panda-thema, altijd de standaard).
+
+Roep daarna `mcp__claude_ai_Gamma__get_themes` aan om te valideren:
+- Succesvol: zoek naar een thema met "AI Panda" in de naam (hoofdletterongevoelig)
+  - Gevonden: update GAMMA_THEME_ID met het gevonden id (voor het geval het id gewijzigd is)
+  - Niet gevonden: houd GAMMA_THEME_ID op `"0r1msp6zfjh4o59"`
+- Timeout of fout: houd GAMMA_THEME_ID op `"0r1msp6zfjh4o59"`
+
+Log altijd: `"Thema: AI Panda (id: [GAMMA_THEME_ID])"`
 
 ---
 
@@ -190,19 +209,7 @@ Controleer of `mcp__claude_ai_Gamma__generate` in de beschikbare tools staat. Al
 ontbreekt (Gamma niet gekoppeld in Claude-instellingen), sla deze stap over en ga naar
 de **Fallback** onderaan.
 
-### 4A — Thema valideren via get_themes
-
-Roep `mcp__claude_ai_Gamma__get_themes` aan.
-
-Zoek in de response naar thema's op naam:
-1. Zoek naar een thema met "panda" of "AI Panda" in de naam (hoofdletterongevoelig)
-2. Als gevonden: sla de `id` op als GAMMA_THEME_ID
-3. Als niet gevonden: zoek naar "canaveral" (hoofdletterongevoelig)
-4. Als ook niet gevonden: sla GAMMA_THEME_ID op als leeg (geen themeId meegeven)
-
-Log kort welk thema is gevonden (bijv: "Thema gevonden: AI Panda (id: abc123)").
-
-### 4B — Bedrijfslogo ophalen
+### 4A — Bedrijfslogo ophalen
 
 Als WEBSITE_DOMEIN beschikbaar en niet leeg:
 - Logo-URL: `https://img.logo.dev/[WEBSITE_DOMEIN]?token=pk_XpHqlOsfSNSn7E3UJB_Kmw&format=png&size=256`
@@ -339,5 +346,5 @@ Geef daarna ook mee:
 - MERKKLEUR_PRIMAIR niet gevonden → gebruik AI Panda oranje (#F97316) als accentkleur
 - WEBSITE_DOMEIN niet beschikbaar → sla logo-stap over, ga door zonder cardOptions
 - Gamma niet beschikbaar (tool ontbreekt) → toon outline als Markdown, verwijs naar gamma.app
-- get_themes faalt of levert geen bruikbaar thema → ga door zonder themeId
+- get_themes faalt of timet out → gebruik hardcoded GAMMA_THEME_ID `"0r1msp6zfjh4o59"` (ingesteld in Stap 1C)
 - Gamma retourneert geen URL → retry met progressief minder parameters (zie 4D)
