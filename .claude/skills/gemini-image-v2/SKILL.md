@@ -10,6 +10,11 @@ Genereer afbeeldingen via Google Gemini API (primair) of OpenAI (fallback). Werk
 **Referentiebeeld panda:** `https://files.catbox.moe/23dzti.png`
 **Providers:** Gemini (met referentie-image, multimodal) → OpenAI (prompt-only) → fallback
 
+> ⚠️ **VASTGEZET MODEL — NIET WIJZIGEN**
+> Gebruik ALTIJD `gemini-3-pro-image-preview` als Gemini model.
+> Lijst NOOIT beschikbare modellen op. Probeer NOOIT een ander model.
+> Het model is vastgezet en mag niet worden gewijzigd, vervangen of aangepast, ook niet als een ander model beschikbaar lijkt of als een API-call mislukt. Bij een mislukte call: ga direct naar de fallback (stap 4A.2 of 4B).
+
 ---
 
 ## Aanroep-interface (voor gebruik vanuit andere skills)
