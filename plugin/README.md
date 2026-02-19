@@ -1,4 +1,4 @@
-# AI Panda Klantpagina Generator v2.2
+# AI Panda Klantpagina Generator v2.3
 
 Genereer professionele Notion-klantpagina's voor AI Panda met een interactieve wizard.
 

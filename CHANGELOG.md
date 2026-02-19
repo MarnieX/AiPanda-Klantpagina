@@ -9,6 +9,23 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 *Geen wijzigingen.*
 
+## [2.3.0] - 2026-02-19
+
+Visuele verrijking en robuustheid: panda-karakter in elke Gamma-slide, merkkleuren doorheen de hele flow, landscape hero-afbeelding, Gemini-model vastgezet en Gamma image-model gecorrigeerd.
+
+### Added
+- **Terugkerend panda-karakter**: ai-toekomstvisie-v2 stuurt per slide een [Scene: ...] hint zodat de panda op minstens 7 van de 10 slides verschijnt
+- **Merkkleur-extractie vroeg in de flow**: klantpagina-v2 stap 2A haalt nu MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR en HUISSTIJL_KENMERK op via WebSearch/WebFetch; beschikbaar voor de hele flow
+
+### Changed
+- **Hero-afbeelding landscape**: panda-server.py genereert nu 16:9 afbeeldingen (Gemini `aspectRatio: 16:9`, OpenAI `1792x1024`)
+- **Gemini model vastgezet**: gemini-image-v2/SKILL.md bevat nu een expliciete verbodsbepaling — model altijd `gemini-3-pro-image-preview`, nooit opzoeken of wisselen
+- **Gamma image-model gecorrigeerd**: `flux-kontext-max` (PRO-only) vervangen door `flux-2-pro` (beschikbaar op standaardplan)
+- **Gamma timeout-gedrag**: timeout wordt niet meer als fout behandeld; skill stopt en verwijst naar gamma.app/recent — geen dubbele presentaties
+- **V1 skills gearchiveerd**: verplaatst naar `.claude/skills/_archive/`, niet meer meegebundeld in de plugin
+- **AI Panda beschrijving uitgebreid**: template `klantpagina.md` bevat nu langere beschrijving met zin over samenwerking met teams op de werkvloer
+- Plugin manifest versie: 2.2.0 → 2.3.0
+
 ## [2.2.0] - 2026-02-19
 
 Foolproof Gamma-presentaties: dynamische thema-validatie, bedrijfslogo in headerFooter, merkkleur-integratie en robuuste 4-staps fallback-keten. LESSONS-LEARNED verplaatst naar projectroot.
