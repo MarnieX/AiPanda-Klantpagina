@@ -21,7 +21,7 @@ if [ -z "$1" ]; then
     echo "  --stijl  cartoon|foto|logo|artistiek  (default: cartoon)"
     echo "  --ratio  1:1|16:9|9:16|4:3|3:4        (default: 1:1)"
     echo "  --tekst  \"Tekst in afbeelding\"         (voor logo's)"
-    echo "  --model  gemini model naam              (default: gemini-2.0-flash-exp)"
+    echo "  --model  gemini model naam              (default: gemini-3-pro-image-preview)"
     echo ""
     echo "Voorbeelden:"
     echo "  ./banana.sh \"een panda die code schrijft\""

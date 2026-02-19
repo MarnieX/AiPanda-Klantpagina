@@ -136,7 +136,7 @@ def optimize_prompt(description, stijl="cartoon", ratio="1:1", tekst=None):
     return prompt
 
 
-def save_prompt(prompt, stijl, ratio, model="gemini-2.0-flash-exp"):
+def save_prompt(prompt, stijl, ratio, model="gemini-3-pro-image-preview"):
     """Sla prompt op als .txt bestand in de prompts/ map."""
     script_dir = Path(__file__).parent
     prompts_dir = script_dir / "prompts"
@@ -171,9 +171,9 @@ def main():
     )
     parser.add_argument(
         "--model", "-m",
-        default="gemini-2.0-flash-exp",
-        choices=["gemini-3-pro-image-preview", "gemini-2.5-flash-preview-05-20", "gemini-2.0-flash-exp"],
-        help="Gemini model (default: gemini-2.0-flash-exp)",
+        default="gemini-3-pro-image-preview",
+        choices=["gemini-3-pro-image-preview", "gemini-3-pro-image-preview", "gemini-3-pro-image-preview"],
+        help="Gemini model (default: gemini-3-pro-image-preview)",
     )
     parser.add_argument(
         "--tekst", "-t",

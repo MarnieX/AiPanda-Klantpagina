@@ -549,13 +549,52 @@ Wacht tot 5A, 5B, 5C, 5D en 5E klaar zijn.
 
 ### Notion Markdown — verplichte syntax
 
-De content MOET Notion-flavored markdown gebruiken:
-- Afbeeldingen: `![Caption](URL)` (NIET `<image>` tags)
-- Tabellen: `<table>` XML, cellen ALLEEN rich text (geen images/blocks)
-- Kolommen: `<columns><column>` met children ingesprongen via tabs `</column></columns>`
-- Callouts: `::: callout {icon="emoji"}\ntekst\n:::`
-- To-do's: `- [ ] tekst`
-- Haal NOOIT apart de Notion markdown spec op via ReadMcpResourceTool
+De content MOET Notion-flavored markdown gebruiken. Hieronder staat de volledige referentie:
+
+**Afbeeldingen:**
+```
+![Caption](URL)
+![](URL)              ← zonder caption (geen grijze tekst onder de afbeelding)
+```
+
+**Callouts (Pandoc-style fenced divs, NIET HTML-tags):**
+```
+::: callout {icon="emoji"}
+Tekst en **rich text** hier
+:::
+```
+FOUT: `<callout icon="emoji">tekst</callout>` — dit werkt NIET.
+
+**Kolommen (children MOETEN met tabs ingesprongen):**
+```
+<columns>
+	<column>
+		![](URL)
+		**Naam**
+		Functie
+	</column>
+	<column>
+		Content hier
+	</column>
+</columns>
+```
+FOUT: children zonder tab-inspringing worden niet gerenderd.
+
+**Tabellen:** `<table>` XML, cellen ALLEEN rich text (geen images/blocks).
+
+**To-do's:** `- [ ] tekst`
+
+**Dividers:** `---`
+
+**Toggle:**
+```
+<details>
+<summary>Titel</summary>
+	Children (ingesprongen)
+</details>
+```
+
+**GEEN embed block:** Notion heeft geen `<embed>` tag. Gebruik gewone links: `[Linktekst](URL)`
 
 ### 6A — Klantpagina aanmaken
 
@@ -580,7 +619,9 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 ---
 
-<callout icon="💬">**"[PULL_QUOTE]"**</callout>
+::: callout {icon="💬"}
+**"[PULL_QUOTE]"**
+:::
 
 ---
 
@@ -596,20 +637,20 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 [TOEKOMSTVERHAAL]
 
-<image source="[VISIE_IMAGE_URL]">[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie</image>
+![[BEDRIJFSNAAM] in 2035 — AI-toekomstvisie]([VISIE_IMAGE_URL])
 
 <columns>
 	<column>
-[KERNGETAL_1]
+		[KERNGETAL_1]
 	</column>
 	<column>
-[KERNGETAL_2]
+		[KERNGETAL_2]
 	</column>
 	<column>
-[KERNGETAL_3]
+		[KERNGETAL_3]
 	</column>
 	<column>
-[KERNGETAL_4]
+		[KERNGETAL_4]
 	</column>
 </columns>
 
@@ -619,25 +660,25 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 <columns>
 	<column>
-<image source="[FOTO_URL_1]">[NAAM_1]</image>
-
-**[NAAM_1]**
-[FUNCTIE_1]
-[EMAIL_1]
+		![]([FOTO_URL_1])
+		**[NAAM_1]**
+		[FUNCTIE_1]
+		[TELEFOON_1]
+		[EMAIL_1]
 	</column>
 	<column>
-<image source="[FOTO_URL_2]">[NAAM_2]</image>
-
-**[NAAM_2]**
-[FUNCTIE_2]
-[EMAIL_2]
+		![]([FOTO_URL_2])
+		**[NAAM_2]**
+		[FUNCTIE_2]
+		[TELEFOON_2]
+		[EMAIL_2]
 	</column>
 	<column>
-<image source="[FOTO_URL_3]">[NAAM_3]</image>
-
-**[NAAM_3]**
-[FUNCTIE_3]
-[EMAIL_3]
+		![]([FOTO_URL_3])
+		**[NAAM_3]**
+		[FUNCTIE_3]
+		[TELEFOON_3]
+		[EMAIL_3]
 	</column>
 </columns>
 
@@ -649,21 +690,29 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in de [SECTOR]-sector. Elke fase bouwt voort op de vorige.
 
-<callout icon="🔍">**Fase 1 — Discovery** *(Week 1-2)*
+::: callout {icon="🔍"}
+**Fase 1 — Discovery** *(Week 1-2)*
 
-[ROADMAP_FASE_1]</callout>
+[ROADMAP_FASE_1]
+:::
 
-<callout icon="🧪">**Fase 2 — Pilot** *(Week 3-6)*
+::: callout {icon="🧪"}
+**Fase 2 — Pilot** *(Week 3-6)*
 
-[ROADMAP_FASE_2]</callout>
+[ROADMAP_FASE_2]
+:::
 
-<callout icon="🚀">**Fase 3 — Implementatie** *(Week 7-12)*
+::: callout {icon="🚀"}
+**Fase 3 — Implementatie** *(Week 7-12)*
 
-[ROADMAP_FASE_3]</callout>
+[ROADMAP_FASE_3]
+:::
 
-<callout icon="📈">**Fase 4 — Schaling & Optimalisatie** *(Week 13+)*
+::: callout {icon="📈"}
+**Fase 4 — Schaling & Optimalisatie** *(Week 13+)*
 
-[ROADMAP_FASE_4]</callout>
+[ROADMAP_FASE_4]
+:::
 
 ---
 
@@ -679,8 +728,6 @@ Hieronder vind je de roadmap die specifiek is opgesteld voor [BEDRIJFSNAAM] in d
 ## AI-Readiness Quickscan
 
 Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vragen en krijg direct je profiel.
-
-<embed source="[QUIZ_URL]">AI-Readiness Quickscan voor [BEDRIJFSNAAM]</embed>
 
 [Start de AI-Readiness Quickscan]([QUIZ_URL])
 
@@ -699,7 +746,7 @@ Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vrag
 
 **Dynamische team-sectie:** Genereer zoveel `<column>` blokken als er geselecteerde consultants zijn. Het template hierboven toont 3 als voorbeeld, maar pas dit aan op het werkelijke aantal.
 
-**Quiz embed:** Het template bevat zowel een `<embed>` blok als een tekstlink voor de quiz. Als Notion de embed niet ondersteunt (GitHub Pages URL niet in whitelist), wordt de link automatisch als fallback getoond. Verwijder de `<embed>` tag als je weet dat het niet werkt, zodat er geen lege embed op de pagina staat.
+**Quiz link:** Notion ondersteunt geen `<embed>` tag. De quiz wordt als klikbare link getoond.
 
 **Sla het `id` uit de response op als KLANTPAGINA_ID** (UUID met dashes, bijv. `abc123-...`).
 
