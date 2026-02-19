@@ -4,7 +4,7 @@ MCP server voor AI Panda plugin.
 - AI-beeldgeneratie via Google Gemini (primair) en OpenAI (fallback)
 - Panda referentie-image support (multimodal Gemini)
 - Bedrijfslogo ophalen en meegeven
-- Image upload naar 0x0.st / catbox.moe
+- Image upload naar catbox.moe / tmpfiles.org
 - Team Excel uitlezen
 """
 
@@ -54,6 +54,7 @@ if not os.environ.get("GEMINI_API_KEY") or not os.environ.get("OPENAI_API_KEY"):
 
 _gemini_api_key = os.environ.get("GEMINI_API_KEY", "")
 _openai_api_key = os.environ.get("OPENAI_API_KEY", "")
+_logo_dev_token = os.environ.get("LOGO_DEV_TOKEN", "")
 
 # --- Gemini config ---
 GEMINI_MODEL = "gemini-3-pro-image-preview"
@@ -121,21 +122,28 @@ def _build_panda_prompt(bedrijfsnaam: str, sector: str = "", has_logo: bool = Fa
 # --- Logo fetching ---
 
 def _fetch_logo_b64(domain: str) -> str | None:
-    """Fetch company logo as base64. Tries Clearbit, then Google Favicons."""
+    """Fetch company logo as base64. Tries Logo.dev (high quality), then Google Favicons.
+    Uses curl subprocess to avoid Python SSL certificate issues."""
     if not domain:
         return None
     # Strip protocol if present
     domain = domain.replace("https://", "").replace("http://", "").strip("/")
-    for url in [
-        f"https://logo.clearbit.com/{domain}",
-        f"https://www.google.com/s2/favicons?domain={domain}&sz=128",
-    ]:
+
+    urls = []
+    # Logo.dev: high quality logos, requires LOGO_DEV_TOKEN
+    if _logo_dev_token:
+        urls.append(f"https://img.logo.dev/{domain}?token={_logo_dev_token}&format=png&size=256")
+    # Google Favicons: free, no key, lower quality (favicons only)
+    urls.append(f"https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=http://{domain}&size=128")
+
+    for url in urls:
         try:
-            resp = urllib.request.urlopen(url, timeout=5)
-            if resp.status == 200:
-                data = resp.read()
-                if len(data) > 100:  # Skip tiny/empty responses
-                    return base64.b64encode(data).decode()
+            result = subprocess.run(
+                ["curl", "-sL", "-o", "-", url],
+                capture_output=True, timeout=10,
+            )
+            if result.returncode == 0 and len(result.stdout) > 100:
+                return base64.b64encode(result.stdout).decode()
         except Exception:
             continue
     return None
@@ -263,16 +271,6 @@ async def generate_with_openai(prompt: str) -> bytes | None:
 
 # --- Upload helpers ---
 
-async def upload_to_0x0(tmp_path: str) -> str:
-    """Upload a file to 0x0.st and return the public URL."""
-    result = subprocess.run(
-        ["curl", "-s", "-F", f"file=@{tmp_path}", "https://0x0.st"],
-        capture_output=True, text=True, timeout=30,
-    )
-    url = result.stdout.strip()
-    return url if url.startswith("http") else ""
-
-
 async def upload_to_catbox(tmp_path: str) -> str:
     """Upload a file to catbox.moe and return the public URL."""
     result = subprocess.run(
@@ -284,17 +282,34 @@ async def upload_to_catbox(tmp_path: str) -> str:
     return url if url.startswith("http") else ""
 
 
+async def upload_to_tmpfiles(tmp_path: str) -> str:
+    """Upload a file to tmpfiles.org and return the direct download URL."""
+    result = subprocess.run(
+        ["curl", "-s", "-F", f"file=@{tmp_path}", "https://tmpfiles.org/api/v1/upload"],
+        capture_output=True, text=True, timeout=30,
+    )
+    try:
+        data = json.loads(result.stdout)
+        if data.get("status") == "success":
+            # Convert page URL to direct download URL: tmpfiles.org/ID/file → tmpfiles.org/dl/ID/file
+            page_url = data["data"]["url"]
+            return page_url.replace("tmpfiles.org/", "tmpfiles.org/dl/", 1).replace("http://", "https://")
+    except (json.JSONDecodeError, KeyError):
+        pass
+    return ""
+
+
 async def upload_image(image_bytes: bytes, filename: str = "image.png") -> str:
-    """Upload image bytes to a public host. Tries 0x0.st first, catbox.moe as fallback."""
+    """Upload image bytes to a public host. Tries catbox.moe first, tmpfiles.org as fallback."""
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
         f.write(image_bytes)
         tmp_path = f.name
 
     try:
-        url = await upload_to_0x0(tmp_path)
+        url = await upload_to_catbox(tmp_path)
         if url:
             return url
-        url = await upload_to_catbox(tmp_path)
+        url = await upload_to_tmpfiles(tmp_path)
         if url:
             return url
         return ""
@@ -386,7 +401,7 @@ async def generate_custom_image(prompt: str) -> str:
 async def upload_image_base64(image_base64: str, filename: str = "image.png") -> str:
     """
     Upload base64-encoded image data en retourneer een publieke URL.
-    Probeert 0x0.st (primair) en catbox.moe (fallback). Server-side upload, geen CORS.
+    Probeert catbox.moe (primair) en tmpfiles.org (fallback). Server-side upload, geen CORS.
 
     Args:
         image_base64: Base64-encoded image data (zonder data:... prefix).
@@ -396,7 +411,7 @@ async def upload_image_base64(image_base64: str, filename: str = "image.png") ->
         image_bytes = base64.b64decode(image_base64)
         url = await upload_image(image_bytes, filename)
         if not url:
-            return json.dumps({"success": False, "error": "Upload mislukt (0x0.st en catbox.moe beide gefaald)."})
+            return json.dumps({"success": False, "error": "Upload mislukt (catbox.moe en tmpfiles.org beide gefaald)."})
         return json.dumps({"success": True, "image_url": url})
     except Exception as e:
         return json.dumps({"success": False, "error": str(e)})

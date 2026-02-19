@@ -187,10 +187,11 @@ sys.exit(1)
 ### 4A.3 — Upload
 
 ```bash
-# Upload: 0x0.st (primair), catbox.moe (fallback)
-IMAGE_URL=$(curl -s -F "file=@$OUTPUT" https://0x0.st)
+# Upload: catbox.moe (primair), tmpfiles.org (fallback)
+IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
 if [ -z "$IMAGE_URL" ] || ! echo "$IMAGE_URL" | grep -q "^http"; then
-    IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
+    TMPFILES_RESP=$(curl -s -F "file=@$OUTPUT" https://tmpfiles.org/api/v1/upload)
+    IMAGE_URL=$(echo "$TMPFILES_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['data']['url'].replace('tmpfiles.org/','tmpfiles.org/dl/',1).replace('http://','https://'))" 2>/dev/null)
 fi
 echo "URL: $IMAGE_URL"
 ```

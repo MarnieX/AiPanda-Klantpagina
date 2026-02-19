@@ -5,7 +5,8 @@
       "args": ["${CLAUDE_PLUGIN_ROOT}/servers/panda-server.py"],
       "env": {
         "GEMINI_API_KEY": "${GEMINI_API_KEY}",
-        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "LOGO_DEV_TOKEN": "pk_XpHqlOsfSNSn7E3UJB_Kmw"
       }
     }
   }
