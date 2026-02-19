@@ -9,6 +9,40 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 *Geen wijzigingen.*
 
+## [2.0.0] - 2026-02-19
+
+Volledige herbouw van de plugin met orchestrator-architectuur. Alle 4 skills herschreven als v2 met quick mode, MCP server uitgebreid, template geëxtraheerd, hooks verwijderd.
+
+### Added
+- **klantpagina-v2 skill**: orchestrator (~220 regels, was 678) die delegeert naar sub-skills via quick mode
+- **gemini-image-v2 skill**: quick mode interface, fallback_url logica bij MCP response, opgeschoonde diagnostics
+- **ai-quiz-v2 skill**: quick mode interface, optionele Notion-pagina (alleen standalone), Python-first base64 encoding
+- **ai-toekomstvisie-v2 skill**: quick mode interface, kwaliteitscheck inline verplaatst naar stap 3 (pre-validatie)
+- `read_team_excel` MCP tool: leest team Excel via CLAUDE_PLUGIN_ROOT met find-fallback, retourneert JSON
+- `check_gemini_api_key` MCP tool: controleert of API key beschikbaar is in de sessie
+- `set_gemini_api_key` MCP tool: slaat API key op in geheugen (nooit op schijf, verdwijnt bij sessie-einde)
+- `plugin/templates/klantpagina.md`: Notion syntax referentie + volledig template met placeholders
+- Gamma MCP tools toegevoegd aan /klantpagina command allowed-tools
+
+### Changed
+- MCP server hernoemd: `gemini-image-server.py` → `panda-server.py`
+- MCP server naam: `gemini-images` → `panda-server`
+- `/klantpagina` command verwijst nu naar klantpagina-v2 skill
+- `build.sh` synct v2 skills, bundelt templates, verwijdert oude bestanden
+- Plugin manifest versie: 0.2.0 → 2.0.0
+- API key management: van bash `export` (shell-only) naar MCP tool (server + shell)
+
+### Removed
+- `plugin/hooks/hooks.json` en hooks directory (quality check niet meer nodig, sub-skills melden eigen status)
+- `plugin/servers/gemini-image-server.py` (vervangen door panda-server.py)
+- Inline Excel-leeslogica uit klantpagina (50 regels → MCP tool)
+- Inline image-generatie uit klantpagina (175 regels → delegatie naar gemini-image-v2)
+- Inline quiz-generatie uit klantpagina (65 regels → delegatie naar ai-quiz-v2)
+- Inline Notion template uit klantpagina (140 regels → apart bestand)
+- Omgevingsdetectie bash uit klantpagina (sub-skills handelen dit zelf af)
+- `[DIAG]` diagnostics uit klantpagina (sub-skills melden zelf hun status)
+- Health check stap 0 uit klantpagina flow
+
 ## [0.3.0] - 2026-02-19
 
 Notion markdown syntax gefixed, Cowork image pipeline robuust gemaakt, lessons learned gedocumenteerd.
