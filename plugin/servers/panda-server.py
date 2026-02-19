@@ -49,14 +49,44 @@ if not os.environ.get("GEMINI_API_KEY"):
     except ImportError:
         pass
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
+_gemini_api_key = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL = "gemini-3-pro-image-preview"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
 
+def _get_api_key() -> str:
+    """Return the current Gemini API key (in-memory, never written to disk)."""
+    return _gemini_api_key
+
+
+@mcp.tool()
+async def check_gemini_api_key() -> str:
+    """
+    Check of de Gemini API key beschikbaar is in deze sessie.
+    Retourneert JSON: {"available": true/false}
+    """
+    return json.dumps({"available": bool(_get_api_key())})
+
+
+@mcp.tool()
+async def set_gemini_api_key(api_key: str) -> str:
+    """
+    Sla de Gemini API key op in het geheugen van de MCP server (voor de duur van de sessie).
+    De key wordt NIET naar schijf geschreven en verdwijnt wanneer de sessie eindigt.
+
+    Args:
+        api_key: De Gemini API key (begint met 'AIza...').
+    """
+    global _gemini_api_key
+    if not api_key or not api_key.strip():
+        return json.dumps({"success": False, "error": "Lege key opgegeven."})
+    _gemini_api_key = api_key.strip()
+    return json.dumps({"success": True, "message": "API key opgeslagen voor deze sessie (alleen in geheugen)."})
+
+
 async def generate_with_gemini(prompt: str) -> bytes | None:
     """Generate an image using Google Gemini API."""
-    if not GEMINI_API_KEY:
+    if not _get_api_key():
         return None
 
     payload = {
@@ -69,7 +99,7 @@ async def generate_with_gemini(prompt: str) -> bytes | None:
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.post(
             GEMINI_URL,
-            params={"key": GEMINI_API_KEY},
+            params={"key": _get_api_key()},
             json=payload,
         )
         resp.raise_for_status()

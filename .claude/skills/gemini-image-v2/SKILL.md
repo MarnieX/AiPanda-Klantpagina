@@ -71,21 +71,21 @@ Sla op: IMAGE_PROMPT (Engelse prompt), FORMAT_INSTRUCTION (bijv. "square 1:1 asp
 
 ## Stap 2: GEMINI_API_KEY check
 
-```bash
-echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+OK}"
-```
+Controleer of de key beschikbaar is via de MCP tool `check_gemini_api_key`.
 
-Als dit NIET "OK" print:
+**Als `available: true`:** Key is al beschikbaar (via settings of eerder in deze sessie gezet). Ga door naar stap 3.
 
-Vraag de key via AskUserQuestion:
+**Als `available: false`:** Vraag de key via AskUserQuestion:
 - question: "GEMINI_API_KEY ontbreekt. Plak je Gemini API key hieronder (aanmaken op https://aistudio.google.com/apikey)."
 - header: "API Key"
 - options:
-  - "Ik heb geen key, sla over" — ga door met lege string als IMAGE_URL
+  - "Ik heb geen key, sla over" — retourneer lege string als IMAGE_URL
   - "Key komt eraan" — de gebruiker plakt de key via het Other-tekstveld
 - multiSelect: false
 
 Als de gebruiker een key plakt:
+1. Sla op via MCP tool `set_gemini_api_key` (maakt key beschikbaar voor de MCP server de rest van de sessie, alleen in geheugen)
+2. Exporteer ook in de shell voor curl-fallbacks:
 ```bash
 export GEMINI_API_KEY="[GEPLAKTE_KEY]"
 ```

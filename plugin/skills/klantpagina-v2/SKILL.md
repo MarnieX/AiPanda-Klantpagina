@@ -8,7 +8,7 @@ description: "Genereer een professionele Notion-klantpagina voor AI Panda. Orche
 Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde. Start parallelstappen altijd tegelijk om snelheid te winnen.
 
 Gebruik TodoWrite om voortgang te tonen:
-1. Bedrijfsnaam ophalen
+1. Bedrijfsnaam ophalen + API key checken
 2. Bedrijfsinfo + Excel laden (parallel)
 3. Consultants selecteren
 4. Bevestiging vragen
@@ -26,6 +26,25 @@ Vraag de gebruiker: "Voor welk bedrijf wil je een klantpagina maken? Geef de bed
 Gebruik hiervoor GEEN AskUserQuestion (dat vereist opties). Stel de vraag als gewone tekst en wacht op het antwoord.
 
 Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
+
+### Gemini API key check (parallel met wachten op antwoord)
+
+Controleer of de Gemini API key beschikbaar is via de MCP tool `check_gemini_api_key`.
+
+**Als `available: false`:** Vraag de key via AskUserQuestion:
+- question: "GEMINI_API_KEY ontbreekt. Die heb ik nodig om een panda-afbeelding te genereren. Plak je Gemini API key hieronder (aanmaken op https://aistudio.google.com/apikey)."
+- header: "API Key"
+- options:
+  - "Ik heb geen key, sla de afbeelding over (Recommended)" — ga door zonder image
+  - "Key komt eraan" — de gebruiker plakt de key via het Other-tekstveld
+- multiSelect: false
+
+Als de gebruiker een key plakt: sla deze op via de MCP tool `set_gemini_api_key` met de geplakte key. Dit maakt de key beschikbaar voor de hele sessie (alleen in geheugen, niet op schijf). Exporteer de key ook in de shell voor eventuele curl-fallbacks:
+```bash
+export GEMINI_API_KEY="[GEPLAKTE_KEY]"
+```
+
+**Als `available: true`:** Key is al beschikbaar, ga door.
 
 ---
 
