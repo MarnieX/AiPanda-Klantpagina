@@ -9,6 +9,37 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 *Geen wijzigingen.*
 
+## [2.1.0] - 2026-02-19
+
+OpenAI fallback, fotorealistische panda-prompt, bedrijfslogo-integratie, en robuustere externe services.
+
+### Added
+- **OpenAI fallback**: `gpt-image-1.5` als fallback wanneer Gemini faalt (rate limits). Automatische fallback-keten: Gemini (met referentie-image) → OpenAI (prompt-only)
+- **Panda referentie-image**: `panda-reference.png` wordt bij startup als base64 geladen en multimodal meegegeven aan Gemini voor stijlconsistentie
+- **Bedrijfslogo-integratie**: Logo ophalen via Logo.dev (primair) of Google Favicons (fallback), meegeven als extra `inlineData` aan Gemini. Logo verschijnt op schermen, badges en whiteboards in de afbeelding
+- **`generate_with_openai()` functie**: POST naar OpenAI images/generations endpoint, model `gpt-image-1.5`, `1024x1024`, quality `high`
+- **`_fetch_logo_b64()` functie**: Haalt bedrijfslogo op als base64 via curl (SSL-robuust)
+- **`upload_to_tmpfiles()` functie**: Upload naar tmpfiles.org met automatische `/dl/` directe-link conversie
+- **`check_api_keys` MCP tool**: Retourneert `{"gemini": true/false, "openai": true/false}`
+- **`set_api_key` MCP tool**: Accepteert `provider` ("gemini" of "openai") + `api_key`
+- `OPENAI_API_KEY` en `LOGO_DEV_TOKEN` in `.mcp.json` env-sectie
+- `sector` en `website` parameters op `generate_panda_image` tool
+
+### Changed
+- **Panda-prompt herschreven**: van cartoon ("cute friendly cartoon panda with t-shirt") naar fotorealistisch ("photorealistic giant panda in black business suit, orange necktie, furry paws, cinematic photography")
+- **Logo API**: Clearbit (sunset dec 2025) vervangen door Logo.dev + Google Favicons fallback
+- **Upload primair**: catbox.moe (was 0x0.st, nu 403). tmpfiles.org als fallback
+- **Logo fetching**: `urllib.request` vervangen door `subprocess` + `curl` (voorkomt Python SSL-certificaatproblemen)
+- **gemini-image-v2 skill**: stap 2 checkt nu beide API keys, fallback-keten bevat OpenAI, curl-fallbacks gebruiken catbox/tmpfiles
+- **klantpagina-v2 skill**: API key check gebruikt `check_api_keys`, stap 5A gebruikt `generate_panda_image` MCP tool met `sector` + `website` parameters
+- Plugin manifest versie: 2.0.0 → 2.1.0
+
+### Removed
+- `check_gemini_api_key` MCP tool (vervangen door `check_api_keys`)
+- `set_gemini_api_key` MCP tool (vervangen door `set_api_key`)
+- `upload_to_0x0()` functie (0x0.st retourneert 403)
+- Clearbit Logo API referenties
+
 ## [2.0.0] - 2026-02-19
 
 Volledige herbouw van de plugin met orchestrator-architectuur. Alle 4 skills herschreven als v2 met quick mode, MCP server uitgebreid, template geëxtraheerd, hooks verwijderd.

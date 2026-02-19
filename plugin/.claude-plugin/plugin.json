@@ -1,7 +1,7 @@
 {
   "name": "ai-panda-klantpagina",
-  "version": "2.0.0",
-  "description": "Genereer professionele Notion-klantpagina's voor AI Panda met bedrijfsinfo, teamleden en een AI-implementatie roadmap.",
+  "version": "2.1.0",
+  "description": "Genereer professionele Notion-klantpagina's voor AI Panda met AI-gegenereerde afbeeldingen (Gemini + OpenAI fallback), bedrijfslogo-integratie, teamleden en sector-specifieke AI-roadmap.",
   "author": {
     "name": "Marnix Matthijsse"
   },

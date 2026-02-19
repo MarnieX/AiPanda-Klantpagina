@@ -31,8 +31,15 @@ Een Claude Code plugin die het aanmaken van professionele Notion-klantpagina's v
   - ai-toekomstvisie-v2: quick mode + inline kwaliteitscheck
   - MCP server hernoemd naar panda-server.py met `read_team_excel` tool
   - Notion template geëxtraheerd naar apart bestand
-  - Session-safe API key management via `check_gemini_api_key` / `set_gemini_api_key` MCP tools
   - Hooks verwijderd (quality check niet meer nodig)
+- **Plugin v2.1.0: OpenAI fallback, fotorealistische prompt, logo-integratie**
+  - OpenAI `gpt-image-1.5` als fallback na Gemini rate limits
+  - Panda referentie-image (multimodal) meegegeven aan Gemini voor stijlconsistentie
+  - Bedrijfslogo ophalen via Logo.dev + Google Favicons, als extra referentie-image
+  - Fotorealistische panda-prompt (zwart pak, oranje stropdas, furry paws)
+  - Dubbele API key management via `check_api_keys` / `set_api_key` MCP tools
+  - Upload: catbox.moe (primair) + tmpfiles.org (fallback), 0x0.st verwijderd
+  - Logo API: Logo.dev (primair) + Google Favicons (fallback), Clearbit verwijderd
 
 ### Openstaand
 - Prompt Optimizer valideren en finetunen (Marnix)
@@ -53,11 +60,11 @@ Het project is een Claude Code plugin bestaande uit skills (Markdown workflows),
     ▼
 klantpagina-v2 (orchestrator, ~220 regels)
     │
-    ├── Stap 1: check_gemini_api_key ──► panda-server.py
+    ├── Stap 1: check_api_keys ──► panda-server.py (Gemini + OpenAI)
     ├── Stap 2B: read_team_excel ──► panda-server.py
     │
-    ├── Stap 5A: gemini-image-v2 (quick mode)
-    │       └── generate_panda_image ──► panda-server.py
+    ├── Stap 5A: generate_panda_image ──► panda-server.py
+    │       └── Gemini (ref+logo) → OpenAI (prompt-only) → fallback
     │
     ├── Stap 5C: ai-quiz-v2 (quick mode, geen Notion-pagina)
     │       └── Base64 encode + URL bouwen
@@ -117,10 +124,10 @@ Gebruiker geeft bedrijfsnaam/URL op
 │   ├── prompt-optimizer.py              # Prompt templates voor Gemini
 │   └── banana.sh                        # CLI wrapper
 ├── plugin/                              # Plugin bronbestanden
-│   ├── .claude-plugin/plugin.json       # Plugin metadata (v2.0.0)
-│   ├── .mcp.json                        # MCP server configuratie (panda-server)
+│   ├── .claude-plugin/plugin.json       # Plugin metadata (v2.1.0)
+│   ├── .mcp.json                        # MCP server configuratie (panda-server, env vars)
 │   ├── commands/klantpagina.md          # /klantpagina slash command → v2 skill
-│   ├── servers/panda-server.py          # MCP server (Gemini + Excel + API key)
+│   ├── servers/panda-server.py          # MCP server (Gemini/OpenAI + logo + Excel + API keys)
 │   ├── templates/klantpagina.md         # Notion-pagina template met placeholders
 │   └── skills/                          # Skills (gesynct vanuit .claude/)
 ├── build.sh                             # Bouwt plugin/ tot .zip
@@ -132,20 +139,21 @@ Gebruiker geeft bedrijfsnaam/URL op
 ### Services
 | Service | Doel | Koppeling |
 |---|---|---|
-| Google Gemini | AI-beeldgeneratie | MCP server (panda-server.py) + Python SDK |
+| Google Gemini | AI-beeldgeneratie (primair) | MCP server (panda-server.py), multimodal met referentie-images |
+| OpenAI | AI-beeldgeneratie (fallback) | MCP server (panda-server.py), gpt-image-1.5 |
+| Logo.dev | Bedrijfslogo ophalen | cURL, publishable key in .mcp.json |
+| Google Favicons | Bedrijfslogo fallback | cURL, gratis, geen key |
 | Notion | Klantpagina's aanmaken | MCP Server (notion-create-pages) |
 | Gamma.app | Toekomstvisie presentatie | MCP Server (claude_ai_Gamma) |
-| 0x0.st | Tijdelijke image hosting (primair) | cURL upload |
-| catbox.moe | Tijdelijke image hosting (fallback) | cURL upload |
-| Cloudinary | Image hosting (optioneel) | Python SDK |
+| catbox.moe | Tijdelijke image hosting (primair) | cURL upload |
+| tmpfiles.org | Tijdelijke image hosting (fallback) | cURL upload + /dl/ URL-conversie |
 
 ### Environment Variables
 | Variabele | Doel | Verplicht |
 |---|---|---|
 | GEMINI_API_KEY | Google Gemini API | Ja (of invoeren via sessie-prompt) |
-| CLOUDINARY_CLOUD_NAME | Cloudinary account | Nee |
-| CLOUDINARY_API_KEY | Cloudinary authenticatie | Nee |
-| CLOUDINARY_API_SECRET | Cloudinary secret | Nee |
+| OPENAI_API_KEY | OpenAI API (fallback image gen) | Nee (Gemini is primair) |
+| LOGO_DEV_TOKEN | Logo.dev bedrijfslogo's | Nee (hardcoded publishable key in .mcp.json) |
 
 ## Infrastructuur
 - Geen eigen hosting: draait lokaal als Claude Code plugin
