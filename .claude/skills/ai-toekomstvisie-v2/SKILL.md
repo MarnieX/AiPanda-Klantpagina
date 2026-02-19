@@ -107,41 +107,48 @@ Slide 1 — Titel
 "AI Panda x [BEDRIJFSNAAM]"
 Subtitel: [prikkelende stelling over de transformatie, max 12 woorden]
 Ondertitel: Toekomstvisie [huidig jaar + 10] | AI Panda
+[Scene: de AI Panda — een grote panda in zwart maatpak met oranje stropdas — staat zelfverzekerd vooraan in een glazen boardroom, armen gekruist, skyline op de achtergrond]
 
 Slide 2 — Het probleem van vandaag
 Kop: "Wat houdt [SECTOR] wakker?"
 Beschrijf het SECTORPROBLEEM concreet in 3-4 bullets.
 Sluit af: "Dit is niet een probleem van morgen. Het is het probleem van nu."
+[Scene: de panda staat voor een grote whiteboard vol frustrerende diagrammen en post-its, wijst er serieus naar terwijl collega's bezorgd toekijken]
 
 Slide 3 — Wie is [BEDRIJFSNAAM]?
 Kop: "[BEDRIJFSNAAM] in één oogopslag"
 OMSCHRIJVING + 3 kernfeiten (grootte, bereik, marktpositie indien bekend)
 TAGLINE als pull quote
+[Scene: luchtfoto of wijd shot van het type locatie dat past bij SECTOR — geen panda op deze slide, puur het bedrijf]
 
 Slide 4 — Wat AI verandert
 Kop: "AI is geen tool. Het is een nieuwe manier van werken."
 3 kolommen: Vandaag | Over 3 jaar | Over 10 jaar
 Elk: 1 kernproces van BEDRIJFSNAAM in de SECTOR
+[Scene: de panda zit aan een vergadertafel en wijst naar een groot holografisch scherm met tijdlijn-data, collega's kijken gefascineerd toe]
 
 Slide 5 — 2035: Een dag in het leven
 Kop: "Een gewone maandagochtend in [huidig jaar + 10]"
 De openingsscène van het verhaal (3-4 zinnen, levendig en concreet)
-Foto-prompt voor Gemini: hyperrealistisch, MERKKLEUR_PRIMAIR als accent, medewerker in beeld
+[Scene: de panda loopt zelfverzekerd door een modern kantoor in MERKKLEUR_PRIMAIR-interieur, koffie in de hand, dashboard op schermen op de achtergrond — sfeer: gewone werkdag]
 
 Slide 6 — De doorbraak
 Kop: "Het probleem dat AI oploste"
 Beschrijf hoe het SECTORPROBLEEM fundamenteel is veranderd (2-3 zinnen)
 Contrast: "Vroeger: [korte beschrijving] → Nu: [korte beschrijving]"
+[Scene: dramatisch voor/na-beeld — links chaotisch en donker, rechts helder en geordend met de panda die triomfantelijk staat bij een scherm dat groene resultaten toont]
 
 Slide 7 — Bedrijfsbrede transformatie
 Kop: "Wat [BEDRIJFSNAAM] nu kan, wat concurrenten niet kunnen"
 3 bullets: specifieke competitieve voordelen die door AI zijn ontstaan
 Afsluit met marktpositie in [huidig jaar + 10]
+[Scene: de panda geeft een presentatie aan een grote zaal, professioneel en gezaghebbend, publiek kijkt aandachtig]
 
 Slide 8 — Kerngetallen
 Kop: "De cijfers achter de transformatie"
 4 grote getallen/feiten die letterlijk in het verhaal voorkomen
 Elk getal met 1 korte duiding (bijv: "3x sneller" — klantresponstijd gehalveerd)
+[Scene: close-up van de panda die tevreden naar een groot dashboard kijkt waarop de kerngetallen oplichten]
 
 Slide 9 — De roadmap
 Kop: "Van hier naar daar — met AI Panda"
@@ -150,6 +157,7 @@ Kop: "Van hier naar daar — met AI Panda"
   Fase 2 Pilot (Week 3-6): [specifiek]
   Fase 3 Implementatie (Week 7-12): [specifiek]
   Fase 4 Schaling (Week 13+): [specifiek]
+[Scene: de panda loopt als gids voorop een pad dat kronkelt van een beginpunt naar een stralend eindpunt, andere teamleden volgen — metafoor voor de reis]
 
 Slide 10 — De eerste stap
 Kop: "Klaar om te beginnen?"
@@ -157,6 +165,7 @@ EINDQUOTE als grote pull quote
 Subtekst: "AI Panda begeleidt [BEDRIJFSNAAM] van visie naar werkelijkheid."
 CTA: "Plan een kennismaking → aipanda.nl"
 AI Panda tagline: "Making AI Work For You"
+[Scene: de panda steekt de hand uit voor een handdruk richting de kijker, vriendelijk en uitnodigend, lichte achtergrond in MERKKLEUR_PRIMAIR]
 ```
 
 **Kwaliteitscheck (controleer voordat je naar stap 4 gaat):**
@@ -215,10 +224,12 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  style: "photorealistic, cinematic, modern corporate, accent color [MERKKLEUR_PRIMAIR]"
+  model: "flux-kontext-max"
+  style: "photorealistic, cinematic, modern corporate. Recurring character: a giant panda wearing a tailored black business suit with orange tie, walking and working confidently among human colleagues as a regular executive — the panda belongs there. Accent color [MERKKLEUR_PRIMAIR] and AI Panda orange #F97316 throughout."
+additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always as a confident professional among humans. Each [Scene: ...] note in the outline describes exactly what the panda does on that slide; follow those descriptions closely. On slides without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual thread that runs through the whole presentation."
 ```
 
-Als MERKKLEUR_PRIMAIR leeg of `#F97316`: gebruik alleen "photorealistic, cinematic, modern office".
+Als MERKKLEUR_PRIMAIR leeg of `#F97316`: laat de accentkleur-vermelding weg uit `style`, maar houd de panda-karakterbeschrijving intact.
 
 **Let op:** Geef de volledige, uitgeschreven outline mee als `inputText`. Niet een samenvatting.
 
