@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 MCP server voor AI-beeldgeneratie via Google Gemini.
-Genereert afbeeldingen en upload ze naar catbox.moe voor publieke URLs.
+Genereert afbeeldingen en upload ze naar 0x0.st (primair) of catbox.moe (fallback) voor publieke URLs.
 """
 
 import asyncio
@@ -75,20 +75,39 @@ async def generate_with_gemini(prompt: str) -> bytes | None:
     return None
 
 
-async def upload_to_catbox(image_bytes: bytes, filename: str = "image.png") -> str:
-    """Upload image bytes to catbox.moe and return the public URL."""
+async def upload_to_0x0(tmp_path: str) -> str:
+    """Upload a file to 0x0.st and return the public URL."""
+    result = subprocess.run(
+        ["curl", "-s", "-F", f"file=@{tmp_path}", "https://0x0.st"],
+        capture_output=True, text=True, timeout=30,
+    )
+    url = result.stdout.strip()
+    return url if url.startswith("http") else ""
+
+
+async def upload_to_catbox(tmp_path: str) -> str:
+    """Upload a file to catbox.moe and return the public URL."""
+    result = subprocess.run(
+        ["curl", "-s", "-F", "reqtype=fileupload", "-F", f"fileToUpload=@{tmp_path}",
+         "https://catbox.moe/user/api.php"],
+        capture_output=True, text=True, timeout=30,
+    )
+    url = result.stdout.strip()
+    return url if url.startswith("http") else ""
+
+
+async def upload_image(image_bytes: bytes, filename: str = "image.png") -> str:
+    """Upload image bytes to a public host. Tries 0x0.st first, catbox.moe as fallback."""
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
         f.write(image_bytes)
         tmp_path = f.name
 
     try:
-        result = subprocess.run(
-            ["curl", "-s", "-F", "reqtype=fileupload", "-F", f"fileToUpload=@{tmp_path}",
-             "https://catbox.moe/user/api.php"],
-            capture_output=True, text=True, timeout=30,
-        )
-        url = result.stdout.strip()
-        if url.startswith("http"):
+        url = await upload_to_0x0(tmp_path)
+        if url:
+            return url
+        url = await upload_to_catbox(tmp_path)
+        if url:
             return url
         return ""
     finally:
@@ -121,11 +140,11 @@ async def generate_panda_image(bedrijfsnaam: str) -> str:
                 "fallback_url": f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png",
             })
 
-        url = await upload_to_catbox(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
+        url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
         if not url:
             return json.dumps({
                 "success": False,
-                "error": "Upload naar catbox.moe mislukt.",
+                "error": "Upload mislukt (0x0.st en catbox.moe beide gefaald).",
                 "fallback_url": f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png",
             })
 
@@ -155,7 +174,7 @@ async def generate_custom_image(prompt: str) -> str:
         if not image_bytes:
             return json.dumps({"success": False, "error": "Geen afbeelding gegenereerd."})
 
-        url = await upload_to_catbox(image_bytes)
+        url = await upload_image(image_bytes)
         if not url:
             return json.dumps({"success": False, "error": "Upload mislukt."})
 
@@ -167,8 +186,8 @@ async def generate_custom_image(prompt: str) -> str:
 @mcp.tool()
 async def upload_image_base64(image_base64: str, filename: str = "image.png") -> str:
     """
-    Upload base64-encoded image data naar catbox.moe en retourneer een publieke URL.
-    Handig als fallback wanneer browser-side uploads geblokkeerd worden door CORS.
+    Upload base64-encoded image data en retourneer een publieke URL.
+    Probeert 0x0.st (primair) en catbox.moe (fallback). Server-side upload, geen CORS.
 
     Args:
         image_base64: Base64-encoded image data (zonder data:... prefix).
@@ -176,9 +195,9 @@ async def upload_image_base64(image_base64: str, filename: str = "image.png") ->
     """
     try:
         image_bytes = base64.b64decode(image_base64)
-        url = await upload_to_catbox(image_bytes, filename)
+        url = await upload_image(image_bytes, filename)
         if not url:
-            return json.dumps({"success": False, "error": "Upload naar catbox.moe mislukt."})
+            return json.dumps({"success": False, "error": "Upload mislukt (0x0.st en catbox.moe beide gefaald)."})
         return json.dumps({"success": True, "image_url": url})
     except Exception as e:
         return json.dumps({"success": False, "error": str(e)})
