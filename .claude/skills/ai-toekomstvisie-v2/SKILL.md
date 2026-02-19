@@ -26,7 +26,8 @@ Het effect dat je wilt bereiken: de klant bekijkt de presentatie en denkt
 ## Aanroep-interface (voor gebruik vanuit andere skills)
 
 ```
-Input:  BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (optioneel), MERKKLEUR_PRIMAIR (optioneel)
+Input:  BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (optioneel),
+        MERKKLEUR_PRIMAIR (optioneel), MERKKLEUR_SECUNDAIR (optioneel), HUISSTIJL_KENMERK (optioneel)
 Output: GAMMA_URL (of "niet beschikbaar" bij fallback)
 ```
 
@@ -45,12 +46,12 @@ bedrijfsnaam en lei ze af.
 
 ### 1A — Huisstijl en merkidentiteit
 
-**Sla deze stap over als WEBSITE_DOMEIN én MERKKLEUR_PRIMAIR al meegegeven zijn vanuit de aanroepende skill.**
+**Sla deze stap over als MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR én HUISSTIJL_KENMERK al meegegeven zijn vanuit de aanroepende skill.**
 
-Als WEBSITE_DOMEIN al beschikbaar is maar MERKKLEUR_PRIMAIR ontbreekt: doe WebFetch op
-het domein (geen WebSearch nodig). Extraheer alleen de merkkleur.
+Als WEBSITE_DOMEIN al beschikbaar is maar de merkkleuren ontbreken: doe WebFetch op
+het domein (geen WebSearch nodig). Extraheer alleen de ontbrekende waarden.
 
-Als geen van beide beschikbaar zijn: doe WebSearch naar `[BEDRIJFSNAAM] huisstijl merkidentiteit
+Als geen van de huisstijlvariabelen beschikbaar zijn: doe WebSearch naar `[BEDRIJFSNAAM] huisstijl merkidentiteit
 kleuren logo`. Fetch daarna de homepage via WebFetch. Extraheer:
 - Primaire en secundaire merkkleur(en) (hex-codes indien zichtbaar)
 - Tagline of pay-off
@@ -60,7 +61,7 @@ kleuren logo`. Fetch daarna de homepage via WebFetch. Extraheer:
 Als WEBSITE_DOMEIN niet beschikbaar is na de search: leid het af uit WebSearch-resultaten
 (bijv. de domeinnaam uit een gevonden URL). Fallback: sla WEBSITE_DOMEIN op als lege string.
 
-Sla op als: MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, TAGLINE, SFEER, VISUELE_ELEMENTEN
+Sla op als: MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK, TAGLINE, SFEER, VISUELE_ELEMENTEN
 Als MERKKLEUR_PRIMAIR niet gevonden: gebruik `#F97316` (AI Panda oranje) als standaard.
 
 ### 1B — Sectorprobleem identificeren
@@ -225,11 +226,13 @@ textOptions:
 imageOptions:
   source: "aiGenerated"
   model: "flux-kontext-max"
-  style: "photorealistic, cinematic, modern corporate. Recurring character: a giant panda wearing a tailored black business suit with orange tie, walking and working confidently among human colleagues as a regular executive — the panda belongs there. Accent color [MERKKLEUR_PRIMAIR] and AI Panda orange #F97316 throughout."
-additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always as a confident professional among humans. Each [Scene: ...] note in the outline describes exactly what the panda does on that slide; follow those descriptions closely. On slides without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual thread that runs through the whole presentation."
+  style: "photorealistic, cinematic, modern corporate. Recurring character: a giant panda wearing a tailored black business suit with orange tie, walking and working confidently among human colleagues as a regular executive — the panda belongs there. Brand colors: [MERKKLEUR_PRIMAIR] (primary) and [MERKKLEUR_SECUNDAIR] (secondary) as accent colors throughout. Visual style: [HUISSTIJL_KENMERK]."
+additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always as a confident professional among humans. Each [Scene: ...] note in the outline describes exactly what the panda does on that slide; follow those descriptions closely. On slides without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual thread that runs through the whole presentation. Use the brand colors [MERKKLEUR_PRIMAIR] and [MERKKLEUR_SECUNDAIR] as dominant accent colors in environments, lighting, and design elements. Incorporate the visual style '[HUISSTIJL_KENMERK]' in the overall aesthetic."
 ```
 
-Als MERKKLEUR_PRIMAIR leeg of `#F97316`: laat de accentkleur-vermelding weg uit `style`, maar houd de panda-karakterbeschrijving intact.
+Als MERKKLEUR_PRIMAIR leeg of `#F97316`, en MERKKLEUR_SECUNDAIR leeg of `#000000`:
+laat de merkkleur-vermeldingen weg uit `style` en `additionalInstructions`, maar houd
+de panda-karakterbeschrijving en HUISSTIJL_KENMERK intact (als die beschikbaar is).
 
 **Let op:** Geef de volledige, uitgeschreven outline mee als `inputText`. Niet een samenvatting.
 

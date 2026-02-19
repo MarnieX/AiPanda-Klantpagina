@@ -69,6 +69,20 @@ Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoal
 
 Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
 
+**Huisstijl ophalen (direct na WebSearch, parallel uitvoeren als WEBSITE_DOMEIN bekend is):**
+
+Doe een WebFetch op `https://[WEBSITE_DOMEIN]` en extraheer:
+- **MERKKLEUR_PRIMAIR** — de dominante merkkleur als hex-code (bijv. `#E63329`)
+- **MERKKLEUR_SECUNDAIR** — de tweede merkkleur als hex-code (bijv. `#1A1A1A`)
+- **HUISSTIJL_KENMERK** — één typisch visueel kenmerk dat het merk onderscheidt (bijv. "vetgedrukte sans-serif typografie met veel witruimte", "warme aardetinten en handgetekende illustraties", "strakke industriële uitstraling met metaalaccenten")
+
+Fallback als WebFetch faalt of geen kleuren zichtbaar zijn:
+- MERKKLEUR_PRIMAIR = `#F97316` (AI Panda oranje)
+- MERKKLEUR_SECUNDAIR = `#000000`
+- HUISSTIJL_KENMERK = leeg string
+
+**Sla alle zeven waarden op:** BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK
+
 ### 2B — Excel lezen via MCP
 
 Gebruik de MCP tool `read_team_excel` om alle teamleden op te halen.
@@ -269,11 +283,11 @@ Voer dit uit NADAT de Notion-URL getoond is in stap 7.
 
 Voer de `ai-toekomstvisie-v2` skill uit in quick mode.
 
-Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (uit stap 2A),
-MERKKLEUR_PRIMAIR (uit stap 2A indien gevonden, anders `#F97316` als standaard).
+Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR,
+MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK (alle uit stap 2A).
 
 Door deze variabelen mee te geven slaat ai-toekomstvisie-v2 stap 1A (huisstijl-research)
-automatisch over, omdat de data al beschikbaar is. Dit bespaart een extra WebSearch-ronde.
+automatisch over, omdat de data al beschikbaar is. Dit bespaart een extra WebFetch-ronde.
 
 Volg de stappen van ai-toekomstvisie-v2 vanaf stap 1 (research).
 
