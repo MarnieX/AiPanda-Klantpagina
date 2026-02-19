@@ -75,8 +75,6 @@ Hieronder het volledige template. Vervang alle `[VARIABELE]` placeholders met we
 ```markdown
 ![]([PANDA_IMAGE_URL])
 
-# AI Panda x [BEDRIJFSNAAM]
-
 ---
 
 ::: callout {icon="💬"}
@@ -95,6 +93,7 @@ Hieronder het volledige template. Vervang alle `[VARIABELE]` placeholders met we
 	<column>
 		## Over AI Panda
 		AI Panda begeleidt organisaties naar AI-volwassenheid. Geen technologie-eerst aanpak, maar mens-eerst: 80% van AI-succes zit in menselijk gedrag, 20% in technologie. Van strategie tot implementatie.
+		Wij werken samen met teams op de werkvloer, niet alleen met management. Zo zorgen we dat AI daadwerkelijk landt in de organisatie en niet blijft hangen als een pilot.
 		**Tagline:** Making AI Work For You
 		**Website:** aipanda.nl
 	</column>
