@@ -269,7 +269,11 @@ Voer dit uit NADAT de Notion-URL getoond is in stap 7.
 
 Voer de `ai-toekomstvisie-v2` skill uit in quick mode.
 
-Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING (verzameld in stap 2A).
+Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (uit stap 2A),
+MERKKLEUR_PRIMAIR (uit stap 2A indien gevonden, anders `#F97316` als standaard).
+
+Door deze variabelen mee te geven slaat ai-toekomstvisie-v2 stap 1A (huisstijl-research)
+automatisch over, omdat de data al beschikbaar is. Dit bespaart een extra WebSearch-ronde.
 
 Volg de stappen van ai-toekomstvisie-v2 vanaf stap 1 (research).
 

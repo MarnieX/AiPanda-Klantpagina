@@ -26,7 +26,7 @@ Het effect dat je wilt bereiken: de klant bekijkt de presentatie en denkt
 ## Aanroep-interface (voor gebruik vanuit andere skills)
 
 ```
-Input:  BEDRIJFSNAAM, SECTOR, OMSCHRIJVING
+Input:  BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (optioneel), MERKKLEUR_PRIMAIR (optioneel)
 Output: GAMMA_URL (of "niet beschikbaar" bij fallback)
 ```
 
@@ -44,16 +44,27 @@ bedrijfsnaam en lei ze af.
 ## Stap 1: Research (parallel uitvoeren)
 
 ### 1A — Huisstijl en merkidentiteit
-Doe WebSearch naar `[BEDRIJFSNAAM] huisstijl merkidentiteit kleuren logo`. Fetch daarna
-de homepage via WebFetch. Extraheer:
+
+**Sla deze stap over als WEBSITE_DOMEIN én MERKKLEUR_PRIMAIR al meegegeven zijn vanuit de aanroepende skill.**
+
+Als WEBSITE_DOMEIN al beschikbaar is maar MERKKLEUR_PRIMAIR ontbreekt: doe WebFetch op
+het domein (geen WebSearch nodig). Extraheer alleen de merkkleur.
+
+Als geen van beide beschikbaar zijn: doe WebSearch naar `[BEDRIJFSNAAM] huisstijl merkidentiteit
+kleuren logo`. Fetch daarna de homepage via WebFetch. Extraheer:
 - Primaire en secundaire merkkleur(en) (hex-codes indien zichtbaar)
 - Tagline of pay-off
 - Sfeer van de beeldtaal: zakelijk, warm, technisch, menselijk?
 - Kenmerkende visuele elementen (voertuigen, uniformen, gebouwen, materialen)
 
+Als WEBSITE_DOMEIN niet beschikbaar is na de search: leid het af uit WebSearch-resultaten
+(bijv. de domeinnaam uit een gevonden URL). Fallback: sla WEBSITE_DOMEIN op als lege string.
+
 Sla op als: MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, TAGLINE, SFEER, VISUELE_ELEMENTEN
+Als MERKKLEUR_PRIMAIR niet gevonden: gebruik `#F97316` (AI Panda oranje) als standaard.
 
 ### 1B — Sectorprobleem identificeren
+
 Doe WebSearch naar het grootste structurele probleem in SECTOR dat AI de komende 10 jaar
 kan oplossen. Zoek naar fundamentele knelpunten (capaciteitstekorten, informatiefragmentatie,
 veiligheidsvraagstukken, regulatoire complexiteit), niet naar kleine efficiëntiewinsten.
@@ -169,9 +180,34 @@ Controleer of `mcp__claude_ai_Gamma__generate` in de beschikbare tools staat. Al
 ontbreekt (Gamma niet gekoppeld in Claude-instellingen), sla deze stap over en ga naar
 de **Fallback** onderaan.
 
-**Gemeenschappelijke parameters (gebruik bij alle pogingen):**
+### 4A — Thema valideren via get_themes
+
+Roep `mcp__claude_ai_Gamma__get_themes` aan.
+
+Zoek in de response naar thema's op naam:
+1. Zoek naar een thema met "panda" of "AI Panda" in de naam (hoofdletterongevoelig)
+2. Als gevonden: sla de `id` op als GAMMA_THEME_ID
+3. Als niet gevonden: zoek naar "canaveral" (hoofdletterongevoelig)
+4. Als ook niet gevonden: sla GAMMA_THEME_ID op als leeg (geen themeId meegeven)
+
+Log kort welk thema is gevonden (bijv: "Thema gevonden: AI Panda (id: abc123)").
+
+### 4B — Bedrijfslogo ophalen
+
+Als WEBSITE_DOMEIN beschikbaar en niet leeg:
+- Logo-URL: `https://img.logo.dev/[WEBSITE_DOMEIN]?token=pk_XpHqlOsfSNSn7E3UJB_Kmw&format=png&size=256`
+- Sla op als LOGO_URL
+
+Als WEBSITE_DOMEIN niet beschikbaar of leeg: sla LOGO_URL op als leeg.
+
+### 4C — Gemeenschappelijke basis-parameters
+
 ```
 inputText: [de volledige outline uit Stap 3 + de volledige VERHAAL_TEKST ingevuld op slide 5]
+
+Design note op slide 1: "Use [MERKKLEUR_PRIMAIR] as accent color throughout the
+presentation alongside the AI Panda orange (#F97316)."
+
 numCards: 10
 textOptions:
   language: "nl"
@@ -179,36 +215,76 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  style: "photorealistic, cinematic, modern office"
+  style: "photorealistic, cinematic, modern corporate, accent color [MERKKLEUR_PRIMAIR]"
 ```
+
+Als MERKKLEUR_PRIMAIR leeg of `#F97316`: gebruik alleen "photorealistic, cinematic, modern office".
 
 **Let op:** Geef de volledige, uitgeschreven outline mee als `inputText`. Niet een samenvatting.
 
-**Poging 1 — AI Panda custom theme:**
-Voeg toe: `themeId: "0r1msp6zfjh4o59"` (oranje/zwart/futuristisch).
+### 4D — Fallback-keten (4 pogingen)
 
-Als Poging 1 mislukt door een onbekend themeId-fout, ga naar Poging 2.
+**Poging 1 — Volledig (themeId + cardOptions met logo + imageOptions met merkkleur):**
 
-**Poging 2 — Canaveral theme (fallback):**
-Vervang themeId door: `themeId: "canaveral"`.
+Parameters:
+- Basis-parameters uit 4C
+- `themeId: "[GAMMA_THEME_ID]"` (alleen als GAMMA_THEME_ID niet leeg)
+- `cardOptions` (alleen als LOGO_URL niet leeg):
+  ```
+  cardOptions:
+    headerFooter:
+      topRight:
+        type: "image"
+        source: "custom"
+        src: "[LOGO_URL]"
+  ```
 
-Als Poging 2 ook mislukt, ga naar Poging 3.
+**Na de call: controleer of de response een URL bevat (begint met `https://`).**
+- Ja: sla op als GAMMA_URL, ga naar Stap 5.
+- Nee (onverwacht formaat): log de fout, ga naar Poging 2.
 
-**Poging 3 — Geen themeId (Gamma default):**
-Verwijder de themeId parameter volledig.
+---
 
-**Fallback (Gamma niet beschikbaar of alle pogingen falen):**
+**Poging 2 — Zonder cardOptions (themeId + imageOptions, geen logo):**
+
+Log: "Poging 1 mislukt (mogelijke cardOptions-fout). Retry zonder logo."
+
+Parameters: basis-parameters uit 4C + `themeId` (als beschikbaar). Geen `cardOptions`.
+
+**Na de call: controleer op URL.**
+- Ja: sla op als GAMMA_URL, ga naar Stap 5.
+- Nee: log de fout, ga naar Poging 3.
+
+---
+
+**Poging 3 — Minimaal (alleen basis, geen themeId, geen cardOptions, geen imageOptions):**
+
+Log: "Poging 2 mislukt. Retry met minimale parameters."
+
+Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen cardOptions,
+geen imageOptions.
+
+**Na de call: controleer op URL.**
+- Ja: sla op als GAMMA_URL, ga naar Stap 5.
+- Nee: log de fout, ga naar Poging 4.
+
+---
+
+**Poging 4 — Markdown-fallback:**
+
+Log: "Alle Gamma-pogingen mislukt. Toon outline als Markdown."
+
 Toon de volledige outline als gestructureerde Markdown in de chat. Meld kort:
-> "Gamma is niet beschikbaar in deze omgeving. Kopieer de onderstaande outline en plak
+> "Gamma is niet beschikbaar of retourneert fouten. Kopieer de onderstaande outline en plak
 > hem op gamma.app → 'Nieuwe presentatie' → 'Importeer tekst'."
 
-Sla de teruggegeven URL op als: GAMMA_URL (of GAMMA_URL = "niet beschikbaar" bij fallback)
+Sla GAMMA_URL op als: `"niet beschikbaar"`
 
 ---
 
 ## Stap 5: Resultaat tonen
 
-**Als Gamma geslaagd:**
+**Als Gamma geslaagd (GAMMA_URL begint met `https://`):**
 Toon aan de gebruiker:
 1. **Gamma presentatie**: [GAMMA_URL] (klikbaar)
 2. Kort overzicht van de 10 slides (titel per slide)
@@ -218,7 +294,7 @@ Toon aan de gebruiker:
 **Als Gamma niet beschikbaar (fallback gebruikt):**
 Toon de volledige outline als Markdown.
 Geef daarna ook mee:
-- Welk thema aanbevolen wordt op gamma.app: zoek op "Canaveral" of "AI Panda"
+- Welk thema aanbevolen wordt op gamma.app: zoek op "AI Panda" of "Canaveral"
 - Kort: welk sectorprobleem als kern is gekozen en de EINDQUOTE
 
 ---
@@ -226,7 +302,8 @@ Geef daarna ook mee:
 ## Foutafhandeling
 
 - Research faalt → gebruik eigen sectorkennis, meld dit
-- Merkkleur niet gevonden → gebruik AI Panda oranje (#F97316) als accentkleur
+- MERKKLEUR_PRIMAIR niet gevonden → gebruik AI Panda oranje (#F97316) als accentkleur
+- WEBSITE_DOMEIN niet beschikbaar → sla logo-stap over, ga door zonder cardOptions
 - Gamma niet beschikbaar (tool ontbreekt) → toon outline als Markdown, verwijs naar gamma.app
-- Gamma themeId `0r1msp6zfjh4o59` onbekend → retry met `canaveral` → retry zonder themeId
-- Gamma retourneert fout → toon outline als Markdown, meld de fout kort
+- get_themes faalt of levert geen bruikbaar thema → ga door zonder themeId
+- Gamma retourneert geen URL → retry met progressief minder parameters (zie 4D)
