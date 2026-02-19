@@ -23,6 +23,11 @@
 - [x] ✅ Browser MCP flow voor image generation: omgevingsdetectie (local/Cowork), Chrome MCP-bridge voor Gemini API calls wanneer sandbox curl blokkeert (Marnix)
 - [x] ✅ Consultantfoto's geupload en team Excel bijgewerkt met URL's (Marnix)
 
+## Fase 2.5: v2.0 verbeteringen
+- [x] ✅ Plugin v2.0.0: orchestrator-architectuur met sub-skills, MCP server uitgebreid, template geëxtraheerd, hooks verwijderd (Marnix)
+- [x] ✅ Session-safe API key management via MCP tools (check/set, in-memory only) (Marnix)
+- [ ] 🔴 Gemini image generation faalt bij hoge load (rate limit / overbelast). Fallback toevoegen naar OpenAI image model (gpt-image-1 of nieuwste beschikbaar). panda-server.py uitbreiden met OPENAI_API_KEY + OpenAI als secondary image provider na Gemini failure (Marnix)
+
 ## Fase 3: Polish & distributie
 - [x] ✅ Plugin ombouwen en packaging voor Cowork — `build.sh` assembleert .plugin bestand vanuit bronmap (Marnix)
 - [x] ✅ GEMINI_API_KEY loading waterdicht gemaakt — settings.json als primaire methode, interactieve setup in Cowork, obsolete load-env.sh hook verwijderd (Marnix)
