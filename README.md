@@ -1,168 +1,222 @@
-# AI Panda - Klantpagina Generator
+# 🐼 AI Panda Klantpagina Generator
 
-> Van bedrijfsnaam naar professionele Notion-klantpagina, volledig automatisch.
+> Van bedrijfsnaam naar professionele Notion-klantpagina — volledig automatisch.
 
-De Klantpagina Generator is een **Claude Cowork plugin** waarmee consultants van AI Panda in een paar stappen een complete klantpagina aanmaken in Notion. Bedrijfsinfo wordt automatisch opgehaald, een AI-gegenereerde panda-afbeelding gemaakt, en het team gekoppeld. Geen templates invullen, geen handwerk.
-
----
-
-## Hoe werkt het?
-
-Je typt `/klantpagina` in Claude Cowork en volgt drie stappen:
-
-1. **Bedrijfsnaam opgeven** - de plugin haalt automatisch bedrijfsinfo op van de website
-2. **Consultants kiezen** - selecteer wie er aan dit project werkt (uit het teambestand)
-3. **Bevestigen** - controleer de samenvatting en klik op akkoord
-
-De rest gaat automatisch: afbeelding genereren, content samenstellen, Notion-pagina aanmaken. Je krijgt een klikbare link terug.
+Een **Claude Cowork plugin** waarmee AI Panda consultants in een paar minuten een complete, gepersonaliseerde klantpagina genereren. Bedrijfsinfo, merkkleuren, AI-roadmap, quiz, panda-afbeelding en een toekomstvisie-presentatie: alles wordt automatisch samengesteld en direct in Notion klaargezet.
 
 ---
 
-## Wat staat er op de klantpagina?
+## ✨ Wat krijg je
 
-Elke gegenereerde pagina bevat:
+Eén `/klantpagina` commando levert een volledige Notion-pagina op:
 
-- **AI-gegenereerde hero-afbeelding** in de AI Panda-stijl via Gemini
-- **2028-quote**: pakkende uitspraak van een fictieve medewerker over hoe hun werk er in 2028 uitziet dankzij AI
-- **Twee-koloms bedrijfsprofiel**: "Over [Bedrijf]" (omschrijving, sector, website) naast "Over AI Panda" (missie, tagline)
-- **Consultantteam** met foto, functie, telefoonnummer en e-mail in kolommen
-- **AI Implementatie Roadmap** in vier fases, specifiek voor de sector van de klant
-- **AI-Readiness Quickscan**: interactieve quiz (5 sector-specifieke vragen) direct als embed op de pagina
+| Onderdeel | Wat het doet |
+|-----------|-------------|
+| 🖼️ **Hero-afbeelding** | Fotorealistische panda in de herkenbare AI Panda stijl, gegenereerd door Gemini met bedrijfslogo |
+| 💬 **2028-quote** | Pakkende uitspraak van een fictieve medewerker over hoe hun werk er in 2028 uitziet |
+| 🏢 **Bedrijfsprofiel** | Twee kolommen: Over het bedrijf + Over AI Panda, gevuld met echte bedrijfsinfo |
+| 👥 **Consultantteam** | Foto, naam, functie en contact van alle betrokken AI Panda consultants |
+| 🗺️ **AI Roadmap** | Sector-specifieke implementatiefases, op maat gemaakt voor de klant |
+| 🧠 **AI-Readiness Quiz** | Interactieve 5-vragen quiz direct als embed op de pagina |
+| 🎯 **Toekomstvisie** | Gamma.app presentatie van 10 slides met het 10-jaar AI-transformatieverhaal |
 
 ---
 
-## Aan de slag
+## 🚀 Hoe het werkt
+
+Typ `/klantpagina` in Claude Cowork en doorloop de wizard:
+
+```
+1. 🏷️  Bedrijfsnaam of URL opgeven
+2. 🔍  Bedrijfsinfo + merkkleuren worden automatisch opgehaald
+3. 👤  Consultants kiezen uit het teambestand
+4. ✅  Samenvatting bevestigen
+5. ⚡  Alles wordt parallel gegenereerd:
+        → AI Panda hero-afbeelding (Gemini + logo)
+        → Sector-specifieke AI roadmap
+        → Interactieve quiz-URL
+        → 2028-medewerker quote
+6. 📄  Notion-pagina wordt aangemaakt
+7. 🔗  Je krijgt direct de Notion-URL + Quiz-URL
+8. 🎬  Gamma-presentatie wordt aangemaakt (op de achtergrond)
+```
+
+Totale doorlooptijd: **3-5 minuten** van bedrijfsnaam tot complete klantpagina.
+
+---
+
+## 🏗️ Technische architectuur
+
+```
+Claude Cowork
+    │
+    ▼
+/klantpagina command
+    │
+    ▼
+klantpagina-v2 skill (orchestrator)
+    ├── WebSearch + WebFetch ──── bedrijfsinfo + merkkleuren
+    ├── panda-server MCP ──────── read_team_excel, generate_panda_image
+    ├── Notion MCP ────────────── pagina aanmaken
+    └── Sub-skills (parallel):
+            ├── gemini-image-v2 ─ AI Panda hero-afbeelding
+            ├── ai-quiz-v2 ────── interactieve Readiness Quiz
+            └── ai-toekomstvisie-v2 ── Gamma presentatie
+```
+
+### Panda-afbeelding fallback-keten
+```
+Gemini (multimodal: panda-referentie + bedrijfslogo)
+  → OpenAI gpt-image-1.5 (prompt-only)
+    → Placeholder (flow stopt nooit)
+```
+
+### Gamma presentatie fallback-keten
+```
+Poging 1: flux-2-pro + themeId + logo in header + merkkleuren
+  → Poging 2: zonder logo (cardOptions weggelaten)
+    → Poging 3: minimale parameters
+      → Poging 4: Markdown-outline in chat
+```
+
+> **Timeout-proof:** Een Gamma-timeout ≠ fout. Het request is al verzonden. De skill stopt bij een timeout en verwijst naar gamma.app/recent — geen dubbele presentaties.
+
+---
+
+## 🧩 Skills
+
+### 🎯 `klantpagina-v2` — De orchestrator
+De hoofdskill. Coördineert alle sub-skills, leest het teambestand, haalt bedrijfsinfo op, en bouwt de Notion-pagina vanuit een template. Paralleliseert zoveel mogelijk om snelheid te winnen.
+
+**Input:** bedrijfsnaam of URL
+**Output:** Notion-klantpagina URL + Quiz-URL + Gamma-presentatie URL
+
+---
+
+### 🖼️ `gemini-image-v2` — AI-beeldgeneratie
+Genereert fotorealistische panda-afbeeldingen via Gemini (primair) of OpenAI (fallback). Werkt standalone én vanuit andere skills via quick mode. Gebruikt `panda-reference.png` als multimodal referentie voor stijlconsistentie.
+
+**Input:** Engelse prompt
+**Output:** publieke afbeeldings-URL
+
+---
+
+### 🧠 `ai-quiz-v2` — Interactieve Readiness Quiz
+Genereert 5 sector-specifieke quizvragen als JSON, base64-encodeert ze en bouwt een klikbare URL naar de GitHub Pages quiz-app. Geen server nodig — alles zit in de URL.
+
+**Input:** bedrijfsnaam, sector
+**Output:** quiz-URL (direct klikbaar, embed-ready voor Notion)
+
+---
+
+### 🎬 `ai-toekomstvisie-v2` — Gamma Presentatie
+Schrijft een visionair 10-jaar transformatieverhaal voor de klant en bouwt daar een professionele Gamma.app pitch-presentatie van 10 slides van. De panda verschijnt als terugkerend karakter op minstens 7 slides. Gebruikt merkkleuren en het bedrijfslogo automatisch.
+
+**Input:** bedrijfsnaam, sector, omschrijving, merkkleuren (optioneel)
+**Output:** Gamma presentatie-URL
+
+---
+
+## 🛠️ MCP Server — `panda-server`
+
+De Python MCP server die de plugin aandrijft:
+
+| Tool | Wat het doet |
+|------|-------------|
+| `generate_panda_image` | Gemini + OpenAI beeldgeneratie, logo ophalen, upload naar catbox/tmpfiles |
+| `read_team_excel` | AI Panda team inlezen uit `ai-panda-team.xlsx` |
+| `check_api_keys` | Controleert of Gemini + OpenAI keys beschikbaar zijn |
+| `set_api_key` | Slaat een API key op in geheugen (sessie-scope, nooit op schijf) |
+| `upload_image_base64` | Server-side upload van base64-afbeelding (omzeilt CORS in Cowork) |
+
+---
+
+## ⚙️ Setup
 
 ### 1. Plugin installeren
 
-Download `ai-panda-klantpagina.zip` uit deze repository en installeer het in Claude Cowork:
+Download `ai-panda-klantpagina.zip` en installeer in Claude Cowork:
 
-1. Open **Claude Cowork**
-2. Ga naar **Instellingen** > **Plugins**
-3. Klik op **Plugin toevoegen** en selecteer het `.zip` bestand
+```
+Cowork → Instellingen → Plugins → Plugin toevoegen → selecteer .zip
+```
 
-### 2. API-key instellen
+### 2. API keys instellen
 
-De plugin gebruikt Google Gemini (primair) en optioneel OpenAI (fallback) voor beeldgeneratie:
+Voeg toe aan `~/.claude/settings.json`:
 
-| Key | Waarvoor | Aanmaken |
-|---|---|---|
-| `GEMINI_API_KEY` | AI-beeldgeneratie (primair) | [Google AI Studio](https://aistudio.google.com/apikey) |
-| `OPENAI_API_KEY` | AI-beeldgeneratie (fallback) | [OpenAI Platform](https://platform.openai.com/api-keys) |
-
-**Methode 1: Claude Code settings.json (aanbevolen)**
-
-Dit is de meest betrouwbare methode en werkt in alle omgevingen (Cowork, CLI, hooks, Bash).
-
-User-level (geldt voor alle projecten):
 ```json
-// ~/.claude/settings.json
 {
   "env": {
-    "GEMINI_API_KEY": "jouw-key-hier"
+    "GEMINI_API_KEY": "AIza...",
+    "OPENAI_API_KEY": "sk-..."
   }
 }
 ```
 
-Of project-level (alleen dit project):
-```json
-// .claude/settings.local.json (staat in .gitignore)
-{
-  "env": {
-    "GEMINI_API_KEY": "jouw-key-hier"
-  }
-}
-```
+| Key | Service | Nodig voor |
+|-----|---------|-----------|
+| `GEMINI_API_KEY` | Google Gemini | Hero-afbeelding (primair) |
+| `OPENAI_API_KEY` | OpenAI | Hero-afbeelding (fallback) |
 
-**Methode 2: .env bestand (fallback)**
-
-```bash
-cp .env.example .env
-# Vul je GEMINI_API_KEY in
-```
-
-> **Let op:** In Cowork (Claude Desktop) wordt het `.env` bestand niet automatisch geladen door de SessionStart hook vanwege een bekende beperking. Gebruik in dat geval methode 1.
-
-Zonder API-key werkt de plugin nog steeds, maar met een placeholder-afbeelding.
+Zonder keys werkt de plugin gewoon door — met een placeholder-afbeelding.
 
 ### 3. Klantpagina genereren
 
-Typ `/klantpagina` in Claude Cowork en volg de wizard.
-
----
-
-## Projectstructuur
-
 ```
-scripts/                  Python scripts voor beeldgeneratie
-  generate_notion_image.py    Nano Banana Pro (Gemini image pipeline)
-  prompt-optimizer.py         Prompt templates voor verschillende stijlen
-  banana.sh                   CLI wrapper
-
-plugin/                   Plugin bronbestanden
-  commands/klantpagina.md     /klantpagina slash command
-  servers/panda-server.py     MCP server (Gemini + OpenAI + logo + Excel)
-  templates/klantpagina.md    Notion template
-  skills/klantpagina-v2/SKILL.md  Orchestrator-workflow
-
-assets/                   Referentiebestanden
-  panda-reference.png         Panda character referentie voor Gemini
-
-data/                     Projectdata
-  ai-panda-team.xlsx          Teambestand met alle consultants
-
-docs/                     Referentiemateriaal, vergaderverslagen, presentaties
+/klantpagina
 ```
 
 ---
 
-## Onderdelen
+## 📁 Projectstructuur
 
-| Onderdeel | Beschrijving |
-|---|---|
-| **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina met toekomstvisie en quiz |
-| **AI-Quiz Skill** | Standalone skill: genereert interactieve AI-Readiness quiz als klikbare URL |
-| **Gemini Image Skill** | Standalone image generation via curl (lokaal) of browser MCP (Cowork) |
-| **Panda MCP Server** | Beeldgeneratie via Gemini/OpenAI, logo-resolutie, Excel parsing, upload via catbox/tmpfiles |
-| **Nano Banana Pro** | Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
-| **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele Gemini-prompt |
+```
+.claude/skills/
+  klantpagina-v2/         Orchestrator skill
+  gemini-image-v2/        AI-beeldgeneratie skill
+  ai-quiz-v2/             Quiz-generator skill
+  ai-toekomstvisie-v2/    Gamma-presentatie skill
+  _archive/               Gearchiveerde v1 skills (niet actief)
 
----
+plugin/
+  commands/klantpagina.md   /klantpagina slash command
+  servers/panda-server.py   MCP server
+  templates/klantpagina.md  Notion page template
+  skills/                   Gesyncte skills voor distributie
 
-## Status
+assets/
+  panda-reference.png       Panda referentiebeeld voor Gemini
+  *.jpeg / *.png            Showcase-afbeeldingen (klantexempels)
 
-Fase 1 (MVP), Fase 2 (Features) en Fase 3 (Component Review) zijn afgerond. v2.2 draait end-to-end: van bedrijfsnaam tot Notion-klantpagina met 2028-quote, roadmap, quiz en Gamma-toekomstvisie.
+data/
+  ai-panda-team.xlsx        Teambestand met alle consultants
 
-Openstaand: prompt optimizer finetunen, onboarding documentatie, plugin-installatie validatie in Cowork.
-
-Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
-
----
-
-## Documentatie
-
-| Bestand | Inhoud |
-|---|---|
-| [PLAN.md](./PLAN.md) | Architectuur, features en technische details |
-| [BACKLOG.md](./BACKLOG.md) | Openstaande taken per fase |
-| [CHANGELOG.md](./CHANGELOG.md) | Versiegeschiedenis |
-| [CLAUDE.md](./CLAUDE.md) | AI-agent instructies voor dit project |
+quiz/                       GitHub Pages quiz-app (submodule)
+scripts/                    Lokale hulpscripts (generate, optimize)
+build.sh                    Bouwt plugin/ naar ai-panda-klantpagina.zip
+```
 
 ---
 
-## Cowork Readiness Test (zonder Cowork)
+## 🧪 Readiness test
 
-Voor een snelle gate op de kritieke flow "afbeelding genereren -> in Notion-content opnemen":
+Snelle gate op de kritieke flow (afbeelding → Notion):
 
 ```bash
 ./scripts/cowork-readiness.sh
 ```
 
-Dit script draait Cowork-simulatie-tests en rapporteert:
-- `IMAGE_GENERATION`
-- `NOTION_IMAGE_EMBED`
-- `OVERALL`
+Rapporteert: `IMAGE_GENERATION` · `NOTION_IMAGE_EMBED` · `OVERALL`
 
 ---
 
-Intern project van **AI Panda** voor het automatiseren van klantprocessen.
+## 📋 Status
+
+**v2.2.0** — Productieklaar. End-to-end getest: van bedrijfsnaam tot Notion-klantpagina met hero-afbeelding, roadmap, quiz, 2028-quote en Gamma-toekomstvisie.
+
+Zie [BACKLOG.md](./BACKLOG.md) voor openstaande taken en [CHANGELOG.md](./CHANGELOG.md) voor versiegeschiedenis.
+
+---
+
+Intern project van **AI Panda** · [aipanda.nl](https://aipanda.nl)
