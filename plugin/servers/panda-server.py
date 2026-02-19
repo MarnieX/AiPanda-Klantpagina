@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 MCP server voor AI Panda plugin.
-- AI-beeldgeneratie via Google Gemini
+- AI-beeldgeneratie via Google Gemini (primair) en OpenAI (fallback)
+- Panda referentie-image support (multimodal Gemini)
+- Bedrijfslogo ophalen en meegeven
 - Image upload naar 0x0.st / catbox.moe
 - Team Excel uitlezen
 """
@@ -13,6 +15,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import urllib.request
 from pathlib import Path
 
 # Ensure dependencies
@@ -37,10 +40,10 @@ except ImportError:
 
 mcp = FastMCP("panda-server")
 
-# GEMINI_API_KEY is passed via .mcp.json from the environment.
-# In Cowork/CLI this is set by ~/.claude/settings.json.
+# --- API Keys ---
+# Loaded from environment (.mcp.json passes them through).
 # Fallback: .env in project root (local development only).
-if not os.environ.get("GEMINI_API_KEY"):
+if not os.environ.get("GEMINI_API_KEY") or not os.environ.get("OPENAI_API_KEY"):
     try:
         from dotenv import load_dotenv
         _env = Path(__file__).parent.parent.parent / ".env"
@@ -50,68 +53,215 @@ if not os.environ.get("GEMINI_API_KEY"):
         pass
 
 _gemini_api_key = os.environ.get("GEMINI_API_KEY", "")
+_openai_api_key = os.environ.get("OPENAI_API_KEY", "")
+
+# --- Gemini config ---
 GEMINI_MODEL = "gemini-3-pro-image-preview"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
 
+# --- Panda reference image ---
+_panda_reference_b64: str | None = None
 
-def _get_api_key() -> str:
-    """Return the current Gemini API key (in-memory, never written to disk)."""
-    return _gemini_api_key
+def _load_panda_reference() -> str | None:
+    """Load panda-reference.png as base64 from known locations."""
+    candidates = []
+    plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT", "")
+    if plugin_root:
+        candidates.append(Path(plugin_root) / "assets" / "panda-reference.png")
+    candidates.append(Path(__file__).parent.parent / "assets" / "panda-reference.png")
+    candidates.append(Path(__file__).parent.parent.parent / "assets" / "panda-reference.png")
+
+    for path in candidates:
+        if path.exists():
+            return base64.b64encode(path.read_bytes()).decode()
+    return None
+
+_panda_reference_b64 = _load_panda_reference()
+
+# --- Panda character prompt (photorealistic, based on reference) ---
+PANDA_PROMPT_BASE = (
+    "A photorealistic giant panda with a realistic furry head, black eye patches, "
+    "and round ears, on a human body wearing a tailored black business suit, "
+    "crisp white dress shirt, and a bold orange necktie. The panda has black "
+    "furry paws instead of human hands. Confident posture, striding forward as "
+    "a leader. Cinematic photography style, natural lighting, sharp focus, "
+    "shallow depth of field."
+)
+
+LOGO_PROMPT_WITH_REF = (
+    "The company logo is provided as a reference image. Reproduce this logo accurately: "
+    "on a large screen or digital display in the background, "
+    "as a small badge or pin on the panda's suit lapel, "
+    "and on any whiteboards, documents, or signage visible in the scene. "
+    "Keep the logo's colors, proportions, and text exactly as shown."
+)
+
+
+def _build_panda_prompt(bedrijfsnaam: str, sector: str = "", has_logo: bool = False) -> str:
+    """Build the full panda image prompt with sector-specific setting."""
+    parts = [PANDA_PROMPT_BASE]
+
+    if sector:
+        parts.append(f"Setting: a modern {sector} environment related to {bedrijfsnaam}. "
+                      f"The panda is presenting AI solutions to the team. "
+                      f"Colleagues in appropriate professional attire walk behind.")
+    else:
+        parts.append(f"Setting: a modern corporate office. "
+                      f"The panda is presenting AI solutions on a large screen. "
+                      f"Colleagues in smart business attire walk behind.")
+
+    if has_logo:
+        parts.append(LOGO_PROMPT_WITH_REF)
+    else:
+        parts.append(f'A screen/whiteboard shows "{bedrijfsnaam}" in a professional corporate font.')
+
+    return " ".join(parts)
+
+
+# --- Logo fetching ---
+
+def _fetch_logo_b64(domain: str) -> str | None:
+    """Fetch company logo as base64. Tries Clearbit, then Google Favicons."""
+    if not domain:
+        return None
+    # Strip protocol if present
+    domain = domain.replace("https://", "").replace("http://", "").strip("/")
+    for url in [
+        f"https://logo.clearbit.com/{domain}",
+        f"https://www.google.com/s2/favicons?domain={domain}&sz=128",
+    ]:
+        try:
+            resp = urllib.request.urlopen(url, timeout=5)
+            if resp.status == 200:
+                data = resp.read()
+                if len(data) > 100:  # Skip tiny/empty responses
+                    return base64.b64encode(data).decode()
+        except Exception:
+            continue
+    return None
+
+
+# --- API Key tools ---
+
+@mcp.tool()
+async def check_api_keys() -> str:
+    """
+    Check welke API keys beschikbaar zijn in deze sessie.
+    Retourneert JSON: {"gemini": true/false, "openai": true/false}
+    """
+    return json.dumps({
+        "gemini": bool(_gemini_api_key),
+        "openai": bool(_openai_api_key),
+    })
 
 
 @mcp.tool()
-async def check_gemini_api_key() -> str:
+async def set_api_key(provider: str, api_key: str) -> str:
     """
-    Check of de Gemini API key beschikbaar is in deze sessie.
-    Retourneert JSON: {"available": true/false}
-    """
-    return json.dumps({"available": bool(_get_api_key())})
-
-
-@mcp.tool()
-async def set_gemini_api_key(api_key: str) -> str:
-    """
-    Sla de Gemini API key op in het geheugen van de MCP server (voor de duur van de sessie).
+    Sla een API key op in het geheugen van de MCP server (voor de duur van de sessie).
     De key wordt NIET naar schijf geschreven en verdwijnt wanneer de sessie eindigt.
 
     Args:
-        api_key: De Gemini API key (begint met 'AIza...').
+        provider: "gemini" of "openai"
+        api_key: De API key.
     """
-    global _gemini_api_key
+    global _gemini_api_key, _openai_api_key
     if not api_key or not api_key.strip():
         return json.dumps({"success": False, "error": "Lege key opgegeven."})
-    _gemini_api_key = api_key.strip()
-    return json.dumps({"success": True, "message": "API key opgeslagen voor deze sessie (alleen in geheugen)."})
+
+    provider = provider.strip().lower()
+    key = api_key.strip()
+
+    if provider == "gemini":
+        _gemini_api_key = key
+    elif provider == "openai":
+        _openai_api_key = key
+    else:
+        return json.dumps({"success": False, "error": f"Onbekende provider: {provider}. Gebruik 'gemini' of 'openai'."})
+
+    return json.dumps({"success": True, "provider": provider, "message": "API key opgeslagen voor deze sessie (alleen in geheugen)."})
 
 
-async def generate_with_gemini(prompt: str) -> bytes | None:
-    """Generate an image using Google Gemini API."""
-    if not _get_api_key():
+# --- Image generation ---
+
+async def generate_with_gemini(prompt: str, logo_b64: str | None = None) -> bytes | None:
+    """Generate an image using Google Gemini API (multimodal with reference images)."""
+    if not _gemini_api_key:
         return None
 
+    # Build multimodal parts
+    prompt_text = prompt
+    if _panda_reference_b64 or logo_b64:
+        prompt_text = "Generate an image matching the style of the reference photo. " + prompt
+
+    parts: list[dict] = [{"text": prompt_text}]
+    if _panda_reference_b64:
+        parts.append({"inlineData": {"mimeType": "image/png", "data": _panda_reference_b64}})
+    if logo_b64:
+        parts.append({"inlineData": {"mimeType": "image/png", "data": logo_b64}})
+
     payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
+        "contents": [{"parts": parts}],
         "generationConfig": {
             "responseModalities": ["TEXT", "IMAGE"],
         },
     }
 
-    async with httpx.AsyncClient(timeout=60) as client:
+    async with httpx.AsyncClient(timeout=120) as client:
         resp = await client.post(
             GEMINI_URL,
-            params={"key": _get_api_key()},
+            params={"key": _gemini_api_key},
             json=payload,
         )
         resp.raise_for_status()
         data = resp.json()
 
-    # Extract image from response
     for candidate in data.get("candidates", []):
         for part in candidate.get("content", {}).get("parts", []):
             if "inlineData" in part:
                 return base64.b64decode(part["inlineData"]["data"])
     return None
 
+
+async def generate_with_openai(prompt: str) -> bytes | None:
+    """Generate an image using OpenAI API (prompt-only, no reference images)."""
+    if not _openai_api_key:
+        return None
+
+    payload = {
+        "model": "gpt-image-1.5",
+        "prompt": prompt,
+        "n": 1,
+        "size": "1024x1024",
+        "quality": "high",
+    }
+
+    async with httpx.AsyncClient(timeout=120) as client:
+        resp = await client.post(
+            "https://api.openai.com/v1/images/generations",
+            headers={
+                "Authorization": f"Bearer {_openai_api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+    # OpenAI returns b64_json or url; try b64 first, then download url
+    for item in data.get("data", []):
+        if "b64_json" in item:
+            return base64.b64decode(item["b64_json"])
+        if "url" in item:
+            try:
+                img_resp = urllib.request.urlopen(item["url"], timeout=30)
+                return img_resp.read()
+            except Exception:
+                pass
+    return None
+
+
+# --- Upload helpers ---
 
 async def upload_to_0x0(tmp_path: str) -> str:
     """Upload a file to 0x0.st and return the public URL."""
@@ -152,73 +302,84 @@ async def upload_image(image_bytes: bytes, filename: str = "image.png") -> str:
         Path(tmp_path).unlink(missing_ok=True)
 
 
+# --- MCP Tools ---
+
 @mcp.tool()
-async def generate_panda_image(bedrijfsnaam: str) -> str:
+async def generate_panda_image(bedrijfsnaam: str, sector: str = "", website: str = "") -> str:
     """
-    Genereer een AI Panda mascotte-afbeelding met de bedrijfsnaam op het shirt.
-    Retourneert een publieke URL naar de afbeelding.
+    Genereer een fotorealistische AI Panda mascotte-afbeelding voor een bedrijf.
+    Gebruikt Gemini (met referentie-image) als primaire provider en OpenAI als fallback.
 
     Args:
-        bedrijfsnaam: De naam van het bedrijf die op het panda-shirt komt.
+        bedrijfsnaam: De naam van het bedrijf.
+        sector: De sector van het bedrijf (optioneel, voor sector-specifieke omgeving).
+        website: Het domein van het bedrijf (optioneel, voor logo ophalen, bijv. "bol.com").
     """
-    prompt = (
-        f"A cute, friendly cartoon panda mascot (the AI Panda) standing proudly "
-        f"and giving a thumbs up. The panda wears a modern t-shirt with the text "
-        f"'{bedrijfsnaam}' clearly printed on the chest in bold letters. Big "
-        f"expressive eyes, rosy cheeks, clean cartoon illustration style, white "
-        f"background, professional but playful."
-    )
+    fallback_url = f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png"
 
+    # Fetch company logo
+    logo_b64 = _fetch_logo_b64(website)
+
+    # Build prompt
+    prompt = _build_panda_prompt(bedrijfsnaam, sector, has_logo=bool(logo_b64))
+
+    # Try Gemini (with reference image + logo)
     try:
-        image_bytes = await generate_with_gemini(prompt)
-        if not image_bytes:
-            return json.dumps({
-                "success": False,
-                "error": "Gemini API gaf geen afbeelding terug. Controleer je GEMINI_API_KEY.",
-                "fallback_url": f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png",
-            })
+        image_bytes = await generate_with_gemini(prompt, logo_b64=logo_b64)
+        if image_bytes:
+            url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
+            if url:
+                return json.dumps({"success": True, "image_url": url, "provider": "gemini", "bedrijfsnaam": bedrijfsnaam})
+    except Exception:
+        pass
 
-        url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
-        if not url:
-            return json.dumps({
-                "success": False,
-                "error": "Upload mislukt (0x0.st en catbox.moe beide gefaald).",
-                "fallback_url": f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png",
-            })
+    # Try OpenAI (prompt-only, no reference images)
+    try:
+        image_bytes = await generate_with_openai(prompt)
+        if image_bytes:
+            url = await upload_image(image_bytes, f"panda_{bedrijfsnaam.lower().replace(' ', '_')}.png")
+            if url:
+                return json.dumps({"success": True, "image_url": url, "provider": "openai", "bedrijfsnaam": bedrijfsnaam})
+    except Exception:
+        pass
 
-        return json.dumps({
-            "success": True,
-            "image_url": url,
-            "bedrijfsnaam": bedrijfsnaam,
-        })
-    except Exception as e:
-        return json.dumps({
-            "success": False,
-            "error": str(e),
-            "fallback_url": f"https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png",
-        })
+    return json.dumps({
+        "success": False,
+        "error": "Beide providers (Gemini en OpenAI) hebben gefaald.",
+        "fallback_url": fallback_url,
+    })
 
 
 @mcp.tool()
 async def generate_custom_image(prompt: str) -> str:
     """
-    Genereer een willekeurige afbeelding via Google Gemini en retourneer een publieke URL.
+    Genereer een willekeurige afbeelding via Gemini (primair) of OpenAI (fallback).
+    Retourneer een publieke URL.
 
     Args:
         prompt: Beschrijving van de gewenste afbeelding (in het Engels voor beste resultaten).
     """
+    # Try Gemini
     try:
         image_bytes = await generate_with_gemini(prompt)
-        if not image_bytes:
-            return json.dumps({"success": False, "error": "Geen afbeelding gegenereerd."})
+        if image_bytes:
+            url = await upload_image(image_bytes)
+            if url:
+                return json.dumps({"success": True, "image_url": url, "provider": "gemini"})
+    except Exception:
+        pass
 
-        url = await upload_image(image_bytes)
-        if not url:
-            return json.dumps({"success": False, "error": "Upload mislukt."})
+    # Try OpenAI
+    try:
+        image_bytes = await generate_with_openai(prompt)
+        if image_bytes:
+            url = await upload_image(image_bytes)
+            if url:
+                return json.dumps({"success": True, "image_url": url, "provider": "openai"})
+    except Exception:
+        pass
 
-        return json.dumps({"success": True, "image_url": url})
-    except Exception as e:
-        return json.dumps({"success": False, "error": str(e)})
+    return json.dumps({"success": False, "error": "Geen afbeelding gegenereerd (Gemini en OpenAI beide gefaald)."})
 
 
 @mcp.tool()

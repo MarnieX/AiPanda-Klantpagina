@@ -27,24 +27,33 @@ Gebruik hiervoor GEEN AskUserQuestion (dat vereist opties). Stel de vraag als ge
 
 Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
-### Gemini API key check (parallel met wachten op antwoord)
+### API key check (parallel met wachten op antwoord)
 
-Controleer of de Gemini API key beschikbaar is via de MCP tool `check_gemini_api_key`.
+Controleer of API keys beschikbaar zijn via de MCP tool `check_api_keys`.
 
-**Als `available: false`:** Vraag de key via AskUserQuestion:
-- question: "GEMINI_API_KEY ontbreekt. Die heb ik nodig om een panda-afbeelding te genereren. Plak je Gemini API key hieronder (aanmaken op https://aistudio.google.com/apikey)."
+**Response:** `{"gemini": true/false, "openai": true/false}`
+
+**Als minstens één key `true`:** Ga door (Gemini is primair, OpenAI is fallback).
+
+**Als beide `false`:** Vraag de key via AskUserQuestion:
+- question: "Geen API keys gevonden. Die heb ik nodig om een panda-afbeelding te genereren. Plak een Gemini of OpenAI API key hieronder. Gemini: https://aistudio.google.com/apikey — OpenAI: https://platform.openai.com/api-keys"
 - header: "API Key"
 - options:
   - "Ik heb geen key, sla de afbeelding over (Recommended)" — ga door zonder image
-  - "Key komt eraan" — de gebruiker plakt de key via het Other-tekstveld
+  - "Gemini key" — de gebruiker plakt de key via het Other-tekstveld
+  - "OpenAI key" — de gebruiker plakt de key via het Other-tekstveld
 - multiSelect: false
 
-Als de gebruiker een key plakt: sla deze op via de MCP tool `set_gemini_api_key` met de geplakte key. Dit maakt de key beschikbaar voor de hele sessie (alleen in geheugen, niet op schijf). Exporteer de key ook in de shell voor eventuele curl-fallbacks:
+Als de gebruiker een key plakt:
+1. Bepaal de provider op basis van de gekozen optie
+2. Sla op via MCP tool `set_api_key` met `provider` ("gemini" of "openai") en `api_key`
+3. Exporteer ook in de shell voor curl-fallbacks:
 ```bash
-export GEMINI_API_KEY="[GEPLAKTE_KEY]"
+export GEMINI_API_KEY="[GEPLAKTE_KEY]"   # als Gemini
+export OPENAI_API_KEY="[GEPLAKTE_KEY]"   # als OpenAI
 ```
 
-**Als `available: true`:** Key is al beschikbaar, ga door.
+**Als de gebruiker geen key heeft:** Ga door zonder image. Stop NOOIT de flow.
 
 ---
 
@@ -125,17 +134,21 @@ Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie
 
 ### 5A — AI Panda-afbeelding genereren
 
-Voer de `gemini-image-v2` skill uit in quick mode.
+Gebruik de MCP tool `generate_panda_image` met alle beschikbare parameters:
 
-Bouw een beschrijvende Engelse prompt op basis van BEDRIJFSNAAM, SECTOR en WEBSITE_DOMEIN. Voorbeeld:
 ```
-A friendly cartoon red panda mascot in a navy blue business polo shirt
-with "[BEDRIJFSNAAM]" embroidered on the chest, standing confidently
-in a modern office presenting AI solutions on a whiteboard.
-Professional illustration, clean white background.
+MCP tool: generate_panda_image
+  bedrijfsnaam: "[BEDRIJFSNAAM]"
+  sector: "[SECTOR]"
+  website: "[WEBSITE_DOMEIN]"
 ```
 
-Geef IMAGE_PROMPT mee en volg de stappen van gemini-image-v2 vanaf stap 2 (API key check). Het resultaat is IMAGE_URL (publieke URL of lege string).
+De tool bouwt intern een fotorealistische prompt, haalt het bedrijfslogo op via het domein, en probeert Gemini (met referentie-image + logo) → OpenAI (prompt-only) → fallback.
+
+Parse de JSON-response:
+- `success: true` → `image_url` is PANDA_IMAGE_URL
+- `success: false` + `fallback_url` → gebruik `fallback_url` als PANDA_IMAGE_URL (of lege string als je liever geen placeholder toont)
+- `success: false` zonder `fallback_url` → ga naar de gemini-image-v2 skill fallback-keten (curl, browser JS, etc.)
 
 **Laatste fallback — AI Studio pakket:**
 
