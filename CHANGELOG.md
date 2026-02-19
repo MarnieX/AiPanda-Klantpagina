@@ -7,6 +7,12 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 ## [Unreleased]
 
+*Geen wijzigingen.*
+
+## [0.2.0] - 2026-02-18
+
+Features uitgebouwd: toekomstvisie, interactieve quiz, browser MCP image generation, gemini-image skill.
+
 ### Added
 - Toekomstvisie geintegreerd in klantpagina-skill: persoonlijke pull quote (vervangt generieke 7-sterren quote), 10-jaar transformatieverhaal (350-500 woorden visionair proza), gebrandde toekomstvisie-afbeelding via Gemini, en 4 kerngetallen
 - Research-fase uitgebreid met merkidentiteit (kleuren, tagline, visuele stijl) en sectorprobleem-identificatie

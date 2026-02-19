@@ -14,16 +14,22 @@ Een Claude Code plugin die het aanmaken van professionele Notion-klantpagina's v
 - Fallback-systeem gedocumenteerd voor alle externe calls
 - Plugin packaging voor Cowork via build.sh
 - Klantpagina skill volledig uitgewerkt met logo compositing en lokale paden
+- Notion-pagina template met strakke opmaak en AI Panda huisstijl (hero banner, teamtabel, roadmap, 9 secties)
+- Interactieve AI-Readiness Quickscan: quiz als GitHub Pages app (JSON + base64 in URL), direct gelinkt op klantpagina
+- Standalone `ai-quiz` skill: genereert quiz JSON, bouwt klikbare URL, optioneel Notion-pagina
+- Toekomstvisie geintegreerd in klantpagina-skill: pull quote, 10-jaar verhaal, gebrandde visie-afbeelding, kerngetallen
+- Generieke `gemini-image` skill: standalone image generation via curl en browser MCP
+- Browser MCP flow voor image generation in Cowork (omgevingsdetectie, Chrome MCP-bridge)
+- Curl-fallback voor image generation (omzeilt httpx SOCKS proxy in Cowork)
+- Consultantfoto's geupload en team Excel bijgewerkt met URL's
+- WebSearch vervangt WebFetch in bedrijfsinfo-ophaalfase
 
-### In ontwikkeling
-- Notion-pagina template: strakke opmaak met AI Panda huisstijl
-
-### Gepland
-- Cloud Cowork uitlegpagina: aparte Notion-subpagina over het platform (Rick)
-- AI-quiz skill: 5 vragen, sector-specifiek, bepaalt AI-niveau klant (Noud)
-- Toekomstbeeld/AI-visie skill: gepersonaliseerd per bedrijf en sector (Rick)
-- Plugin installatie testen in Cowork (Marnix)
+### Openstaand
+- Prompt Optimizer valideren en finetunen (Marnix)
+- Plugin installatie testen in Cowork met browser MCP image generation flow (Marnix)
+- Verhaal rondom Claude Cowork uitwerken voor de demonstratie (Rick)
 - Onboarding documentatie voor medestudenten (Marnix)
+- Branch protection instellen op main (Marnix)
 
 ## Architectuur
 
@@ -67,21 +73,28 @@ Gebruiker geeft bedrijfsnaam/URL op
 
 ### Notion-pagina structuur
 
-1. Header-afbeelding (AI Panda x Bedrijf, gegenereerd door Gemini)
-2. Over [Bedrijf]: omschrijving en sector
-3. Jouw AI Panda Team: tabel met foto, naam, functie, contact
-4. AI Implementatie Roadmap: 4 sector-specifieke fases
-5. Volgende stappen: checklist voor kickoff
-6. Over AI Panda Cowork: placeholder sectie (volledige subpagina volgt)
+1. Hero-afbeelding (AI Panda x Bedrijf, gegenereerd door Gemini)
+2. Titel + datum
+3. Pull quote (persoonlijk citaat uit toekomstvisie)
+4. Over [Bedrijf]: omschrijving, sector en website
+5. Jouw Toekomstvisie [Bedrijf] in 2035: visionair verhaal + gebrandde visie-afbeelding + kerngetallen
+6. Jouw AI Panda Team: consultants met foto, functie, email in kolommen
+7. AI Implementatie Roadmap: 4 sector-specifieke fases in callouts
+8. Volgende stappen: checklist voor kickoff
+9. AI-Readiness Quickscan: interactieve quiz-link + scoretabel
 
 ### Projectstructuur
 
 ```
 /
-├── .claude/skills/klantpagina/SKILL.md   # Canonical skill (development)
+├── .claude/skills/
+│   ├── klantpagina/SKILL.md              # Hoofdskill: klantpagina generator
+│   ├── ai-quiz/SKILL.md                  # Standalone AI-Readiness quiz skill
+│   └── gemini-image/SKILL.md             # Standalone image generation skill
 ├── assets/panda-reference.png            # Panda character referentiebeeld
 ├── data/ai-panda-team.xlsx               # Teambestand met consultants
 ├── docs/                                 # Referentiemateriaal en verslagen
+├── quiz/                                 # Interactieve quiz app (git submodule → aipanda-quiz)
 ├── scripts/
 │   ├── generate_notion_image.py          # Nano Banana Pro beeldgeneratie
 │   ├── prompt-optimizer.py               # Prompt templates voor Gemini

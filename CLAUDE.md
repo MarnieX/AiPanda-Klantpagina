@@ -13,12 +13,15 @@
 
 **Bestanden:**
 - `ai-panda-klantpagina.zip` - Gebouwd plugin-bestand voor Cowork
-- `.claude/skills/klantpagina/SKILL.md` - Hoofdskill (canonical source)
+- `.claude/skills/klantpagina/SKILL.md` - Hoofdskill: klantpagina generator
+- `.claude/skills/ai-quiz/SKILL.md` - Standalone AI-Readiness quiz skill
+- `.claude/skills/gemini-image/SKILL.md` - Standalone image generation skill
 - `scripts/generate_notion_image.py` - Python script voor AI-beeldgeneratie
 - `scripts/prompt-optimizer.py` - Prompt optimalisatie voor betere beeldresultaten
 - `scripts/banana.sh` - CLI wrapper voor image generation
 - `data/ai-panda-team.xlsx` - Teambestand met consultants
 - `plugin/` - Plugin bronbestanden (servers, commands, hooks, skills)
+- `quiz/` - Interactieve quiz app (git submodule, GitHub Pages)
 - `assets/panda-reference.png` - Panda character referentiebeeld voor Gemini
 - `build.sh` - Bouwt plugin/ tot .zip
 

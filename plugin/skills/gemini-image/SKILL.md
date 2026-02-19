@@ -145,11 +145,24 @@ Lokaal bestand: [OUTPUT]
 
 ---
 
-## Stap 4B: Cowork (browser MCP)
+## Stap 4B: Cowork (MCP server primair, browser MCP als fallback)
 
-In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer. De enige route naar buiten is via de Chrome MCP-bridge: Claude bestuurt de lokale Chrome van de gebruiker.
+In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer voor directe Python/curl calls. De MCP server heeft een socksio fix waardoor deze wel door de proxy kan. De Chrome MCP-bridge is de fallback.
 
-### 4B.1 — Tab verkrijgen
+### 4B.0 — MCP server (primair)
+
+Gebruik de MCP tool `generate_custom_image` met de IMAGE_PROMPT + FORMAT_INSTRUCTION:
+
+```
+MCP tool: generate_custom_image
+  prompt: "[IMAGE_PROMPT]. [FORMAT_INSTRUCTION]"
+```
+
+Parse de JSON-response:
+- `success: true` → `image_url` is IMAGE_URL. Ga naar stap 4B.5 (screenshot) of toon de URL direct.
+- `success: false` → ga naar stap 4B.1 (browser fallback).
+
+### 4B.1 — Tab verkrijgen (browser fallback)
 
 MCP tool: `tabs_context_mcp` met `createIfEmpty: true`
 Sla het `tabId` op.
@@ -242,6 +255,26 @@ Daarna: MCP tool `computer` (screenshot) om de afbeelding als bewijs in het gesp
 
 Alleen nodig als een publieke URL gewenst is (bijv. vanuit klantpagina flow).
 
+**Methode A: upload_image_base64 MCP tool (primair, geen CORS)**
+
+Haal de base64 data op uit de browser en geef deze door aan de MCP server tool `upload_image_base64`. Dit omzeilt CORS omdat de upload server-side via curl gebeurt.
+
+MCP tool: `javascript_tool` in het tabId om de base64 data op te halen:
+```javascript
+(() => window._geminiB64 || 'NO_DATA')()
+```
+
+Geef de volledige base64 string door aan:
+```
+MCP tool: upload_image_base64
+  image_base64: "[BASE64_DATA]"
+  filename: "gemini-image.png"
+```
+
+Parse de JSON-response: `success: true` → `image_url` is IMAGE_URL.
+
+**Methode B: Browser-side catbox upload (fallback als MCP tool faalt)**
+
 MCP tool: `javascript_tool` in het tabId:
 
 ```javascript
@@ -264,45 +297,10 @@ MCP tool: `javascript_tool` in het tabId:
     const url = await resp.text();
     return JSON.stringify({ success: true, url: url.trim() });
   } catch(e) {
-    return JSON.stringify({ error: e.message, note: 'CORS blocked? Try same-origin.' });
+    return JSON.stringify({ error: e.message, note: 'CORS blocked? Use placeholder.' });
   }
 })()
 ```
-
-**Als CORS blokkeert:** Navigeer naar `https://catbox.moe` (same-origin) en voer de upload daar uit:
-
-1. MCP tool: `navigate` naar `https://catbox.moe`
-2. MCP tool: `javascript_tool`:
-```javascript
-(async () => {
-  try {
-    const b64 = window._geminiB64;
-    // b64 data overleeft navigatie niet, dus moet opnieuw worden doorgegeven
-    // Als window._geminiB64 undefined is, geef een foutmelding terug
-    if (!b64) return JSON.stringify({ error: 'Image data lost after navigation. Use placeholder.' });
-
-    const mime = window._geminiMime || 'image/png';
-    const byteChars = atob(b64);
-    const byteArray = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) byteArray[i] = byteChars.charCodeAt(i);
-    const blob = new Blob([byteArray], { type: mime });
-
-    const form = new FormData();
-    form.append('reqtype', 'fileupload');
-    form.append('fileToUpload', blob, 'panda.png');
-    const resp = await fetch('/user/api.php', {
-      method: 'POST',
-      body: form
-    });
-    const url = await resp.text();
-    return JSON.stringify({ success: true, url: url.trim() });
-  } catch(e) {
-    return JSON.stringify({ error: e.message });
-  }
-})()
-```
-
-**Let op:** Na navigatie gaat `window._geminiB64` verloren. Om dit op te lossen, sla de base64 data op in een JS-variabele VOORDAT je navigeert, of voer generatie + upload op dezelfde pagina uit. Als de data verloren is, gebruik de placeholder URL.
 
 **Output voor standalone gebruik:** Toon de screenshot en meld dat het bestand gedownload is naar de lokale Downloads-map.
 
@@ -316,10 +314,10 @@ Lokaal:
   Fallback: Placeholder URL
 
 Cowork:
-  Browser JS fetch (Gemini API) → Download + Screenshot
-  Voor publieke URL: + Catbox upload vanuit browser JS → URL
-  Als catbox CORS faalt: navigeer naar catbox.moe → same-origin upload
-  Laatste fallback: Placeholder URL (flow stopt nooit)
+  1. MCP generate_custom_image (primair, server-side met socksio fix)
+  2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
+  3. Browser JS fetch + catbox browser upload (laatste poging)
+  4. Placeholder URL (flow stopt nooit)
 ```
 
 ---

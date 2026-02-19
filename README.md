@@ -22,10 +22,12 @@ De rest gaat automatisch: afbeelding genereren, content samenstellen, Notion-pag
 
 Elke gegenereerde pagina bevat:
 
-- **AI-gegenereerde afbeelding** in de AI Panda-stijl, met het bedrijfslogo verwerkt via Gemini
-- **Bedrijfsprofiel** met omschrijving, automatisch opgehaald van de website
+- **AI-gegenereerde hero-afbeelding** in de AI Panda-stijl via Gemini
+- **Persoonlijke toekomstvisie**: visionair verhaal over het bedrijf in 2035, met pull quote, gebrandde visie-afbeelding en kerngetallen
+- **Bedrijfsprofiel** met omschrijving, automatisch opgehaald via WebSearch
 - **Consultantteam** met foto, functie en contactgegevens
 - **AI Implementatie Roadmap** in vier fases, specifiek voor de sector van de klant
+- **AI-Readiness Quickscan**: interactieve quiz (5 sector-specifieke vragen) als klikbare link
 - **Volgende stappen** als checklist om direct mee te starten
 
 ---
@@ -118,9 +120,11 @@ docs/                     Referentiemateriaal, vergaderverslagen, presentaties
 
 | Onderdeel | Beschrijving |
 |---|---|
-| **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina |
+| **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina met toekomstvisie en quiz |
+| **AI-Quiz Skill** | Standalone skill: genereert interactieve AI-Readiness quiz als klikbare URL |
+| **Gemini Image Skill** | Standalone image generation via curl (lokaal) of browser MCP (Cowork) |
 | **Gemini MCP Server** | Beeldgeneratie via Google Gemini, upload naar catbox.moe |
-| **Nano Banana Pro** | Geavanceerd Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
+| **Nano Banana Pro** | Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
 | **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele Gemini-prompt |
 | **Kwaliteitscheck Hook** | Controleert automatisch of de gegenereerde pagina compleet en specifiek is |
 
@@ -128,9 +132,9 @@ docs/                     Referentiemateriaal, vergaderverslagen, presentaties
 
 ## Status
 
-Fase 1 (MVP) is afgerond. De end-to-end flow werkt: van bedrijfsnaam tot Notion-pagina.
+Fase 1 (MVP) en Fase 2 (Features) zijn afgerond. De volledige flow werkt: van bedrijfsnaam tot Notion-klantpagina met toekomstvisie, interactieve quiz, AI-afbeeldingen en sector-specifieke roadmap.
 
-Momenteel in ontwikkeling: Notion-template met strakke huisstijl, AI-quiz (Noud), toekomstvisie (Rick).
+Openstaand: Prompt Optimizer finetunen, plugin testen in Cowork, onboarding documentatie.
 
 Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
 
