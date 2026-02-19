@@ -426,13 +426,13 @@ Daarna: MCP tool `computer` (screenshot) als bewijs.
 
 ```
 Lokaal:
-  Python script → Curl fallback → Placeholder URL
+  Python script → Curl fallback → AI Studio pakket (handmatig)
 
 Cowork:
   1. MCP generate_custom_image / generate_panda_image (primair, server-side)
   2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
   3. Browser JS fetch + browser upload naar 0x0.st (laatste poging)
-  4. Placeholder URL
+  4. AI Studio pakket (handmatig)
 ```
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
@@ -441,9 +441,42 @@ Cowork:
 - `[DIAG 5A] Cowork: MCP generate_panda_image geslaagd`
 - `[DIAG 5A] Cowork: browser + upload_image_base64 fallback gebruikt`
 - `[DIAG 5A] Cowork: browser + 0x0.st browser upload gebruikt`
-- `[DIAG 5A] Placeholder URL (laatste fallback)`
+- `[DIAG 5A] Alle methodes mislukt → AI Studio pakket getoond`
 
-**Laatste fallback:** gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
+**Laatste fallback — AI Studio pakket:**
+
+Als alle automatische methodes zijn mislukt, toon het volgende pakket aan de gebruiker (kopieerklaar):
+
+---
+**Genereer de afbeelding zelf in Google AI Studio** — https://aistudio.google.com/
+
+**Model:** `gemini-2.0-flash-exp` (of `gemini-3-pro-image-preview` als beschikbaar)
+**Output type:** Image generation
+
+**Prompt** (kopieer dit):
+```
+[PANDA_PROMPT — de volledige opgebouwde Engelse prompt, bijv.:
+"A friendly cartoon red panda mascot in a navy blue business polo shirt
+with '[BEDRIJFSNAAM]' embroidered on the chest, standing confidently
+in a modern [SECTOR] office presenting AI solutions on a whiteboard.
+Professional illustration, clean white background."]
+```
+
+**Referentieafbeelding (optioneel, maar aanbevolen):**
+Upload deze afbeelding als reference in AI Studio: `https://files.catbox.moe/23dzti.png`
+(AI Panda panda-karakter — houdt de stijl consistent)
+
+---
+
+Gebruik daarna AskUserQuestion:
+- question: "Afbeelding kon niet automatisch worden gegenereerd. Plak hieronder een URL als je hem al hebt, of ga door zonder afbeelding — je kunt hem later zelf in Notion toevoegen."
+- header: "Afbeelding"
+- options:
+  - label: "Ga door, ik voeg de afbeelding zelf toe in Notion" (Recommended)
+  - label: "Ik heb een URL" (gebruiker plakt via Other-veld)
+
+Als de gebruiker een URL plakt via Other: gebruik die als PANDA_IMAGE_URL.
+Als de gebruiker "ga door" kiest: sla PANDA_IMAGE_URL op als lege string `""`. In stap 6 wordt de afbeeldingsregel dan weggelaten uit de Notion-content (niet een lege `![]()` sturen, maar de regel volledig overslaan).
 
 ### 5B — Roadmap content voorbereiden
 
@@ -614,10 +647,12 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 **Datum:** Gebruik formaat "DD maand YYYY" (bijv. "17 februari 2026").
 
+**Afbeelding:** Als PANDA_IMAGE_URL een lege string is (gebruiker genereert zelf), laat dan de eerste afbeeldingsregel volledig weg uit de content. Stuur nooit een lege `![]()`.
+
 ### Content template (AI Panda huisstijl):
 
 ```markdown
-![]([PANDA_IMAGE_URL])
+![]([PANDA_IMAGE_URL])          ← weglaten als PANDA_IMAGE_URL leeg is
 
 # AI Panda x [BEDRIJFSNAAM]
 
