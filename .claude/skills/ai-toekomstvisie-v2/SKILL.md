@@ -225,7 +225,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "flux-kontext-max"
+  model: "flux-2-pro"
   style: "photorealistic, cinematic, modern corporate. Recurring character: a giant panda wearing a tailored black business suit with orange tie, walking and working confidently among human colleagues as a regular executive — the panda belongs there. Brand colors: [MERKKLEUR_PRIMAIR] (primary) and [MERKKLEUR_SECUNDAIR] (secondary) as accent colors throughout. Visual style: [HUISSTIJL_KENMERK]."
 additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always as a confident professional among humans. Each [Scene: ...] note in the outline describes exactly what the panda does on that slide; follow those descriptions closely. On slides without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual thread that runs through the whole presentation. Use the brand colors [MERKKLEUR_PRIMAIR] and [MERKKLEUR_SECUNDAIR] as dominant accent colors in environments, lighting, and design elements. Incorporate the visual style '[HUISSTIJL_KENMERK]' in the overall aesthetic."
 ```
