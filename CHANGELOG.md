@@ -9,6 +9,30 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 *Geen wijzigingen.*
 
+## [0.3.0] - 2026-02-19
+
+Notion markdown syntax gefixed, Cowork image pipeline robuust gemaakt, lessons learned gedocumenteerd.
+
+### Fixed
+- Notion callouts: `<callout>` HTML-tags vervangen door Pandoc-style fenced divs (`::: callout {icon="emoji"}`)
+- Notion kolommen: children tab-inspringing toegevoegd (zonder tabs werden kolommen leeg gerenderd)
+- Notion teamfoto's: image captions verwijderd (`![](url)` i.p.v. `![[naam]](url)`) zodat er geen grijze tekst onder foto's verschijnt
+- Notion embed: niet-bestaande `<embed>` tag verwijderd, vervangen door gewone link
+- Gemini model: `gemini-2.0-flash-exp` (404) overal vervangen door `gemini-3-pro-image-preview`
+- MCP server: `httpcore[socks]` toegevoegd aan bootstrap voor SOCKS proxy in Cowork
+- catbox.moe 504 timeouts: teamfoto's opnieuw gehost op 0x0.st als fallback
+
+### Added
+- `upload_image_base64` MCP tool: server-side image upload naar catbox.moe (omzeilt CORS in Cowork)
+- Inline Notion markdown syntax-referentie in klantpagina skill (met expliciete FOUT-voorbeelden)
+- `docs/LESSONS-LEARNED.md`: gedocumenteerde lessen uit Cowork en Notion debugging
+- `assets/nophoto.png`: placeholder avatar voor consultants zonder foto
+- `DEMO-CHECKLIST.md`: 10-stappen dry-run procedure voor Cowork demo's
+
+### Changed
+- Skill template volledig herschreven met correcte Notion markdown syntax
+- Plugin zip opnieuw gebouwd met alle fixes
+
 ## [0.2.0] - 2026-02-18
 
 Features uitgebouwd: toekomstvisie, interactieve quiz, browser MCP image generation, gemini-image skill.
