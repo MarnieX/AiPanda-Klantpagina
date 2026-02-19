@@ -238,6 +238,29 @@ de panda-karakterbeschrijving en HUISSTIJL_KENMERK intact (als die beschikbaar i
 
 ### 4D — Fallback-keten (4 pogingen)
 
+**Belangrijk — timeout vs. echte fout:**
+
+De Gamma MCP-tool heeft een ingebouwde timeout (~30 seconden). Gamma-generatie duurt
+vaak langer. Een timeout betekent **niet** dat de aanvraag mislukt is — het request is
+al verzonden en Gamma werkt waarschijnlijk gewoon door op de achtergrond. Een nieuwe poging
+doet na een timeout leidt dan tot dubbele presentaties.
+
+**Na elke call — bepaal het fouttype:**
+
+1. **Response bevat URL (begint met `https://`):** Succes. Sla op als GAMMA_URL, ga naar Stap 5.
+2. **Timeout-fout** (foutbericht bevat "timed out", "timeout" of "time out"):
+   **STOP. Niet opnieuw proberen.**
+   De presentatie wordt waarschijnlijk al gegenereerd.
+   Toon aan de gebruiker:
+   > "De Gamma-presentatie wordt aangemaakt maar het genereren duurt langer dan verwacht.
+   > Bekijk je recente presentaties op: https://gamma.app/recent"
+   Sla GAMMA_URL op als: `"wordt gegenereerd — check gamma.app/recent"`
+   Ga naar Stap 5.
+3. **Echte API-fout** (foutbericht bevat statuscode 4xx/5xx, validatiefout, of tool ontbreekt):
+   Log de fout, ga naar de volgende poging met minder parameters.
+
+---
+
 **Poging 1 — Volledig (themeId + cardOptions met logo + imageOptions met merkkleur):**
 
 Parameters:
@@ -253,39 +276,36 @@ Parameters:
         src: "[LOGO_URL]"
   ```
 
-**Na de call: controleer of de response een URL bevat (begint met `https://`).**
-- Ja: sla op als GAMMA_URL, ga naar Stap 5.
-- Nee (onverwacht formaat): log de fout, ga naar Poging 2.
+Na de call: pas de timeout-check hierboven toe.
 
 ---
 
 **Poging 2 — Zonder cardOptions (themeId + imageOptions, geen logo):**
 
+Alleen na echte API-fout op Poging 1.
 Log: "Poging 1 mislukt (mogelijke cardOptions-fout). Retry zonder logo."
 
 Parameters: basis-parameters uit 4C + `themeId` (als beschikbaar). Geen `cardOptions`.
 
-**Na de call: controleer op URL.**
-- Ja: sla op als GAMMA_URL, ga naar Stap 5.
-- Nee: log de fout, ga naar Poging 3.
+Na de call: pas de timeout-check hierboven toe.
 
 ---
 
 **Poging 3 — Minimaal (alleen basis, geen themeId, geen cardOptions, geen imageOptions):**
 
+Alleen na echte API-fout op Poging 2.
 Log: "Poging 2 mislukt. Retry met minimale parameters."
 
 Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen cardOptions,
 geen imageOptions.
 
-**Na de call: controleer op URL.**
-- Ja: sla op als GAMMA_URL, ga naar Stap 5.
-- Nee: log de fout, ga naar Poging 4.
+Na de call: pas de timeout-check hierboven toe.
 
 ---
 
 **Poging 4 — Markdown-fallback:**
 
+Alleen na echte API-fout op Poging 3.
 Log: "Alle Gamma-pogingen mislukt. Toon outline als Markdown."
 
 Toon de volledige outline als gestructureerde Markdown in de chat. Meld kort:
