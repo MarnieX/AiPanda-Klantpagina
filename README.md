@@ -23,12 +23,11 @@ De rest gaat automatisch: afbeelding genereren, content samenstellen, Notion-pag
 Elke gegenereerde pagina bevat:
 
 - **AI-gegenereerde hero-afbeelding** in de AI Panda-stijl via Gemini
-- **Persoonlijke toekomstvisie**: visionair verhaal over het bedrijf in 2035, met pull quote, gebrandde visie-afbeelding en kerngetallen
-- **Bedrijfsprofiel** met omschrijving, automatisch opgehaald via WebSearch
-- **Consultantteam** met foto, functie en contactgegevens
+- **2028-quote**: pakkende uitspraak van een fictieve medewerker over hoe hun werk er in 2028 uitziet dankzij AI
+- **Twee-koloms bedrijfsprofiel**: "Over [Bedrijf]" (omschrijving, sector, website) naast "Over AI Panda" (missie, tagline)
+- **Consultantteam** met foto, functie, telefoonnummer en e-mail in kolommen
 - **AI Implementatie Roadmap** in vier fases, specifiek voor de sector van de klant
-- **AI-Readiness Quickscan**: interactieve quiz (5 sector-specifieke vragen) als klikbare link
-- **Volgende stappen** als checklist om direct mee te starten
+- **AI-Readiness Quickscan**: interactieve quiz (5 sector-specifieke vragen) direct als embed op de pagina
 
 ---
 
@@ -123,7 +122,7 @@ docs/                     Referentiemateriaal, vergaderverslagen, presentaties
 | **Klantpagina Skill** | De volledige wizard: van bedrijfsnaam naar Notion-pagina met toekomstvisie en quiz |
 | **AI-Quiz Skill** | Standalone skill: genereert interactieve AI-Readiness quiz als klikbare URL |
 | **Gemini Image Skill** | Standalone image generation via curl (lokaal) of browser MCP (Cowork) |
-| **Gemini MCP Server** | Beeldgeneratie via Google Gemini, upload naar catbox.moe |
+| **Gemini MCP Server** | Beeldgeneratie via Google Gemini, upload naar 0x0.st (primair) of catbox.moe (fallback) |
 | **Nano Banana Pro** | Python-script met logo-zoekpipeline en sector-specifieke achtergronden |
 | **Prompt Optimizer** | Maakt van een simpele beschrijving een professionele Gemini-prompt |
 | **Kwaliteitscheck Hook** | Controleert automatisch of de gegenereerde pagina compleet en specifiek is |
@@ -132,9 +131,9 @@ docs/                     Referentiemateriaal, vergaderverslagen, presentaties
 
 ## Status
 
-Fase 1 (MVP) en Fase 2 (Features) zijn afgerond. De volledige flow werkt: van bedrijfsnaam tot Notion-klantpagina met toekomstvisie, interactieve quiz, AI-afbeeldingen en sector-specifieke roadmap.
+Fase 1 (MVP), Fase 2 (Features) en Fase 3 (Component Review) zijn afgerond. De volledige flow werkt: van bedrijfsnaam tot Notion-klantpagina met 2028-quote, twee-koloms bedrijfsprofiel, team, roadmap en interactieve quiz.
 
-Openstaand: Prompt Optimizer finetunen, plugin testen in Cowork, onboarding documentatie.
+Openstaand: Gamma.app toekomstvisie-presentatie integreren, prompt optimizer finetunen, onboarding documentatie.
 
 Zie [BACKLOG.md](./BACKLOG.md) voor het volledige takenoverzicht.
 

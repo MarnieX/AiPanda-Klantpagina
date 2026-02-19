@@ -1,8 +1,12 @@
 ---
 description: Genereer een AI Panda klantpagina in Notion
-allowed-tools: Read, Write, Bash, Grep, Glob, WebFetch, WebSearch, AskUserQuestion, TodoWrite, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-fetch
+allowed-tools: Read, Write, Bash, Grep, Glob, WebFetch, WebSearch, AskUserQuestion, TodoWrite, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Gamma__generate, mcp__claude_ai_Gamma__get_themes
 ---
 
-Start de AI Panda Klantpagina Generator wizard. Volg de instructies in de klantpagina skill exact.
+**ALLEREERSTE ACTIE — schrijf dit direct als je eerste output, nog VOORDAT je iets anders doet:**
 
-Begin bij Stap 1: vraag de gebruiker voor welk bedrijf de klantpagina moet worden aangemaakt.
+Hey Panda! Even geduld, ik start de klantpagina-wizard...
+
+---
+
+Voer daarna de klantpagina-v2 skill uit, stap voor stap, beginnend bij **Stap 1 (vraag om bedrijf)**.

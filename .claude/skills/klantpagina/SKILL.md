@@ -14,6 +14,8 @@ Gebruik TodoWrite om voortgang te tonen:
 4. Bevestiging vragen
 5. Panda-afbeelding + roadmap + quiz-URL + 2028-quote (parallel)
 6. Notion-pagina aanmaken (quiz als embed)
+8. Toon Notion-URL + Quiz-URL direct
+7. Toekomstvisie presentatie genereren (Gamma, na de finish)
 
 ---
 
@@ -60,12 +62,12 @@ fi
 # Fallback: find (voor lokale ontwikkeling of als plugin-pad niet werkt)
 if [ -z "$EXCEL_PATH" ]; then
     echo "[DIAG 2B] CLAUDE_PLUGIN_ROOT niet beschikbaar, zoeken via find..."
-    EXCEL_PATH=$(find /sessions ~ -maxdepth 10 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
+    EXCEL_PATH=$(timeout 5 find /sessions ~ -maxdepth 3 -name "ai-panda-team.xlsx" 2>/dev/null | head -1)
 fi
 
 if [ -z "$EXCEL_PATH" ]; then
-    echo "[DIAG 2B] NIET GEVONDEN. Mapstructuur van /sessions voor debug:"
-    find /sessions -maxdepth 5 -type d 2>/dev/null | head -30
+    echo "[DIAG 2B] NIET GEVONDEN. /sessions inhoud voor debug:"
+    ls /sessions 2>/dev/null | head -10
     echo "[DIAG 2B] Home directory inhoud:"
     ls ~ 2>/dev/null | head -20
     echo '{"error": "ai-panda-team.xlsx niet gevonden"}'
@@ -203,7 +205,11 @@ if [ -d "/sessions" ]; then echo "ENVIRONMENT=cowork"; else echo "ENVIRONMENT=lo
 **Methode 1: Python script (volledige pipeline met logo/referentie):**
 ```bash
 echo "[DIAG 5A] Zoeken naar generate_notion_image.py..."
-SCRIPT=$(find /sessions ~ -maxdepth 10 -name "generate_notion_image.py" 2>/dev/null | head -1)
+SCRIPT=""
+if [ -n "$CLAUDE_PLUGIN_ROOT" ] && [ -f "$CLAUDE_PLUGIN_ROOT/scripts/generate_notion_image.py" ]; then
+    SCRIPT="$CLAUDE_PLUGIN_ROOT/scripts/generate_notion_image.py"
+    echo "[DIAG 5A] Script gevonden via CLAUDE_PLUGIN_ROOT"
+fi
 
 if [ -z "$SCRIPT" ]; then
     echo "[DIAG 5A] Script niet gevonden, ga naar curl-fallback"
@@ -277,93 +283,8 @@ MCP tool: generate_panda_image
 
 Parse de JSON-response:
 - `success: true` → `image_url` is PANDA_IMAGE_URL
-- `success: false` → ga naar Methode 2
-
-**Methode 2: Browser JS + upload_image_base64 MCP tool (fallback)**
-
-Als Methode 1 faalt, gebruik de Chrome MCP-bridge om de afbeelding te genereren in de browser, en upload via de MCP server tool `upload_image_base64` (server-side curl, geen CORS).
-
-**5A-C.1 — Tab verkrijgen:**
-MCP tool: `tabs_context_mcp` met `createIfEmpty: true`. Sla `tabId` op.
-
-**5A-C.2 — Navigeer naar JS-context:**
-MCP tool: `navigate` naar `https://example.com` met het tabId.
-
-**5A-C.3 — Genereer image via Gemini API:**
-MCP tool: `javascript_tool` in het tabId:
-
-```javascript
-(async () => {
-  try {
-    const API_KEY = '[GEMINI_API_KEY]';
-    const MODEL = 'gemini-3-pro-image-preview';
-    const PROMPT = '[PANDA_PROMPT]';
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
-
-    const resp = await fetch(URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: PROMPT }] }],
-        generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
-      })
-    });
-
-    const data = await resp.json();
-    if (!resp.ok) return JSON.stringify({ error: data.error?.message });
-
-    const parts = data.candidates?.[0]?.content?.parts || [];
-    for (const part of parts) {
-      if (part.inlineData) {
-        window._geminiB64 = part.inlineData.data;
-        window._geminiMime = part.inlineData.mimeType;
-      }
-    }
-
-    return JSON.stringify({
-      success: true,
-      hasImage: !!window._geminiB64,
-      imageSize: window._geminiB64?.length || 0
-    });
-  } catch(e) {
-    return JSON.stringify({ error: e.message });
-  }
-})()
-```
-
-**5A-C.4 — Upload via MCP server tool (geen CORS):**
-
-Haal de base64 data op uit de browser en geef deze door aan de MCP server tool `upload_image_base64`. Dit omzeilt CORS omdat de upload server-side via curl gebeurt.
-
-MCP tool: `javascript_tool` in het tabId om de base64 data op te halen:
-```javascript
-(() => window._geminiB64 ? window._geminiB64.substring(0, 50000) : 'NO_DATA')()
-```
-
-**Let op:** Als de base64 string te groot is voor een enkele MCP call, splits dan in chunks of gebruik `generate_custom_image` (Methode 1) in plaats daarvan.
-
-Geef de volledige base64 string door aan:
-```
-MCP tool: upload_image_base64
-  image_base64: "[BASE64_DATA]"
-  filename: "panda_[bedrijfsnaam].png"
-```
-
-Parse de JSON-response: `success: true` → `image_url` is PANDA_IMAGE_URL.
-
-**5A-C.5 — Screenshot als bewijs:**
-MCP tool: `javascript_tool` om de afbeelding te renderen:
-```javascript
-(() => {
-  const img = document.createElement('img');
-  img.src = 'data:' + window._geminiMime + ';base64,' + window._geminiB64;
-  img.style.cssText = 'max-width:90%;max-height:80vh';
-  document.body.innerHTML = '';
-  document.body.appendChild(img);
-  return 'Image rendered';
-})()
-```
-Daarna: MCP tool `computer` (screenshot) als bewijs.
+- `success: false` maar `fallback_url` aanwezig → gebruik `fallback_url` direct als PANDA_IMAGE_URL
+- `success: false` en geen `fallback_url` → toon AI Studio pakket (zie hieronder)
 
 ---
 
@@ -371,13 +292,12 @@ Daarna: MCP tool `computer` (screenshot) als bewijs.
 
 ```
 Lokaal:
-  Python script → Curl fallback → Placeholder URL
+  Python script → Curl fallback → AI Studio pakket (handmatig)
 
 Cowork:
-  1. MCP generate_custom_image / generate_panda_image (primair, server-side)
-  2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
-  3. Browser JS fetch + browser upload naar 0x0.st (laatste poging)
-  4. Placeholder URL
+  1. MCP generate_panda_image (primair, server-side)
+  2. success:false + fallback_url → gebruik fallback_url direct
+  3. AI Studio pakket (handmatig)
 ```
 
 **Diagnostics:** Meld altijd welke methode gebruikt is:
@@ -386,9 +306,42 @@ Cowork:
 - `[DIAG 5A] Cowork: MCP generate_panda_image geslaagd`
 - `[DIAG 5A] Cowork: browser + upload_image_base64 fallback gebruikt`
 - `[DIAG 5A] Cowork: browser + 0x0.st browser upload gebruikt`
-- `[DIAG 5A] Placeholder URL (laatste fallback)`
+- `[DIAG 5A] Alle methodes mislukt → AI Studio pakket getoond`
 
-**Laatste fallback:** gebruik `https://ui-avatars.com/api/?name=AI+Panda&size=400&background=000000&color=ffffff&bold=true&format=png` en meld dit kort. GA ALTIJD DOOR.
+**Laatste fallback — AI Studio pakket:**
+
+Als alle automatische methodes zijn mislukt, toon het volgende pakket aan de gebruiker (kopieerklaar):
+
+---
+**Genereer de afbeelding zelf in Google AI Studio** — https://aistudio.google.com/
+
+**Model:** `gemini-2.0-flash-exp` (of `gemini-3-pro-image-preview` als beschikbaar)
+**Output type:** Image generation
+
+**Prompt** (kopieer dit):
+```
+[PANDA_PROMPT — de volledige opgebouwde Engelse prompt, bijv.:
+"A friendly cartoon red panda mascot in a navy blue business polo shirt
+with '[BEDRIJFSNAAM]' embroidered on the chest, standing confidently
+in a modern [SECTOR] office presenting AI solutions on a whiteboard.
+Professional illustration, clean white background."]
+```
+
+**Referentieafbeelding (optioneel, maar aanbevolen):**
+Upload deze afbeelding als reference in AI Studio: `https://files.catbox.moe/23dzti.png`
+(AI Panda panda-karakter — houdt de stijl consistent)
+
+---
+
+Gebruik daarna AskUserQuestion:
+- question: "Afbeelding kon niet automatisch worden gegenereerd. Plak hieronder een URL als je hem al hebt, of ga door zonder afbeelding — je kunt hem later zelf in Notion toevoegen."
+- header: "Afbeelding"
+- options:
+  - label: "Ga door, ik voeg de afbeelding zelf toe in Notion" (Recommended)
+  - label: "Ik heb een URL" (gebruiker plakt via Other-veld)
+
+Als de gebruiker een URL plakt via Other: gebruik die als PANDA_IMAGE_URL.
+Als de gebruiker "ga door" kiest: sla PANDA_IMAGE_URL op als lege string `""`. In stap 6 wordt de afbeeldingsregel dan weggelaten uit de Notion-content (niet een lege `![]()` sturen, maar de regel volledig overslaan).
 
 ### 5B — Roadmap content voorbereiden
 
@@ -559,10 +512,12 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 **Datum:** Gebruik formaat "DD maand YYYY" (bijv. "17 februari 2026").
 
+**Afbeelding:** Als PANDA_IMAGE_URL een lege string is (gebruiker genereert zelf), laat dan de eerste afbeeldingsregel volledig weg uit de content. Stuur nooit een lege `![]()`.
+
 ### Content template (AI Panda huisstijl):
 
 ```markdown
-![]([PANDA_IMAGE_URL])
+![]([PANDA_IMAGE_URL])          ← weglaten als PANDA_IMAGE_URL leeg is
 
 # AI Panda x [BEDRIJFSNAAM]
 
@@ -670,13 +625,42 @@ Ontdek in 2 minuten hoe ver [BEDRIJFSNAAM] staat met AI. Beantwoord 5 korte vrag
 
 ---
 
-## Stap 7: Bevestig het resultaat
+## Stap 8: Bevestig het resultaat (direct na Notion)
 
-Toon:
-1. Klantpagina aangemaakt
-2. Klantpagina: `[KLANTPAGINA_URL]` (klikbaar)
-3. Interactieve quiz: `[QUIZ_URL]` (klikbaar)
-4. Korte samenvatting: bedrijf, 2028-quote, consultants, roadmap en interactieve quiz gegenereerd
+Toon **zodra de Notion-pagina aangemaakt is**:
+
+```
+Klantpagina klaar voor [BEDRIJFSNAAM]!
+
+Notion-klantpagina: [KLANTPAGINA_URL]
+Interactieve quiz:  [QUIZ_URL]
+
+Toekomstvisie presentatie wordt nu gegenereerd...
+```
+
+---
+
+## Stap 7: Toekomstvisie presentatie genereren (Gamma)
+
+Voer dit uit NADAT de Notion-URL getoond is in stap 8. Gebruiker ziet zijn klantpagina meteen, Gamma draait als "bonus na de finish".
+
+Volg de instructies uit de `ai-toekomstvisie` skill. De benodigde variabelen zijn al beschikbaar:
+- BEDRIJFSNAAM, SECTOR, OMSCHRIJVING (verzameld in stap 2A)
+
+Voer stap 1 t/m 5 van de `ai-toekomstvisie` skill uit:
+1. Research: huisstijl + sectorprobleem (parallel)
+2. Verhaal schrijven
+3. Presentatie-outline opstellen (10 slides)
+4. Gamma presentatie genereren via MCP tool (themeId: `0r1msp6zfjh4o59`)
+5. GAMMA_URL opslaan
+
+Fallback: als Gamma faalt → toon de outline als Markdown in de chat, ga door.
+
+Zodra klaar, toon:
+
+```
+Toekomstvisie presentatie:  [GAMMA_URL]
+```
 
 ---
 
@@ -690,3 +674,4 @@ De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow s
 - Notion parent faalt → pagina zonder parent aanmaken
 - Quiz base64-encoding faalt → Python fallback gebruiken
 - Quiz-URL te lang → vraagteksten verkorten
+- Gamma generatie faalt → toon outline als Markdown, ga door

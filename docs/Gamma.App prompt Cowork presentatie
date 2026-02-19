@@ -1,0 +1,91 @@
+Prompt voor Gamma.app:
+Maak een presentatie van 10 slides in het Nederlands over Claude Cowork voor een intern publiek van AI-consultants (AIxcellerators) bij AI Panda, een Nederlands AI-consultancybedrijf.
+
+STIJL & TOON:
+- Direct, zelfverzekerd, actiegericht. Geen wollig taalgebruik.
+- Koppen zijn bold en pakkend met tegenstellingen. Cursiveer het kernwoord dat spanning draagt.
+- Korte zinnen, max 2-3 bullets per slide. Liever een krachtige oneliner dan een alinea.
+- Gebruik "je/jullie" en "wij" voor AI Panda.
+- Nederlands met gangbare Engelse vaktermen (agentic AI, plugins, skills, MCP).
+- Dit is een hoogover presentatie: weinig tekst, veel impact. Geen muren van tekst.
+
+VISUEEL:
+- Donkere achtergronden met oranje accenten (#FF6600) en witte tekst.
+- AI-gegenereerde afbeeldingen: fotorealistische panda in donker pak met oranje stropdas in zakelijke setting, warm cinematografisch licht, zelfverzekerde houding.
+- Sans-serif typografie. Strak en modern.
+- Tabellen met oranje headers.
+
+---
+
+SLIDE 1: TITEL
+"Claude Cowork — Van Chat Naar Gedaan"
+Subtitel: Interne kennisdeling | Februari 2026
+Tagline: AI Panda — Making AI Work For You
+
+SLIDE 2: DE EVOLUTIE
+"Chat → Code → Cowork"
+Drie stappen in één visual:
+- Chat: vragen stellen, antwoorden krijgen. Jij doet het werk.
+- Code: agentic kracht, maar alleen voor developers.
+- Cowork (jan 2026): diezelfde kracht, voor iedereen. Desktop-app, lokale bestanden, geïsoleerde VM.
+Oneliner: "Chat beantwoordt vragen. Cowork doet het werk."
+
+SLIDE 3: HOE HET WERKT
+"Onder de Motorkap"
+Vier kernpunten, elk max één zin:
+- Sandbox: draait in een geïsoleerde VM. Jij kiest welke mappen Claude mag zien.
+- Agentic: Claude maakt zelf een plan en voert het uit. Jij reviewt.
+- Parallel: meerdere taken tegelijk, wachtrij mogelijk.
+- Direct output: maakt DOCX, PPTX, XLSX, PDF direct aan. Geen copy-paste.
+
+SLIDE 4: PLUGINS, SKILLS & MCP
+"De Superkrachten"
+Drie features, elk max twee zinnen:
+- Skills: modulaire instructies per bestandstype. Worden alleen geladen wanneer relevant.
+- Plugins (30 jan 2026): vertel Claude hoe jij werkt — tools, data, workflows, slash-commands. 11 open-source bij launch, custom plugins eenvoudig te bouwen.
+- MCP & Apps: koppel met Slack, Figma, Box, Canva, Salesforce. Met Chrome-extensie ook browser-taken.
+
+SLIDE 5: GLOBAL & FOLDER INSTRUCTIONS
+"Context Die Blijft"
+- Global: stel je voorkeurtoon en werkwijze in, geldt voor elke sessie.
+- Folder: per klantmap specifieke instructies. Claude pakt automatisch de juiste context.
+- Voorbeeld: AI Panda tone-of-voice als global, klant-huisstijl als folder instruction.
+
+SLIDE 6: TOOL-VERGELIJKING
+"De Juiste Tool Voor de Juiste Taak"
+Compacte tabel met vier kolommen:
+
+Claude Chat — Snel antwoord, brainstorm | Geen bestanden, veel copy-paste | Snelle vragen
+Claude Code — Software bouwen, filesystem | Terminal, niet voor niet-devs | Codeprojecten  
+Claude Cowork — Documenten, research, multi-step | Geen auto-triggers, lokaal | Kenniswerk
+n8n — Altijd-aan automations, webhooks | Technische setup, geen denkkracht | Herhaalbare flows
+
+Oneliner: "Niet of-of, maar en-en. Weet wanneer je welke tool pakt."
+
+SLIDE 7: USE CASE 1
+"Workshop-Materiaal Op Maat"
+Geef Cowork je klantbriefing en huisstijl-guide → ontvang een compleet workshop-deck, hand-out en facilitator-guide in PPTX, DOCX en PDF. Van een middag werk naar 30 minuten review.
+
+SLIDE 8: USE CASE 2 & 3
+"Nieuwsbrief & Huisstijl-Toepassing"
+- Nieuwsbrief: Claude onderzoekt, schrijft in AI Panda tone-of-voice, levert kant-en-klaar op. Folder instructions zorgen voor consistentie.
+- Huisstijl: zet de klant-huisstijlguide als folder instruction → elk document automatisch on-brand.
+
+SLIDE 9: USE CASE 4 & 5
+"Klant-Research & Kennisbank"
+- Research: Cowork + Chrome levert een compleet klantprofiel met AI-volwassenheid, kansen en gespreksonderwerpen. Eén document, klaar voor je meeting.
+- Kennisbank: geef Claude je losse docs, cases en notities → gestructureerde kennisbank, automatisch gecategoriseerd.
+
+SLIDE 10: AFSLUITER
+"Let's Get To Work"
+Vijf stappen:
+1. Download claude.com/download
+2. Open Cowork
+3. Stel global instructions in
+4. Maak een klantmap met folder instructions
+5. Probeer deze week één use case
+
+Slotquote: "De tijd van vragen stellen is voorbij. Laat AI het werk doen."
+AI Panda — Let's Get To Work
+
+Gebruik in Gamma het Canaveral-thema (donker + oranje), zet de afbeeldingsbron op AI Generated, en kies 16:9 als formaat. De taal op Nederlands.
