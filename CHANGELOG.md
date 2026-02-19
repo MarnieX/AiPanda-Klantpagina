@@ -9,6 +9,26 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 
 *Geen wijzigingen.*
 
+## [2.2.0] - 2026-02-19
+
+Foolproof Gamma-presentaties: dynamische thema-validatie, bedrijfslogo in headerFooter, merkkleur-integratie en robuuste 4-staps fallback-keten. LESSONS-LEARNED verplaatst naar projectroot.
+
+### Added
+- **Gamma thema-validatie**: `get_themes` wordt aangeroepen vóór `generate`; zoekt op "panda"/"AI Panda" dan "canaveral", anders geen themeId
+- **Bedrijfslogo in Gamma**: `cardOptions.headerFooter.topRight` met bedrijfslogo via Logo.dev, alleen als WEBSITE_DOMEIN beschikbaar
+- **Merkkleur in Gamma**: primaire merkkleur meegeven als design note in `inputText` (slide 1) én als stijl-hint in `imageOptions.style`
+- **4-staps fallback-keten** bij Gamma-fouten: (1) volledig → (2) zonder cardOptions → (3) minimaal → (4) Markdown-fallback; elke poging logt wat is weggelaten
+- **Post-generatie URL-validatie**: controleert na elke Gamma-call of response een `https://`-URL bevat vóór acceptatie
+- **Conditionele stap 1A**: huisstijl-research overgeslagen als WEBSITE_DOMEIN + MERKKLEUR_PRIMAIR al meegegeven zijn
+- **WEBSITE_DOMEIN afleiden**: bij stap 1A zonder input leid WEBSITE_DOMEIN af uit WebSearch-resultaten als fallback
+- `LESSONS-LEARNED.md` verplaatst van `docs/` naar projectroot
+
+### Changed
+- **ai-toekomstvisie-v2 aanroep-interface**: accepteert nu ook `WEBSITE_DOMEIN` en `MERKKLEUR_PRIMAIR` als optionele inputparameters
+- **klantpagina-v2 stap 8**: geeft WEBSITE_DOMEIN + MERKKLEUR_PRIMAIR door aan ai-toekomstvisie-v2 (bespaart extra WebSearch-ronde)
+- **Fallback-beschrijving**: hardcoded themeId `0r1msp6zfjh4o59` vervangen door dynamische lookup
+- Plugin manifest versie: 2.1.0 → 2.2.0
+
 ## [2.1.0] - 2026-02-19
 
 OpenAI fallback, fotorealistische panda-prompt, bedrijfslogo-integratie, en robuustere externe services.
