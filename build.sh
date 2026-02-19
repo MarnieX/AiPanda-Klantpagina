@@ -33,17 +33,7 @@ cp "$SCRIPT_DIR/.claude/skills/ai-quiz-v2/SKILL.md" "$BUILD_PLUGIN/skills/ai-qui
 mkdir -p "$BUILD_PLUGIN/skills/ai-toekomstvisie-v2"
 cp "$SCRIPT_DIR/.claude/skills/ai-toekomstvisie-v2/SKILL.md" "$BUILD_PLUGIN/skills/ai-toekomstvisie-v2/SKILL.md"
 
-echo "  Syncing v1 skills (backwards compatibility)..."
-mkdir -p "$BUILD_PLUGIN/skills/klantpagina"
-cp "$SCRIPT_DIR/.claude/skills/klantpagina/SKILL.md" "$BUILD_PLUGIN/skills/klantpagina/SKILL.md"
-mkdir -p "$BUILD_PLUGIN/skills/gemini-image"
-cp "$SCRIPT_DIR/.claude/skills/gemini-image/SKILL.md" "$BUILD_PLUGIN/skills/gemini-image/SKILL.md"
-mkdir -p "$BUILD_PLUGIN/skills/ai-toekomstvisie"
-cp "$SCRIPT_DIR/.claude/skills/ai-toekomstvisie/SKILL.md" "$BUILD_PLUGIN/skills/ai-toekomstvisie/SKILL.md"
-if [ -d "$SCRIPT_DIR/.claude/skills/ai-quiz" ]; then
-  mkdir -p "$BUILD_PLUGIN/skills/ai-quiz"
-  cp "$SCRIPT_DIR/.claude/skills/ai-quiz/SKILL.md" "$BUILD_PLUGIN/skills/ai-quiz/SKILL.md"
-fi
+# V1 skills zijn gearchiveerd in .claude/skills/_archive/ en worden niet meegebundeld.
 
 echo "  Bundling runtime files..."
 cp "$SCRIPT_DIR/scripts/generate_notion_image.py" "$BUILD_PLUGIN/scripts/"
