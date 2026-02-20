@@ -262,7 +262,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "imagen-4-pro"
+  model: "flux-1-pro"
   style: "photorealistic, cinematic, modern corporate.
     Recurring character: a giant panda wearing a tailored black business suit
     with an orange tie, walking and working confidently among human colleagues
@@ -283,7 +283,7 @@ Waarbij `[LOGO_INSTRUCTIE]`:
 - Als LOGO_URL niet leeg: `"Feature the company logo ([LOGO_URL]) prominently on slide 1 (title slide) and slide 10 (closing slide) as part of the slide layout."`
 - Als LOGO_URL leeg: laat dit weg.
 
-### 4C — Fallback-keten Presentatie 1 (4 pogingen)
+### 4C — Fallback-keten Presentatie 1 (5 pogingen)
 
 **Belangrijk — timeout vs. echte fout:**
 
@@ -308,7 +308,7 @@ na een timeout leidt dan tot dubbele presentaties.
 
 ---
 
-**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
+**Poging 1 — Volledig (themeId + imageOptions met flux-1-pro):**
 
 Parameters:
 - Basis-parameters uit 4B
@@ -318,10 +318,21 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
+**Poging 2 — imagen-3-pro (themeId + imageOptions, expliciete fallback):**
 
 Alleen na echte API-fout op Poging 1.
-Log: "Poging 1 mislukt. Retry zonder model-specificatie (Gamma auto-select)."
+Log: "Poging 1 mislukt. Retry met imagen-3-pro."
+
+Parameters: basis-parameters uit 4B, maar met `imageOptions.model: "imagen-3-pro"` + `themeId` (als beschikbaar).
+
+Na de call: pas de timeout-check hierboven toe.
+
+---
+
+**Poging 3 — Geen model (themeId + imageOptions, Gamma auto-select):**
+
+Alleen na echte API-fout op Poging 2.
+Log: "Poging 2 mislukt. Retry zonder model-specificatie (Gamma auto-select)."
 
 Parameters: basis-parameters uit 4B, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
 
@@ -329,10 +340,10 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 3 — Minimaal (alleen basis, geen themeId, geen imageOptions):**
+**Poging 4 — Minimaal (alleen basis, geen themeId, geen imageOptions):**
 
-Alleen na echte API-fout op Poging 2.
-Log: "Poging 2 mislukt. Retry met minimale parameters."
+Alleen na echte API-fout op Poging 3.
+Log: "Poging 3 mislukt. Retry met minimale parameters."
 
 Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen imageOptions.
 
@@ -340,9 +351,9 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 4 — Markdown-fallback:**
+**Poging 5 — Markdown-fallback:**
 
-Alleen na echte API-fout op Poging 3.
+Alleen na echte API-fout op Poging 4.
 Log: "Alle Gamma-pogingen mislukt. Toon outline als Markdown."
 
 Toon de volledige outline als gestructureerde Markdown in de chat. Meld kort:
@@ -375,7 +386,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "imagen-4-pro"
+  model: "flux-1-pro"
   style: "photorealistic, cinematic, modern corporate.
     Recurring character: a giant panda wearing a tailored black business suit
     with a [MERKKLEUR_PRIMAIR_NAAM]-colored tie (hex: [MERKKLEUR_PRIMAIR]),
@@ -409,33 +420,42 @@ Waarbij `[LOGO_INSTRUCTIE]` dezelfde logica volgt als in Stap 4B.
 
 ---
 
-**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
+**Poging 1 — Volledig (themeId + imageOptions met flux-1-pro):**
 
 Parameters: basis-parameters Presentatie 2 + `themeId: "[GAMMA_THEME_ID_2]"` (als niet leeg).
 
 ---
 
-**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
+**Poging 2 — imagen-3-pro (themeId + imageOptions, expliciete fallback):**
 
 Alleen na echte API-fout op Poging 1.
-Log: "Presentatie 2 Poging 1 mislukt. Retry zonder model-specificatie."
+Log: "Presentatie 2 Poging 1 mislukt. Retry met imagen-3-pro."
+
+Parameters: basis-parameters Presentatie 2, maar met `imageOptions.model: "imagen-3-pro"` + `themeId` (als beschikbaar).
+
+---
+
+**Poging 3 — Geen model (themeId + imageOptions, Gamma auto-select):**
+
+Alleen na echte API-fout op Poging 2.
+Log: "Presentatie 2 Poging 2 mislukt. Retry zonder model-specificatie."
 
 Parameters: basis-parameters Presentatie 2, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
 
 ---
 
-**Poging 3 — Minimaal (geen themeId, geen imageOptions):**
+**Poging 4 — Minimaal (geen themeId, geen imageOptions):**
 
-Alleen na echte API-fout op Poging 2.
-Log: "Presentatie 2 Poging 2 mislukt. Retry met minimale parameters."
+Alleen na echte API-fout op Poging 3.
+Log: "Presentatie 2 Poging 3 mislukt. Retry met minimale parameters."
 
 Parameters: alleen `inputText`, `numCards: 10`, `textOptions`.
 
 ---
 
-**Poging 4 — Melding:**
+**Poging 5 — Melding:**
 
-Alleen na echte API-fout op Poging 3.
+Alleen na echte API-fout op Poging 4.
 Log: "Presentatie 2 alle pogingen mislukt."
 
 Sla GAMMA_URL_2 op als: `"niet beschikbaar — gebruik Presentatie 1"`
