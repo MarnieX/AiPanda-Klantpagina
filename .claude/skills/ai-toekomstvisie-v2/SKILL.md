@@ -13,10 +13,11 @@ description: >
 
 ## Doel
 
-Genereer een Gamma.app presentatie van 10 slides die een potentiële klant een concreet en
-inspirerend beeld geeft van hoe hun bedrijf er over 10 jaar uitziet met AI. De presentatie
-gebruikt de AI Panda huisstijl (oranje/zwart, futuristisch) en is geschikt als pitch-deck
-of opvolgmateriaal na een eerste gesprek.
+Genereer twee Gamma.app presentaties van elk 10 slides die een potentiële klant een concreet en
+inspirerend beeld geeft van hoe hun bedrijf er over 10 jaar uitziet met AI:
+
+- **Presentatie 1** — AI Panda huisstijl (oranje/zwart, futuristisch)
+- **Presentatie 2** — Klant huisstijl (merkkleuren + passend Gamma-thema)
 
 Het effect dat je wilt bereiken: de klant bekijkt de presentatie en denkt
 "dit zijn wij — en zo willen we zijn."
@@ -28,7 +29,7 @@ Het effect dat je wilt bereiken: de klant bekijkt de presentatie en denkt
 ```
 Input:  BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN (optioneel),
         MERKKLEUR_PRIMAIR (optioneel), MERKKLEUR_SECUNDAIR (optioneel), HUISSTIJL_KENMERK (optioneel)
-Output: GAMMA_URL (of "niet beschikbaar" bij fallback)
+Output: GAMMA_URL_1, GAMMA_URL_2 (of "niet beschikbaar" bij fallback)
 ```
 
 Als alle input-variabelen al beschikbaar zijn: ga direct naar stap 1 (research).
@@ -36,7 +37,9 @@ Als alle input-variabelen al beschikbaar zijn: ga direct naar stap 1 (research).
 Bekende themeId's (fallback als get_themes timet out):
 - AI Panda thema: `0r1msp6zfjh4o59`
 
-Stel bij start in: `GAMMA_THEME_ID = "0r1msp6zfjh4o59"` (startwaarde, wordt eventueel bijgewerkt in Stap 1C).
+Stel bij start in:
+- `GAMMA_THEME_ID_1 = "0r1msp6zfjh4o59"` (AI Panda, startwaarde)
+- `GAMMA_THEME_ID_2 = ""` (klant thema, wordt ingesteld in Stap 1C)
 
 ---
 
@@ -79,17 +82,47 @@ veiligheidsvraagstukken, regulatoire complexiteit), niet naar kleine efficiënti
 
 Sla op als: SECTORPROBLEEM (één zin die de kern beschrijft)
 
-### 1C — Gamma thema opzoeken
+### 1C — Gamma thema's opzoeken (AI Panda + klant)
 
-Stel direct in: `GAMMA_THEME_ID = "0r1msp6zfjh4o59"` (het AI Panda-thema, altijd de standaard).
+Stel direct in: `GAMMA_THEME_ID_1 = "0r1msp6zfjh4o59"` (het AI Panda-thema, altijd de standaard).
 
-Roep daarna `mcp__claude_ai_Gamma__get_themes` aan om te valideren:
+Roep daarna `mcp__claude_ai_Gamma__get_themes` aan om te valideren en GAMMA_THEME_ID_2 te bepalen:
+
+**Valideer AI Panda thema (GAMMA_THEME_ID_1):**
 - Succesvol: zoek naar een thema met "AI Panda" in de naam (hoofdletterongevoelig)
-  - Gevonden: update GAMMA_THEME_ID met het gevonden id (voor het geval het id gewijzigd is)
-  - Niet gevonden: houd GAMMA_THEME_ID op `"0r1msp6zfjh4o59"`
-- Timeout of fout: houd GAMMA_THEME_ID op `"0r1msp6zfjh4o59"`
+  - Gevonden: update GAMMA_THEME_ID_1 met het gevonden id (voor het geval het id gewijzigd is)
+  - Niet gevonden: houd GAMMA_THEME_ID_1 op `"0r1msp6zfjh4o59"`
+- Timeout of fout: houd GAMMA_THEME_ID_1 op `"0r1msp6zfjh4o59"`, sla klantthema-selectie over
 
-Log altijd: `"Thema: AI Panda (id: [GAMMA_THEME_ID])"`
+**Selecteer klant-thema (GAMMA_THEME_ID_2) — alleen als get_themes succesvol was:**
+
+Vertaal MERKKLEUR_PRIMAIR naar een kleurgroep:
+- rood/oranje/warm: hex met R>180, G<100, B<100 → colorKeywords: ["red", "warm", "dark", "bold"]
+- blauw/koel: hex met B>150, R<100 → colorKeywords: ["blue", "cool", "clean", "professional"]
+- groen/natuur: hex met G>150, R<100, B<100 → colorKeywords: ["green", "nature", "organic", "fresh"]
+- paars/violet: hex met R>100, B>150, G<100 → colorKeywords: ["purple", "violet", "dark", "luxe"]
+- donker (zwart/donkerblauw): lage waarden voor alle channels → colorKeywords: ["dark", "onyx", "night", "deep"]
+- licht/neutraal: hoge waarden voor alle channels → colorKeywords: ["light", "clean", "minimal", "neutral"]
+
+Haal toon-keywords uit HUISSTIJL_KENMERK + SECTOR:
+- "strak", "modern", "zakelijk" → toneKeywords: ["professional", "modern", "clean"]
+- "warm", "menselijk", "persoonlijk" → toneKeywords: ["warm", "friendly", "human"]
+- "tech", "innovatief", "digitaal" → toneKeywords: ["tech", "innovation", "digital"]
+- "duurzaam", "groen", "maatschappelijk" → toneKeywords: ["sustainable", "organic", "nature"]
+
+Doorzoek de themalijst en scoor elk thema (dat NIET "AI Panda" is):
+- +2 punten per match van thema-naam/beschrijving met colorKeywords
+- +1 punt per match met toneKeywords
+
+Kies het hoogst scorende thema. Sla op als GAMMA_THEME_ID_2 en GAMMA_THEME_NAAM_2.
+Als score 0 of alle thema's zijn "AI Panda": sla GAMMA_THEME_ID_2 op als `""` (Gamma kiest default).
+
+Sla ook op als MERKKLEUR_PRIMAIR_NAAM (kleurgroep-omschrijving in het Engels, bijv. "deep red",
+"royal blue", "forest green", "dark purple") — wordt gebruikt in Presentatie 2.
+
+Log altijd:
+- `"Thema 1: AI Panda (id: [GAMMA_THEME_ID_1])"`
+- `"Thema 2: [GAMMA_THEME_NAAM_2] (id: [GAMMA_THEME_ID_2])"` of `"Thema 2: Gamma default (geen match)"`
 
 ---
 
@@ -201,12 +234,12 @@ Als een punt niet klopt: corrigeer de outline voordat je doorgaat.
 
 ---
 
-## Stap 4: Gamma presentatie genereren
+## Stap 4: Presentatie 1 genereren — AI Panda huisstijl
 
 **Pre-check: is Gamma beschikbaar?**
 
 Controleer of `mcp__claude_ai_Gamma__generate` in de beschikbare tools staat. Als de tool
-ontbreekt (Gamma niet gekoppeld in Claude-instellingen), sla deze stap over en ga naar
+ontbreekt (Gamma niet gekoppeld in Claude-instellingen), sla stap 4 en 5 over en ga naar
 de **Fallback** onderaan.
 
 ### 4A — Bedrijfslogo ophalen
@@ -217,13 +250,10 @@ Als WEBSITE_DOMEIN beschikbaar en niet leeg:
 
 Als WEBSITE_DOMEIN niet beschikbaar of leeg: sla LOGO_URL op als leeg.
 
-### 4C — Gemeenschappelijke basis-parameters
+### 4B — Basis-parameters Presentatie 1
 
 ```
 inputText: [de volledige outline uit Stap 3 + de volledige VERHAAL_TEKST ingevuld op slide 5]
-
-Design note op slide 1: "Use [MERKKLEUR_PRIMAIR] as accent color throughout the
-presentation alongside the AI Panda orange (#F97316)."
 
 numCards: 10
 textOptions:
@@ -232,79 +262,79 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "flux-2-pro"
-  style: "photorealistic, cinematic, modern corporate. Recurring character: a giant panda wearing a tailored black business suit with orange tie, walking and working confidently among human colleagues as a regular executive — the panda belongs there. Brand colors: [MERKKLEUR_PRIMAIR] (primary) and [MERKKLEUR_SECUNDAIR] (secondary) as accent colors throughout. Visual style: [HUISSTIJL_KENMERK]."
-additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always as a confident professional among humans. Each [Scene: ...] note in the outline describes exactly what the panda does on that slide; follow those descriptions closely. On slides without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual thread that runs through the whole presentation. Use the brand colors [MERKKLEUR_PRIMAIR] and [MERKKLEUR_SECUNDAIR] as dominant accent colors in environments, lighting, and design elements. Incorporate the visual style '[HUISSTIJL_KENMERK]' in the overall aesthetic."
+  model: "imagen-4-pro"
+  style: "photorealistic, cinematic, modern corporate.
+    Recurring character: a giant panda wearing a tailored black business suit
+    with an orange tie, walking and working confidently among human colleagues
+    as a regular executive — the panda belongs there.
+    Brand colors: #F97316 (AI Panda orange) and #000000 (black) as dominant accent colors.
+    Visual style: [HUISSTIJL_KENMERK]."
+additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored
+  business suit with orange tie) naturally on at least 7 of the 10 slides. The panda leads
+  meetings, shakes hands, points at dashboards, drinks coffee, gives presentations — always
+  as a confident professional among humans. Each [Scene: ...] note in the outline describes
+  exactly what the panda does on that slide; follow those descriptions closely. On slides
+  without a [Scene] note, choose a fitting panda moment yourself. The panda is the visual
+  thread that runs through the whole presentation.
+  [LOGO_INSTRUCTIE]"
 ```
 
-Als MERKKLEUR_PRIMAIR leeg of `#F97316`, en MERKKLEUR_SECUNDAIR leeg of `#000000`:
-laat de merkkleur-vermeldingen weg uit `style` en `additionalInstructions`, maar houd
-de panda-karakterbeschrijving en HUISSTIJL_KENMERK intact (als die beschikbaar is).
+Waarbij `[LOGO_INSTRUCTIE]`:
+- Als LOGO_URL niet leeg: `"Feature the company logo ([LOGO_URL]) prominently on slide 1 (title slide) and slide 10 (closing slide) as part of the slide layout."`
+- Als LOGO_URL leeg: laat dit weg.
 
-**Let op:** Geef de volledige, uitgeschreven outline mee als `inputText`. Niet een samenvatting.
-
-### 4D — Fallback-keten (4 pogingen)
+### 4C — Fallback-keten Presentatie 1 (4 pogingen)
 
 **Belangrijk — timeout vs. echte fout:**
 
 De Gamma MCP-tool heeft een ingebouwde timeout (~30 seconden). Gamma-generatie duurt
 vaak langer. Een timeout betekent **niet** dat de aanvraag mislukt is — het request is
 al verzonden en Gamma werkt waarschijnlijk gewoon door op de achtergrond. Een nieuwe poging
-doet na een timeout leidt dan tot dubbele presentaties.
+na een timeout leidt dan tot dubbele presentaties.
 
 **Na elke call — bepaal het fouttype:**
 
-1. **Response bevat URL (begint met `https://`):** Succes. Sla op als GAMMA_URL, ga naar Stap 5.
+1. **Response bevat URL (begint met `https://`):** Succes. Sla op als GAMMA_URL_1, ga naar Stap 5.
 2. **Timeout-fout** (foutbericht bevat "timed out", "timeout" of "time out"):
    **STOP. Niet opnieuw proberen.**
    De presentatie wordt waarschijnlijk al gegenereerd.
    Toon aan de gebruiker:
    > "De Gamma-presentatie wordt aangemaakt maar het genereren duurt langer dan verwacht.
    > Bekijk je recente presentaties op: https://gamma.app/recent"
-   Sla GAMMA_URL op als: `"wordt gegenereerd — check gamma.app/recent"`
+   Sla GAMMA_URL_1 op als: `"wordt gegenereerd — check gamma.app/recent"`
    Ga naar Stap 5.
 3. **Echte API-fout** (foutbericht bevat statuscode 4xx/5xx, validatiefout, of tool ontbreekt):
    Log de fout, ga naar de volgende poging met minder parameters.
 
 ---
 
-**Poging 1 — Volledig (themeId + cardOptions met logo + imageOptions met merkkleur):**
+**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
 
 Parameters:
-- Basis-parameters uit 4C
-- `themeId: "[GAMMA_THEME_ID]"` (alleen als GAMMA_THEME_ID niet leeg)
-- `cardOptions` (alleen als LOGO_URL niet leeg):
-  ```
-  cardOptions:
-    headerFooter:
-      topRight:
-        type: "image"
-        source: "custom"
-        src: "[LOGO_URL]"
-  ```
+- Basis-parameters uit 4B
+- `themeId: "[GAMMA_THEME_ID_1]"` (alleen als GAMMA_THEME_ID_1 niet leeg)
 
 Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 2 — Zonder cardOptions (themeId + imageOptions, geen logo):**
+**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
 
 Alleen na echte API-fout op Poging 1.
-Log: "Poging 1 mislukt (mogelijke cardOptions-fout). Retry zonder logo."
+Log: "Poging 1 mislukt. Retry zonder model-specificatie (Gamma auto-select)."
 
-Parameters: basis-parameters uit 4C + `themeId` (als beschikbaar). Geen `cardOptions`.
+Parameters: basis-parameters uit 4B, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
 
 Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 3 — Minimaal (alleen basis, geen themeId, geen cardOptions, geen imageOptions):**
+**Poging 3 — Minimaal (alleen basis, geen themeId, geen imageOptions):**
 
 Alleen na echte API-fout op Poging 2.
 Log: "Poging 2 mislukt. Retry met minimale parameters."
 
-Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen cardOptions,
-geen imageOptions.
+Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen imageOptions.
 
 Na de call: pas de timeout-check hierboven toe.
 
@@ -319,20 +349,129 @@ Toon de volledige outline als gestructureerde Markdown in de chat. Meld kort:
 > "Gamma is niet beschikbaar of retourneert fouten. Kopieer de onderstaande outline en plak
 > hem op gamma.app → 'Nieuwe presentatie' → 'Importeer tekst'."
 
-Sla GAMMA_URL op als: `"niet beschikbaar"`
+Sla GAMMA_URL_1 op als: `"niet beschikbaar"`
 
 ---
 
-## Stap 5: Resultaat tonen
+## Stap 5: Presentatie 2 genereren — Klant huisstijl
 
-**Als Gamma geslaagd (GAMMA_URL begint met `https://`):**
-Toon aan de gebruiker:
-1. **Gamma presentatie**: [GAMMA_URL] (klikbaar)
-2. Kort overzicht van de 10 slides (titel per slide)
-3. Het sectorprobleem dat als kern is gekozen
-4. De EINDQUOTE die als pull quote op slide 10 staat
+**Overslaan-conditie:**
+Als `MERKKLEUR_PRIMAIR = "#F97316"` (of niet ingesteld / default AI Panda oranje): sla deze
+stap volledig over. Er is geen zinvol verschil met Presentatie 1.
+Log: "Stap 5 overgeslagen: merkkleur is AI Panda default."
+Sla GAMMA_URL_2 op als: `"overgeslagen (zelfde als Presentatie 1)"`
 
-**Als Gamma niet beschikbaar (fallback gebruikt):**
+---
+
+**Basis-parameters Presentatie 2:**
+
+```
+inputText: [zelfde outline als Presentatie 1 — hergebruik, geen herberekening]
+
+numCards: 10
+textOptions:
+  language: "nl"
+  tone: "professional"
+  audience: "business executives"
+imageOptions:
+  source: "aiGenerated"
+  model: "imagen-4-pro"
+  style: "photorealistic, cinematic, modern corporate.
+    Recurring character: a giant panda wearing a tailored black business suit
+    with a [MERKKLEUR_PRIMAIR_NAAM]-colored tie (hex: [MERKKLEUR_PRIMAIR]),
+    walking and working confidently among human colleagues as a regular
+    executive — the panda belongs there.
+    Brand colors: [MERKKLEUR_PRIMAIR] (primary) and [MERKKLEUR_SECUNDAIR]
+    (secondary) as accent colors throughout.
+    Visual style: [HUISSTIJL_KENMERK]."
+additionalInstructions: "Include the AI Panda character (a giant panda in a black tailored
+  business suit with a [MERKKLEUR_PRIMAIR_NAAM]-colored tie) naturally on at least 7 of the
+  10 slides. The panda leads meetings, shakes hands, points at dashboards, drinks coffee,
+  gives presentations — always as a confident professional among humans. Each [Scene: ...]
+  note in the outline describes exactly what the panda does on that slide; follow those
+  descriptions closely. On slides without a [Scene] note, choose a fitting panda moment
+  yourself. The panda is the visual thread that runs through the whole presentation.
+  Use the brand colors [MERKKLEUR_PRIMAIR] and [MERKKLEUR_SECUNDAIR] as dominant accent
+  colors in environments, lighting, and design elements.
+  Incorporate the visual style '[HUISSTIJL_KENMERK]' in the overall aesthetic.
+  [LOGO_INSTRUCTIE]"
+```
+
+Waarbij `[LOGO_INSTRUCTIE]` dezelfde logica volgt als in Stap 4B.
+
+**themeId:** GAMMA_THEME_ID_2 (als niet leeg; anders geen themeId opgeven).
+
+**Na elke call — zelfde timeout-check als Stap 4C:**
+
+1. Response bevat URL: succes. Sla op als GAMMA_URL_2, ga naar Stap 6.
+2. Timeout-fout: STOP. Sla op als `"wordt gegenereerd — check gamma.app/recent"`. Ga naar Stap 6.
+3. Echte API-fout: ga naar volgende poging.
+
+---
+
+**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
+
+Parameters: basis-parameters Presentatie 2 + `themeId: "[GAMMA_THEME_ID_2]"` (als niet leeg).
+
+---
+
+**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
+
+Alleen na echte API-fout op Poging 1.
+Log: "Presentatie 2 Poging 1 mislukt. Retry zonder model-specificatie."
+
+Parameters: basis-parameters Presentatie 2, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
+
+---
+
+**Poging 3 — Minimaal (geen themeId, geen imageOptions):**
+
+Alleen na echte API-fout op Poging 2.
+Log: "Presentatie 2 Poging 2 mislukt. Retry met minimale parameters."
+
+Parameters: alleen `inputText`, `numCards: 10`, `textOptions`.
+
+---
+
+**Poging 4 — Melding:**
+
+Alleen na echte API-fout op Poging 3.
+Log: "Presentatie 2 alle pogingen mislukt."
+
+Sla GAMMA_URL_2 op als: `"niet beschikbaar — gebruik Presentatie 1"`
+
+---
+
+## Stap 6: Resultaat tonen
+
+**Als beide presentaties geslaagd:**
+
+```
+## Toekomstvisie presentaties klaar voor [BEDRIJFSNAAM]
+
+**Presentatie 1 — AI Panda huisstijl:**
+→ [GAMMA_URL_1]
+
+**Presentatie 2 — [BEDRIJFSNAAM] huisstijl:**
+→ [GAMMA_URL_2]
+
+Slide-overzicht: [titels slide 1–10]
+Sectorprobleem: [SECTORPROBLEEM]
+Eindquote: "[EINDQUOTE]" — [QUOTE_PERSOON]
+```
+
+**Als Presentatie 2 overgeslagen (default kleuren):**
+
+Toon alleen Presentatie 1 met melding:
+> "Presentatie 2 is overgeslagen omdat de merkkleuren overeenkomen met de AI Panda huisstijl.
+> Presentatie 1 is de definitieve versie."
+
+**Als Presentatie 1 of 2 "niet beschikbaar":**
+
+Toon beschikbare URL's + melding welke mislukt is + fallback-instructie (gamma.app/recent of markdown-outline).
+
+**Als Gamma volledig niet beschikbaar (fallback gebruikt):**
+
 Toon de volledige outline als Markdown.
 Geef daarna ook mee:
 - Welk thema aanbevolen wordt op gamma.app: zoek op "AI Panda" of "Canaveral"
@@ -344,7 +483,7 @@ Geef daarna ook mee:
 
 - Research faalt → gebruik eigen sectorkennis, meld dit
 - MERKKLEUR_PRIMAIR niet gevonden → gebruik AI Panda oranje (#F97316) als accentkleur
-- WEBSITE_DOMEIN niet beschikbaar → sla logo-stap over, ga door zonder cardOptions
+- WEBSITE_DOMEIN niet beschikbaar → sla logo-stap over, ga door zonder logo-instructie
 - Gamma niet beschikbaar (tool ontbreekt) → toon outline als Markdown, verwijs naar gamma.app
-- get_themes faalt of timet out → gebruik hardcoded GAMMA_THEME_ID `"0r1msp6zfjh4o59"` (ingesteld in Stap 1C)
-- Gamma retourneert geen URL → retry met progressief minder parameters (zie 4D)
+- get_themes faalt of timet out → gebruik hardcoded GAMMA_THEME_ID_1 `"0r1msp6zfjh4o59"`, GAMMA_THEME_ID_2 `""`
+- Gamma retourneert geen URL → retry met progressief minder parameters (zie 4C / Stap 5)
