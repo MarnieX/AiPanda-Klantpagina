@@ -8,32 +8,23 @@ description: "Genereer een professionele Notion-klantpagina voor AI Panda. Orche
 Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde. Start parallelstappen altijd tegelijk om snelheid te winnen.
 
 Gebruik TodoWrite om voortgang te tonen:
-1. Bedrijfsnaam ophalen + API key checken
+1. API key check + bedrijf vragen
 2. Bedrijfsinfo + Excel laden (parallel)
 3. Consultants selecteren
-4. Bevestiging vragen
-5. Panda-afbeelding + roadmap + quiz-URL + 2028-quote (parallel)
-6. Notion-pagina aanmaken
-7. Toon Notion-URL + Quiz-URL direct
-8. Toekomstvisie presentatie genereren (Gamma, na de finish)
+4. Panda-afbeelding + roadmap + quiz-URL + 2028-quote (parallel)
+5. Notion-pagina aanmaken
+6. Toon Notion-URL + Quiz-URL direct
+7. Toekomstvisie presentatie genereren (Gamma, na de finish)
 
 ---
 
-## Stap 1: Vraag om bedrijf
-
-Vraag de gebruiker: "Voor welk bedrijf wil je een klantpagina maken? Geef de bedrijfsnaam of website-URL."
-
-Gebruik hiervoor GEEN AskUserQuestion (dat vereist opties). Stel de vraag als gewone tekst en wacht op het antwoord.
-
-Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
-
-### API key check (parallel met wachten op antwoord)
+## Fase 0: API key check (vóór alles)
 
 Controleer of API keys beschikbaar zijn via de MCP tool `check_api_keys`.
 
 **Response:** `{"gemini": true/false, "openai": true/false}`
 
-**Als minstens één key `true`:** Ga door (Gemini is primair, OpenAI is fallback).
+**Als minstens één key `true`:** Ga stil door.
 
 **Als beide `false`:** Vraag de key via AskUserQuestion:
 - question: "Geen API keys gevonden. Die heb ik nodig om een panda-afbeelding te genereren. Plak een Gemini of OpenAI API key hieronder. Gemini: https://aistudio.google.com/apikey — OpenAI: https://platform.openai.com/api-keys"
@@ -57,45 +48,41 @@ export OPENAI_API_KEY="[GEPLAKTE_KEY]"   # als OpenAI
 
 ---
 
-## Stap 2: Parallel ophalen (2A + 2B tegelijk)
+## Fase 1: Minimale input (2 vragen, sequentieel)
 
-### 2A — Bedrijfsinfo ophalen
+### Vraag 1 — Bedrijf
 
-Gebruik WebSearch met query: `"[klant] Nederland bedrijf sector omschrijving"`
+Vraag de gebruiker: "Voor welk bedrijf maak ik een klantpagina? (naam of website-URL)"
 
-Als KLANT_INPUT een URL of domein bevat, gebruik dat als WEBSITE_DOMEIN. Anders, leid het domein af uit de WebSearch-resultaten.
+Gebruik hiervoor GEEN AskUserQuestion (dat vereist opties). Stel de vraag als gewone tekst en wacht op het antwoord.
 
-Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoals ingetypt, omschrijving leeg laten voor bevestigingsstap.
+Sla op: KLANT_INPUT (naam of URL zoals ingetypt door gebruiker)
 
-Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
+**Parallel na vraag 1 (onzichtbaar voor gebruiker):**
+- WebSearch naar bedrijf → probeer sector + omvang te bepalen (zie fase 2A)
+- Excel laden via `read_team_excel` (zie fase 2B)
 
-**Huisstijl ophalen (direct na WebSearch, parallel uitvoeren als WEBSITE_DOMEIN bekend is):**
+### Vraag 1b — Sector/omvang (conditioneel)
 
-Doe een WebFetch op `https://[WEBSITE_DOMEIN]` en extraheer:
-- **MERKKLEUR_PRIMAIR** — de dominante merkkleur als hex-code (bijv. `#E63329`)
-- **MERKKLEUR_SECUNDAIR** — de tweede merkkleur als hex-code (bijv. `#1A1A1A`)
-- **HUISSTIJL_KENMERK** — één typisch visueel kenmerk dat het merk onderscheidt (bijv. "vetgedrukte sans-serif typografie met veel witruimte", "warme aardetinten en handgetekende illustraties", "strakke industriële uitstraling met metaalaccenten")
+Sla deze vraag over als de sector én bedrijfsomvang automatisch bepaald zijn via WebSearch.
 
-Fallback als WebFetch faalt of geen kleuren zichtbaar zijn:
-- MERKKLEUR_PRIMAIR = `#F97316` (AI Panda oranje)
-- MERKKLEUR_SECUNDAIR = `#000000`
-- HUISSTIJL_KENMERK = leeg string
+Alleen stellen als het bedrijf onbekend of onduidelijk is:
 
-**Sla alle zeven waarden op:** BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK
+Gebruik AskUserQuestion:
+- question: "Ik kan [KLANT_INPUT] niet automatisch vinden. In welke sector is dit bedrijf actief?"
+- header: "Sector"
+- options:
+  - "Retail / e-commerce"
+  - "Zorg / medisch"
+  - "Logistiek / transport"
+  - "Fintech / financiële diensten"
+  - "B2B / professionele dienstverlening"
+  - "Overig" (gebruiker typt zelf via Other)
+- multiSelect: false
 
-### 2B — Excel lezen via MCP
+### Vraag 2 — Consultants (zodra Excel klaar)
 
-Gebruik de MCP tool `read_team_excel` om alle teamleden op te halen.
-
-Parse de JSON-response:
-- Array → sla op als ALLE_TEAMLEDEN
-- Object met `error` → ga door zonder teamdata (fallback in stap 3)
-
-Fallback als MCP tool niet beschikbaar of faalt: ga door zonder teamdata, vraag namen handmatig in stap 3. GA ALTIJD DOOR.
-
----
-
-## Stap 3: Consultants selecteren
+Wacht tot de `read_team_excel` call uit de parallelstap klaar is, dan stel deze vraag.
 
 **Bij 4 of minder teamleden:** Gebruik AskUserQuestion met multiSelect:
 - question: "Welke consultants werken aan dit traject?"
@@ -111,42 +98,49 @@ Fallback als MCP tool niet beschikbaar of faalt: ga door zonder teamdata, vraag 
 
 Sla op: CONSULTANTS (lijst met naam, functie, foto_url, email per geselecteerde consultant, gematcht aan ALLE_TEAMLEDEN)
 
----
-
-## Stap 4: Bevestigingsscherm
-
-Toon de opgehaalde informatie overzichtelijk aan de gebruiker:
-
-```
-Samenvatting:
-
-Bedrijf: [BEDRIJFSNAAM]
-Website: [WEBSITE_DOMEIN]
-Sector: [SECTOR]
-
-Over het bedrijf:
-[OMSCHRIJVING]
-
-Consultants:
-- [NAAM_1] — [FUNCTIE_1]
-- [NAAM_2] — [FUNCTIE_2]
-```
-
-Gebruik daarna AskUserQuestion:
-- question: "Klopt bovenstaande informatie, of wil je iets aanpassen?"
-- header: "Bevestiging"
-- options:
-  - "Ziet er goed uit, ga door (Recommended)"
-  - "Bedrijfsinfo aanpassen"
-  - "Consultants aanpassen"
-
-Als de gebruiker wil aanpassen: vraag wat er anders moet en verwerk de correctie. Herhaal het bevestigingsscherm daarna niet opnieuw.
+> Na vraag 2: geen verdere vragen aan de gebruiker. Alles loopt automatisch door.
 
 ---
 
-## Stap 5: Parallel uitvoeren (5A + 5B + 5C + 5D tegelijk)
+## Fase 2: Parallel research (volledig automatisch)
 
-### 5A — AI Panda-afbeelding genereren
+Zodra vraag 2 beantwoord is, start alles tegelijk:
+
+### 2A — Bedrijfsinfo ophalen
+
+Gebruik WebSearch met query: `"[klant] Nederland bedrijf sector omschrijving"`
+
+Als KLANT_INPUT een URL of domein bevat, gebruik dat als WEBSITE_DOMEIN. Anders, leid het domein af uit de WebSearch-resultaten.
+
+Fallback: als WebSearch geen bruikbare resultaten oplevert, gebruik de naam zoals ingetypt.
+
+Sla op: BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN (bijv. `bol.com`, zonder https://)
+
+**Huisstijl ophalen (direct na WebSearch, als WEBSITE_DOMEIN bekend is):**
+
+Doe een WebFetch op `https://[WEBSITE_DOMEIN]` en extraheer:
+- **MERKKLEUR_PRIMAIR** — de dominante merkkleur als hex-code (bijv. `#E63329`)
+- **MERKKLEUR_SECUNDAIR** — de tweede merkkleur als hex-code (bijv. `#1A1A1A`)
+- **HUISSTIJL_KENMERK** — één typisch visueel kenmerk dat het merk onderscheidt (bijv. "vetgedrukte sans-serif typografie met veel witruimte")
+
+Fallback als WebFetch faalt of geen kleuren zichtbaar zijn:
+- MERKKLEUR_PRIMAIR = `#F97316` (AI Panda oranje)
+- MERKKLEUR_SECUNDAIR = `#000000`
+- HUISSTIJL_KENMERK = leeg string
+
+**Sla alle zeven waarden op:** BEDRIJFSNAAM, OMSCHRIJVING, SECTOR, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK
+
+### 2B — Excel lezen via MCP
+
+Gebruik de MCP tool `read_team_excel` om alle teamleden op te halen.
+
+Parse de JSON-response:
+- Array → sla op als ALLE_TEAMLEDEN
+- Object met `error` → ga door zonder teamdata (fallback in vraag 2)
+
+Fallback als MCP tool niet beschikbaar of faalt: ga door zonder teamdata. GA ALTIJD DOOR.
+
+### 2C — AI Panda-afbeelding genereren
 
 Gebruik de MCP tool `generate_panda_image` met alle beschikbare parameters:
 
@@ -161,34 +155,12 @@ De tool bouwt intern een fotorealistische prompt, haalt het bedrijfslogo op via 
 
 Parse de JSON-response:
 - `success: true` → `image_url` is PANDA_IMAGE_URL
-- `success: false` + `fallback_url` → gebruik `fallback_url` als PANDA_IMAGE_URL (of lege string als je liever geen placeholder toont)
-- `success: false` zonder `fallback_url` → ga naar de gemini-image-v2 skill fallback-keten (curl, browser JS, etc.)
+- `success: false` + `fallback_url` → gebruik `fallback_url` als PANDA_IMAGE_URL
+- `success: false` zonder `fallback_url` → PANDA_IMAGE_URL = lege string (afbeeldingsregel weggelaten in template)
 
-**Laatste fallback — AI Studio pakket:**
+**Stop NOOIT de flow bij een mislukte afbeelding. Vraag NOOIT om een URL aan de gebruiker.**
 
-Als alle automatische methodes zijn mislukt, toon het volgende pakket aan de gebruiker:
-
----
-**Genereer de afbeelding zelf in Google AI Studio** — https://aistudio.google.com/
-
-**Model:** `gemini-3-pro-image-preview`
-**Output type:** Image generation
-**Prompt** (kopieer dit): `[DE OPGEBOUWDE PANDA_PROMPT]`
-**Referentieafbeelding (optioneel):** `https://files.catbox.moe/23dzti.png`
-
----
-
-Gebruik daarna AskUserQuestion:
-- question: "Afbeelding kon niet automatisch worden gegenereerd. Plak hieronder een URL als je hem al hebt, of ga door zonder afbeelding."
-- header: "Afbeelding"
-- options:
-  - "Ga door, ik voeg de afbeelding zelf toe in Notion (Recommended)"
-  - "Ik heb een URL" (gebruiker plakt via Other-veld)
-
-Als URL geplakt: gebruik die als PANDA_IMAGE_URL.
-Als "ga door": PANDA_IMAGE_URL = lege string (afbeeldingsregel wordt weggelaten in template).
-
-### 5B — Roadmap content voorbereiden
+### 2D — Roadmap content voorbereiden
 
 Bereid de sector-specifieke roadmap voor (geen externe call nodig):
 
@@ -201,7 +173,7 @@ Maak elke fase specifiek voor SECTOR en BEDRIJFSNAAM. Vermijd generieke tekst. V
 
 Sla op als ROADMAP_CONTENT (markdown tekst voor fase 1 t/m 4).
 
-### 5C — Interactieve quiz genereren
+### 2E — Interactieve quiz genereren
 
 Voer de `ai-quiz-v2` skill uit in quick mode.
 
@@ -211,7 +183,7 @@ Volg de stappen van ai-quiz-v2 vanaf stap 1 (vragen genereren). Stap 4 (Notion-p
 
 Het resultaat is QUIZ_URL.
 
-### 5D — Medewerker-quote 2028 genereren
+### 2F — Medewerker-quote 2028 genereren
 
 Genereer een korte, pakkende quote (1-2 zinnen) van een fictieve medewerker van [BEDRIJFSNAAM], die beschrijft hoe hun werk er radicaal anders uitziet in 2028 dankzij AI.
 
@@ -226,13 +198,13 @@ Genereer een korte, pakkende quote (1-2 zinnen) van een fictieve medewerker van 
 
 Sla op: MEDEWERKER_QUOTE
 
+Wacht tot 2A + 2C + 2D + 2E + 2F klaar zijn.
+
 ---
 
-## Stap 6: Notion-pagina aanmaken
+## Fase 3: Notion-pagina aanmaken (automatisch)
 
-Wacht tot 5A, 5B, 5C en 5D klaar zijn.
-
-### 6A — Template lezen en invullen
+### 3A — Template lezen en invullen
 
 Lees het template uit `plugin/templates/klantpagina.md` (zoek via `CLAUDE_PLUGIN_ROOT/templates/klantpagina.md` of relatief pad).
 
@@ -242,7 +214,7 @@ Vervang alle `[VARIABELE]` placeholders met werkelijke waarden. Volg de instruct
 - Afbeelding weglaten als PANDA_IMAGE_URL leeg
 - Datum in formaat "DD maand YYYY"
 
-### 6B — Pre-validatie
+### 3B — Pre-validatie
 
 Controleer de ingevulde content voordat je de Notion API aanroept:
 - Geen lege `![]()` afbeeldingen
@@ -250,7 +222,7 @@ Controleer de ingevulde content voordat je de Notion API aanroept:
 - Alle kolommen hebben tab-ingesprongen children
 - Geen `[VARIABELE]` placeholders meer over
 
-### 6C — Notion-pagina aanmaken
+### 3C — Notion-pagina aanmaken
 
 Gebruik `notion-create-pages`.
 
@@ -262,7 +234,7 @@ De `parent` parameter is optioneel: laat weg voor workspace-niveau, of geef een 
 
 ---
 
-## Stap 7: Bevestig het resultaat (direct na Notion)
+## Fase 3 — Resultaat tonen (direct na Notion)
 
 Toon **zodra de Notion-pagina aangemaakt is**:
 
@@ -277,24 +249,28 @@ Toekomstvisie presentatie wordt nu gegenereerd...
 
 ---
 
-## Stap 8: Toekomstvisie presentatie genereren (Gamma)
+## Fase 4: Toekomstvisie genereren (automatisch, na Notion)
 
-Voer dit uit NADAT de Notion-URL getoond is in stap 7.
+Voer dit uit NADAT de Notion-URL getoond is.
 
 Voer de `ai-toekomstvisie-v2` skill uit in quick mode.
 
 Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR,
-MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK (alle uit stap 2A).
+MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK (alle uit fase 2A).
 
 Door deze variabelen mee te geven slaat ai-toekomstvisie-v2 stap 1A (huisstijl-research)
 automatisch over, omdat de data al beschikbaar is. Dit bespaart een extra WebFetch-ronde.
 
 Volg de stappen van ai-toekomstvisie-v2 vanaf stap 1 (research).
 
-Zodra klaar, toon:
+Zodra klaar, toon het eindresultaat:
 
 ```
-Toekomstvisie presentatie:  [GAMMA_URL]
+Alles klaar voor [BEDRIJFSNAAM]!
+
+Notion-klantpagina: [KLANTPAGINA_URL]
+Interactieve quiz:  [QUIZ_URL]
+Toekomstvisie:      [GAMMA_URL]
 ```
 
 ---
@@ -302,9 +278,9 @@ Toekomstvisie presentatie:  [GAMMA_URL]
 ## Foutafhandeling
 
 De skill moet ALTIJD een Notion-pagina opleveren. Geen enkele fout mag de flow stoppen:
-- WebSearch faalt → gebruiker vragen
-- Excel niet gevonden / MCP tool faalt → namen handmatig vragen
-- Panda-afbeelding generatie faalt → lege string, regel weglaten
+- WebSearch faalt → gebruik naam zoals ingetypt, ga door
+- Excel niet gevonden / MCP tool faalt → namen handmatig vragen in vraag 2
+- Panda-afbeelding generatie faalt → lege string, regel weglaten in template
 - Medewerker-quote generatie faalt → gebruik generieke quote, doorgaan
 - Notion parent faalt → pagina zonder parent aanmaken
 - Quiz base64-encoding faalt → Python fallback gebruiken
