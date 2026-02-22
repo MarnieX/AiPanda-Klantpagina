@@ -25,10 +25,10 @@ Een Claude Code plugin die het aanmaken van professionele Notion-klantpagina's v
 - Component review: alle 10 klantpagina-componenten doorgelopen en verbeterd
 - AI Toekomstvisie: Gamma.app presentatie van 10 slides met visionair transformatieverhaal
 - **Plugin v2.0.0: volledige herbouw met orchestrator-architectuur**
-  - klantpagina-v2: orchestrator (~220 regels, was 678) delegeert naar sub-skills via quick mode
-  - gemini-image-v2: quick mode + fallback_url handling
-  - ai-quiz-v2: quick mode + optionele Notion-pagina + Python-first base64
-  - ai-toekomstvisie-v2: quick mode + inline kwaliteitscheck
+  - klantpagina: orchestrator (~220 regels, was 678) delegeert naar sub-skills via quick mode
+  - gemini-image: quick mode + fallback_url handling
+  - ai-quiz: quick mode + optionele Notion-pagina + Python-first base64
+  - ai-toekomstvisie: quick mode + inline kwaliteitscheck
   - MCP server hernoemd naar panda-server.py met `read_team_excel` tool
   - Notion template geëxtraheerd naar apart bestand
   - Hooks verwijderd (quality check niet meer nodig)
@@ -58,7 +58,7 @@ Het project is een Claude Code plugin bestaande uit skills (Markdown workflows),
 /klantpagina command
     │
     ▼
-klantpagina-v2 (orchestrator, ~220 regels)
+klantpagina (orchestrator, ~220 regels)
     │
     ├── Stap 1: check_api_keys ──► panda-server.py (Gemini + OpenAI)
     ├── Stap 2B: read_team_excel ──► panda-server.py
@@ -66,13 +66,13 @@ klantpagina-v2 (orchestrator, ~220 regels)
     ├── Stap 5A: generate_panda_image ──► panda-server.py
     │       └── Gemini (ref+logo) → OpenAI (prompt-only) → fallback
     │
-    ├── Stap 5C: ai-quiz-v2 (quick mode, geen Notion-pagina)
+    ├── Stap 5C: ai-quiz (quick mode, geen Notion-pagina)
     │       └── Base64 encode + URL bouwen
     │
     ├── Stap 6: Leest plugin/templates/klantpagina.md
     │       └── notion-create-pages (Notion MCP)
     │
-    └── Stap 8: ai-toekomstvisie-v2 (quick mode)
+    └── Stap 8: ai-toekomstvisie (quick mode)
             └── mcp__claude_ai_Gamma__generate (Gamma MCP)
 ```
 
@@ -107,10 +107,10 @@ Gebruiker geeft bedrijfsnaam/URL op
 ```
 /
 ├── .claude/skills/
-│   ├── klantpagina-v2/SKILL.md          # v2 orchestrator
-│   ├── gemini-image-v2/SKILL.md         # v2 image generation (quick mode)
-│   ├── ai-quiz-v2/SKILL.md             # v2 quiz (quick mode)
-│   ├── ai-toekomstvisie-v2/SKILL.md    # v2 Gamma presentatie (quick mode)
+│   ├── klantpagina/SKILL.md          # v2 orchestrator
+│   ├── gemini-image/SKILL.md         # v2 image generation (quick mode)
+│   ├── ai-quiz/SKILL.md             # v2 quiz (quick mode)
+│   ├── ai-toekomstvisie/SKILL.md    # v2 Gamma presentatie (quick mode)
 │   ├── klantpagina/SKILL.md            # v1 (behouden)
 │   ├── ai-quiz/SKILL.md               # v1 (behouden)
 │   ├── gemini-image/SKILL.md           # v1 (behouden)

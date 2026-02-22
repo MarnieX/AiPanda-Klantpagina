@@ -1,5 +1,5 @@
 ---
-name: ai-toekomstvisie-v2
+name: ai-toekomstvisie
 description: >
   Genereer een visionaire AI-toekomstvisie voor een klant als Gamma.app presentatie van 10 slides
   in de AI Panda huisstijl. Schrijft een inspirerend 10-jaar transformatieverhaal en bouwt
@@ -7,9 +7,10 @@ description: >
 
   Aanroepen vanuit de klantpagina-skill na het aanmaken van de Notion-pagina, of standalone met:
   "maak een toekomstvisie voor [bedrijf]", "gamma presentatie voor [klant]".
+allowed-tools: Read, Write, Bash, WebFetch, WebSearch, AskUserQuestion, TodoWrite, mcp__claude_ai_Gamma__generate, mcp__claude_ai_Gamma__get_themes, mcp__claude_ai_Gamma__get_folders
 ---
 
-# AI Toekomstvisie — Gamma Presentatie v2
+# AI Toekomstvisie — Gamma Presentatie
 
 ## Doel
 
@@ -150,87 +151,168 @@ Sla op als: VERHAAL_TEKST, EINDQUOTE, QUOTE_PERSOON (naam + functie)
 
 ---
 
-## Stap 3: Presentatie-outline opstellen + kwaliteitscheck
+## Stap 3: Presentatie-outlines opstellen (parallel uitvoeren)
 
-Stel een gedetailleerde outline op voor 10 slides. Gebruik de vaste structuur hieronder
-en vul elk onderdeel in met specifieke content voor BEDRIJFSNAAM.
+Voer 3A en 3B tegelijkertijd uit. Sla de resultaten op als OUTLINE_1 (traject/partnership)
+en OUTLINE_2 (toekomstvisie). Beide outlines worden ingevuld met specifieke content voor BEDRIJFSNAAM.
+
+---
+
+### 3A — Outline Presentatie 1: Traject + Partnership (AI Panda huisstijl)
+
+Sla op als: OUTLINE_1
 
 ```
-Slide 1 — Titel
-"AI Panda x [BEDRIJFSNAAM]"
-Subtitel: [prikkelende stelling over de transformatie, max 12 woorden]
-Ondertitel: Toekomstvisie [huidig jaar + 10] | AI Panda
-[Scene: de AI Panda — een grote panda in zwart maatpak met oranje stropdas — staat zelfverzekerd vooraan in een glazen boardroom, armen gekruist, skyline op de achtergrond]
+Slide 1 — Samen naar de toekomst
+"[BEDRIJFSNAAM] × AI Panda"
+Subtitel: [persoonlijke stelling over het partnership, max 12 woorden]
+[Scene: de panda staat naast een medewerker van BEDRIJFSNAAM, schouder aan schouder,
+beiden kijkend naar de horizon — team, niet verkoper]
 
-Slide 2 — Het probleem van vandaag
+Slide 2 — Dit zijn jullie
+Kop: "[BEDRIJFSNAAM] vandaag"
+OMSCHRIJVING + 3 kernfeiten + TAGLINE als pull quote
+[Scene: geen panda — luchtfoto of sfeershot van locatie passend bij SECTOR]
+
+Slide 3 — De uitdaging van vandaag
 Kop: "Wat houdt [SECTOR] wakker?"
-Beschrijf het SECTORPROBLEEM concreet in 3-4 bullets.
-Sluit af: "Dit is niet een probleem van morgen. Het is het probleem van nu."
-[Scene: de panda staat voor een grote whiteboard vol frustrerende diagrammen en post-its, wijst er serieus naar terwijl collega's bezorgd toekijken]
+SECTORPROBLEEM in 3-4 concrete bullets voor BEDRIJFSNAAM
+[Scene: panda staat bij whiteboard met frustrerende diagrammen, collega's kijken bezorgd]
 
-Slide 3 — Wie is [BEDRIJFSNAAM]?
-Kop: "[BEDRIJFSNAAM] in één oogopslag"
-OMSCHRIJVING + 3 kernfeiten (grootte, bereik, marktpositie indien bekend)
-TAGLINE als pull quote
-[Scene: luchtfoto of wijd shot van het type locatie dat past bij SECTOR — geen panda op deze slide, puur het bedrijf]
+Slide 4 — Waar AI het verschil maakt
+Kop: "AI transformeert hoe jullie werken"
+3 concrete AI-kansen specifiek voor BEDRIJFSNAAM in SECTOR
+[Scene: panda en collega's kijken naar holografisch scherm met kansen en data]
 
-Slide 4 — Wat AI verandert
-Kop: "AI is geen tool. Het is een nieuwe manier van werken."
-3 kolommen: Vandaag | Over 3 jaar | Over 10 jaar
-Elk: 1 kernproces van BEDRIJFSNAAM in de SECTOR
-[Scene: de panda zit aan een vergadertafel en wijst naar een groot holografisch scherm met tijdlijn-data, collega's kijken gefascineerd toe]
+Slide 5 — Wie is AI Panda?
+Kop: "Jullie partner in het AI-tijdperk"
+Korte introductie AI Panda: aanpak, bewezen methode.
+Onderscheidend: niet alleen adviseren, maar ook daadwerkelijk implementeren.
+[Scene: panda geeft presentatie — zelfverzekerd, open, uitnodigend]
 
-Slide 5 — 2035: Een dag in het leven
-Kop: "Een gewone maandagochtend in [huidig jaar + 10]"
-De openingsscène van het verhaal (3-4 zinnen, levendig en concreet)
-[Scene: de panda loopt zelfverzekerd door een modern kantoor in MERKKLEUR_PRIMAIR-interieur, koffie in de hand, dashboard op schermen op de achtergrond — sfeer: gewone werkdag]
+Slide 6 — Onze aanpak
+Kop: "Hoe we samenwerken"
+AI Panda-methode in context van BEDRIJFSNAAM: wat dit per fase betekent (kort overzicht)
+[Scene: panda en klantteam werken samen aan tafel, whiteboard op achtergrond]
 
-Slide 6 — De doorbraak
-Kop: "Het probleem dat AI oploste"
-Beschrijf hoe het SECTORPROBLEEM fundamenteel is veranderd (2-3 zinnen)
-Contrast: "Vroeger: [korte beschrijving] → Nu: [korte beschrijving]"
-[Scene: dramatisch voor/na-beeld — links chaotisch en donker, rechts helder en geordend met de panda die triomfantelijk staat bij een scherm dat groene resultaten toont]
-
-Slide 7 — Bedrijfsbrede transformatie
-Kop: "Wat [BEDRIJFSNAAM] nu kan, wat concurrenten niet kunnen"
-3 bullets: specifieke competitieve voordelen die door AI zijn ontstaan
-Afsluit met marktpositie in [huidig jaar + 10]
-[Scene: de panda geeft een presentatie aan een grote zaal, professioneel en gezaghebbend, publiek kijkt aandachtig]
-
-Slide 8 — Kerngetallen
-Kop: "De cijfers achter de transformatie"
-4 grote getallen/feiten die letterlijk in het verhaal voorkomen
-Elk getal met 1 korte duiding (bijv: "3x sneller" — klantresponstijd gehalveerd)
-[Scene: close-up van de panda die tevreden naar een groot dashboard kijkt waarop de kerngetallen oplichten]
-
-Slide 9 — De roadmap
-Kop: "Van hier naar daar — met AI Panda"
-4 fases als tijdlijn:
-  Fase 1 Discovery (Week 1-2): [specifiek voor BEDRIJFSNAAM/SECTOR]
+Slide 7 — Het traject: 4 fases
+Kop: "Jouw AI-reis stap voor stap"
+Tijdlijn specifiek voor BEDRIJFSNAAM/SECTOR:
+  Fase 1 Discovery (Week 1-2): [specifiek]
   Fase 2 Pilot (Week 3-6): [specifiek]
   Fase 3 Implementatie (Week 7-12): [specifiek]
   Fase 4 Schaling (Week 13+): [specifiek]
-[Scene: de panda loopt als gids voorop een pad dat kronkelt van een beginpunt naar een stralend eindpunt, andere teamleden volgen — metafoor voor de reis]
+[Scene: panda loopt als gids voorop een kronkelend pad richting een stralend eindpunt]
 
-Slide 10 — De eerste stap
-Kop: "Klaar om te beginnen?"
-EINDQUOTE als grote pull quote
-Subtekst: "AI Panda begeleidt [BEDRIJFSNAAM] van visie naar werkelijkheid."
+Slide 8 — Wat jullie kunnen verwachten
+Kop: "Concrete resultaten"
+4 verwachte uitkomsten op basis van SECTOR/bedrijfstype, elk met korte duiding
+Bijv: "30% tijdsbesparing" — op handmatige rapportage
+[Scene: panda kijkt tevreden naar dashboard met groene resultaten]
+
+Slide 9 — De eerste stap
+Kop: "Vandaag beginnen we"
+Wat er concreet als eerste gaat gebeuren (Discovery fase), klein en concreet
+Tijdsinvestering: [specifiek, realistisch laagdrempelig]
+[Scene: panda steekt hand uit voor handdruk richting kijker, vriendelijk en uitnodigend]
+
+Slide 10 — Start de reis
+EINDQUOTE als grote pull quote (uit Stap 2)
+"Samen bouwen we aan jullie AI-toekomst."
 CTA: "Plan een kennismaking → aipanda.nl"
 AI Panda tagline: "Making AI Work For You"
-[Scene: de panda steekt de hand uit voor een handdruk richting de kijker, vriendelijk en uitnodigend, lichte achtergrond in MERKKLEUR_PRIMAIR]
+[Scene: panda en medewerker lopen schouder aan schouder richting verlichte deur/horizon]
 ```
 
-**Kwaliteitscheck (controleer voordat je naar stap 4 gaat):**
+**Kwaliteitscheck OUTLINE_1:**
+- Slide 5: Is "Wie is AI Panda?" genuanceerd en niet aanmatigend?
+- Slide 7: Is het traject SPECIFIEK voor BEDRIJFSNAAM/SECTOR (geen generieke fases)?
+- Slide 8: Zijn de verwachte resultaten REALISTISCH en sectorspecifiek?
 
-- Is de **prikkelende stelling** op slide 1 specifiek voor dit bedrijf (niet generiek)?
-- Beschrijft slide 5 iets wat **vandaag nog niet bestaat**?
-- Zit het **SECTORPROBLEEM** verwerkt in slide 2 én slide 6?
-- Komen de **kerngetallen** op slide 8 letterlijk voor in het verhaal?
-- Staat de **EINDQUOTE** letterlijk op slide 10?
-- Is de roadmap op slide 9 **specifiek** voor SECTOR en BEDRIJFSNAAM?
+Als een punt niet klopt: corrigeer OUTLINE_1 voordat je naar Stap 4 gaat.
 
-Als een punt niet klopt: corrigeer de outline voordat je doorgaat.
+---
+
+### 3B — Outline Presentatie 2: Toekomstvisie (klant huisstijl)
+
+Behoud de 10-slide visie-structuur maar verschuif het perspectief: de klant staat centraal,
+de panda is reisleider op de achtergrond (niet hoofdrolspeler).
+
+Sla op als: OUTLINE_2
+
+```
+Slide 1 — De toekomst van [BEDRIJFSNAAM]
+Hoofdtitel: "Zo ziet [BEDRIJFSNAAM] er uit in [huidig jaar + 10]"
+Subtitel: [prikkelende belofte over de transformatie, max 12 woorden — vanuit klantperspectief]
+Ondertitel: Toekomstvisie [huidig jaar + 10]
+[Scene: de panda staat ACHTER de medewerker, als vertrouwde gids die de weg wijst —
+de medewerker kijkt naar de toekomst, de panda begeleidt]
+
+Slide 2 — Het probleem van vandaag
+Kop: "Wat houdt [SECTOR] wakker?"
+SECTORPROBLEEM concreet in 3-4 bullets.
+"Dit is niet een probleem van morgen. Het is het probleem van nu."
+[Scene: chaotisch/druk kantoor — geen panda, puur het probleem]
+
+Slide 3 — Jullie fundament
+Kop: "Waar [BEDRIJFSNAAM] vandaan komt"
+OMSCHRIJVING + 3 kernfeiten (grootte, bereik, marktpositie)
+TAGLINE als pull quote — dit is WAT hen onderscheidt
+[Scene: luchtfoto of wijd shot passend bij SECTOR — geen panda]
+
+Slide 4 — Wat AI verandert
+Kop: "Zo transformeert jullie manier van werken"
+3 kolommen: Vandaag | Over 3 jaar | Over 10 jaar
+Elk: 1 kernproces van BEDRIJFSNAAM in de SECTOR
+[Scene: panda als gids naast holografisch scherm met tijdlijn-data, wijst richting toekomst]
+
+Slide 5 — [huidig jaar + 10]: Een dag in het leven van [BEDRIJFSNAAM]
+Kop: "Een gewone maandagochtend in [huidig jaar + 10]"
+De openingsscène van VERHAAL_TEKST (3-4 zinnen, levendig en concreet)
+[Scene: medewerker van BEDRIJFSNAAM in futuristisch kantoor, panda als vertrouwde collega op achtergrond]
+
+Slide 6 — De doorbraak
+Kop: "Het probleem dat verdween"
+Hoe SECTORPROBLEEM fundamenteel veranderd is (2-3 zinnen)
+Contrast: "Vroeger: [korte beschrijving] → Nu: [korte beschrijving]"
+[Scene: dramatisch voor/na — panda triumfantelijk bij groene resultaten]
+
+Slide 7 — Jullie transformatie
+Kop: "Wat [BEDRIJFSNAAM] nu kan, wat concurrenten niet kunnen"
+3 bullets: specifieke competitieve voordelen door AI
+Marktpositie in [huidig jaar + 10]
+[Scene: medewerkers van BEDRIJFSNAAM in futuristisch kantoor, panda op achtergrond als medestander]
+
+Slide 8 — De cijfers
+Kop: "De cijfers achter jullie transformatie"
+4 grote getallen/feiten die letterlijk in VERHAAL_TEKST voorkomen, elk met korte duiding
+[Scene: panda bij dashboard, cijfers oplichten]
+
+Slide 9 — De reis: hoe jullie hier komen
+Kop: "Van vandaag naar [huidig jaar + 10] — samen"
+4 fases als tijdlijn, specifiek voor BEDRIJFSNAAM/SECTOR:
+  Fase 1 Discovery (Week 1-2): [specifiek]
+  Fase 2 Pilot (Week 3-6): [specifiek]
+  Fase 3 Implementatie (Week 7-12): [specifiek]
+  Fase 4 Schaling (Week 13+): [specifiek]
+Subtiele vermelding: "AI Panda begeleidt jullie in elke stap."
+[Scene: panda als reisleider voorop een pad, teamleden volgen]
+
+Slide 10 — De uitnodiging
+Kop: "Klaar voor jullie toekomst?"
+EINDQUOTE als grote pull quote
+Subtekst: "AI Panda begeleidt [BEDRIJFSNAAM] van visie naar werkelijkheid."
+CTA: "Zet de eerste stap → aipanda.nl"
+[Scene: horizon/opengedraaide deur naar het licht, panda als gids in de verte — poëtisch]
+```
+
+**Kwaliteitscheck OUTLINE_2:**
+- Slide 1: Is de titel over BEDRIJFSNAAM (niet over AI Panda)?
+- Slide 5: Is de scène SPECIFIEK voor dit bedrijf (niet generiek)?
+- Slide 8: Komen de kerngetallen letterlijk voor in VERHAAL_TEKST?
+- Is de EINDQUOTE op slide 10 dezelfde als in Stap 2?
+
+Als een punt niet klopt: corrigeer OUTLINE_2 voordat je naar Stap 5 gaat.
 
 ---
 
@@ -253,7 +335,7 @@ Als WEBSITE_DOMEIN niet beschikbaar of leeg: sla LOGO_URL op als leeg.
 ### 4B — Basis-parameters Presentatie 1
 
 ```
-inputText: [de volledige outline uit Stap 3 + de volledige VERHAAL_TEKST ingevuld op slide 5]
+inputText: [OUTLINE_1 volledig ingevuld]
 
 numCards: 10
 textOptions:
@@ -262,7 +344,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "imagen-4-pro"
+  model: "flux-1-pro"
   style: "photorealistic, cinematic, modern corporate.
     Recurring character: a giant panda wearing a tailored black business suit
     with an orange tie, walking and working confidently among human colleagues
@@ -283,7 +365,7 @@ Waarbij `[LOGO_INSTRUCTIE]`:
 - Als LOGO_URL niet leeg: `"Feature the company logo ([LOGO_URL]) prominently on slide 1 (title slide) and slide 10 (closing slide) as part of the slide layout."`
 - Als LOGO_URL leeg: laat dit weg.
 
-### 4C — Fallback-keten Presentatie 1 (4 pogingen)
+### 4C — Fallback-keten Presentatie 1 (5 pogingen)
 
 **Belangrijk — timeout vs. echte fout:**
 
@@ -308,7 +390,7 @@ na een timeout leidt dan tot dubbele presentaties.
 
 ---
 
-**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
+**Poging 1 — Volledig (themeId + imageOptions met flux-1-pro):**
 
 Parameters:
 - Basis-parameters uit 4B
@@ -318,10 +400,21 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
+**Poging 2 — imagen-3-pro (themeId + imageOptions, expliciete fallback):**
 
 Alleen na echte API-fout op Poging 1.
-Log: "Poging 1 mislukt. Retry zonder model-specificatie (Gamma auto-select)."
+Log: "Poging 1 mislukt. Retry met imagen-3-pro."
+
+Parameters: basis-parameters uit 4B, maar met `imageOptions.model: "imagen-3-pro"` + `themeId` (als beschikbaar).
+
+Na de call: pas de timeout-check hierboven toe.
+
+---
+
+**Poging 3 — Geen model (themeId + imageOptions, Gamma auto-select):**
+
+Alleen na echte API-fout op Poging 2.
+Log: "Poging 2 mislukt. Retry zonder model-specificatie (Gamma auto-select)."
 
 Parameters: basis-parameters uit 4B, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
 
@@ -329,10 +422,10 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 3 — Minimaal (alleen basis, geen themeId, geen imageOptions):**
+**Poging 4 — Minimaal (alleen basis, geen themeId, geen imageOptions):**
 
-Alleen na echte API-fout op Poging 2.
-Log: "Poging 2 mislukt. Retry met minimale parameters."
+Alleen na echte API-fout op Poging 3.
+Log: "Poging 3 mislukt. Retry met minimale parameters."
 
 Parameters: alleen `inputText`, `numCards: 10`, `textOptions`. Geen themeId, geen imageOptions.
 
@@ -340,9 +433,9 @@ Na de call: pas de timeout-check hierboven toe.
 
 ---
 
-**Poging 4 — Markdown-fallback:**
+**Poging 5 — Markdown-fallback:**
 
-Alleen na echte API-fout op Poging 3.
+Alleen na echte API-fout op Poging 4.
 Log: "Alle Gamma-pogingen mislukt. Toon outline als Markdown."
 
 Toon de volledige outline als gestructureerde Markdown in de chat. Meld kort:
@@ -366,7 +459,7 @@ Sla GAMMA_URL_2 op als: `"overgeslagen (zelfde als Presentatie 1)"`
 **Basis-parameters Presentatie 2:**
 
 ```
-inputText: [zelfde outline als Presentatie 1 — hergebruik, geen herberekening]
+inputText: [OUTLINE_2 volledig ingevuld, met VERHAAL_TEKST ingevuld op slide 5]
 
 numCards: 10
 textOptions:
@@ -375,7 +468,7 @@ textOptions:
   audience: "business executives"
 imageOptions:
   source: "aiGenerated"
-  model: "imagen-4-pro"
+  model: "flux-1-pro"
   style: "photorealistic, cinematic, modern corporate.
     Recurring character: a giant panda wearing a tailored black business suit
     with a [MERKKLEUR_PRIMAIR_NAAM]-colored tie (hex: [MERKKLEUR_PRIMAIR]),
@@ -409,33 +502,42 @@ Waarbij `[LOGO_INSTRUCTIE]` dezelfde logica volgt als in Stap 4B.
 
 ---
 
-**Poging 1 — Volledig (themeId + imageOptions met imagen-4-pro):**
+**Poging 1 — Volledig (themeId + imageOptions met flux-1-pro):**
 
 Parameters: basis-parameters Presentatie 2 + `themeId: "[GAMMA_THEME_ID_2]"` (als niet leeg).
 
 ---
 
-**Poging 2 — Geen model (themeId + imageOptions, Gamma auto-select):**
+**Poging 2 — imagen-3-pro (themeId + imageOptions, expliciete fallback):**
 
 Alleen na echte API-fout op Poging 1.
-Log: "Presentatie 2 Poging 1 mislukt. Retry zonder model-specificatie."
+Log: "Presentatie 2 Poging 1 mislukt. Retry met imagen-3-pro."
+
+Parameters: basis-parameters Presentatie 2, maar met `imageOptions.model: "imagen-3-pro"` + `themeId` (als beschikbaar).
+
+---
+
+**Poging 3 — Geen model (themeId + imageOptions, Gamma auto-select):**
+
+Alleen na echte API-fout op Poging 2.
+Log: "Presentatie 2 Poging 2 mislukt. Retry zonder model-specificatie."
 
 Parameters: basis-parameters Presentatie 2, maar zonder `imageOptions.model` + `themeId` (als beschikbaar).
 
 ---
 
-**Poging 3 — Minimaal (geen themeId, geen imageOptions):**
+**Poging 4 — Minimaal (geen themeId, geen imageOptions):**
 
-Alleen na echte API-fout op Poging 2.
-Log: "Presentatie 2 Poging 2 mislukt. Retry met minimale parameters."
+Alleen na echte API-fout op Poging 3.
+Log: "Presentatie 2 Poging 3 mislukt. Retry met minimale parameters."
 
 Parameters: alleen `inputText`, `numCards: 10`, `textOptions`.
 
 ---
 
-**Poging 4 — Melding:**
+**Poging 5 — Melding:**
 
-Alleen na echte API-fout op Poging 3.
+Alleen na echte API-fout op Poging 4.
 Log: "Presentatie 2 alle pogingen mislukt."
 
 Sla GAMMA_URL_2 op als: `"niet beschikbaar — gebruik Presentatie 1"`

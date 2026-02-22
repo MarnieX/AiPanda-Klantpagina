@@ -54,14 +54,14 @@ Claude Cowork
 /klantpagina command
     │
     ▼
-klantpagina-v2 skill (orchestrator)
+klantpagina skill (orchestrator)
     ├── WebSearch + WebFetch ──── bedrijfsinfo + merkkleuren
     ├── panda-server MCP ──────── read_team_excel, generate_panda_image
     ├── Notion MCP ────────────── pagina aanmaken
     └── Sub-skills (parallel):
-            ├── gemini-image-v2 ─ AI Panda hero-afbeelding
-            ├── ai-quiz-v2 ────── interactieve Readiness Quiz
-            └── ai-toekomstvisie-v2 ── Gamma presentatie
+            ├── gemini-image ─ AI Panda hero-afbeelding
+            ├── ai-quiz ────── interactieve Readiness Quiz
+            └── ai-toekomstvisie ── Gamma presentatie
 ```
 
 ### Panda-afbeelding fallback-keten
@@ -85,7 +85,7 @@ Poging 1: flux-2-pro + themeId + logo in header + merkkleuren
 
 ## 🧩 Skills
 
-### 🎯 `klantpagina-v2` — De orchestrator
+### 🎯 `klantpagina` — De orchestrator
 De hoofdskill. Coördineert alle sub-skills, leest het teambestand, haalt bedrijfsinfo op, en bouwt de Notion-pagina vanuit een template. Paralleliseert zoveel mogelijk om snelheid te winnen.
 
 **Input:** bedrijfsnaam of URL
@@ -93,7 +93,7 @@ De hoofdskill. Coördineert alle sub-skills, leest het teambestand, haalt bedrij
 
 ---
 
-### 🖼️ `gemini-image-v2` — AI-beeldgeneratie
+### 🖼️ `gemini-image` — AI-beeldgeneratie
 Genereert fotorealistische panda-afbeeldingen via Gemini (primair) of OpenAI (fallback). Werkt standalone én vanuit andere skills via quick mode. Gebruikt `panda-reference.png` als multimodal referentie voor stijlconsistentie.
 
 **Input:** Engelse prompt
@@ -101,7 +101,7 @@ Genereert fotorealistische panda-afbeeldingen via Gemini (primair) of OpenAI (fa
 
 ---
 
-### 🧠 `ai-quiz-v2` — Interactieve Readiness Quiz
+### 🧠 `ai-quiz` — Interactieve Readiness Quiz
 Genereert 5 sector-specifieke quizvragen als JSON, base64-encodeert ze en bouwt een klikbare URL naar de GitHub Pages quiz-app. Geen server nodig — alles zit in de URL.
 
 **Input:** bedrijfsnaam, sector
@@ -109,7 +109,7 @@ Genereert 5 sector-specifieke quizvragen als JSON, base64-encodeert ze en bouwt 
 
 ---
 
-### 🎬 `ai-toekomstvisie-v2` — Gamma Presentatie
+### 🎬 `ai-toekomstvisie` — Gamma Presentatie
 Schrijft een visionair 10-jaar transformatieverhaal voor de klant en bouwt daar een professionele Gamma.app pitch-presentatie van 10 slides van. De panda verschijnt als terugkerend karakter op minstens 7 slides. Gebruikt merkkleuren en het bedrijfslogo automatisch.
 
 **Input:** bedrijfsnaam, sector, omschrijving, merkkleuren (optioneel)
@@ -173,10 +173,10 @@ Zonder keys werkt de plugin gewoon door — met een placeholder-afbeelding.
 
 ```
 .claude/skills/
-  klantpagina-v2/         Orchestrator skill
-  gemini-image-v2/        AI-beeldgeneratie skill
-  ai-quiz-v2/             Quiz-generator skill
-  ai-toekomstvisie-v2/    Gamma-presentatie skill
+  klantpagina/         Orchestrator skill
+  gemini-image/        AI-beeldgeneratie skill
+  ai-quiz/             Quiz-generator skill
+  ai-toekomstvisie/    Gamma-presentatie skill
   _archive/               Gearchiveerde v1 skills (niet actief)
 
 plugin/

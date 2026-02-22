@@ -33,14 +33,6 @@ else
     echo "   → Oplossing: voer build.sh uit om de plugin opnieuw te bouwen"
 fi
 
-SCRIPT=$(find /sessions ~ -maxdepth 10 -name "generate_notion_image.py" 2>/dev/null | head -1)
-if [ -n "$SCRIPT" ]; then
-    echo "✅ Image script (generate_notion_image.py): $SCRIPT"
-else
-    echo "⚠️  Image script: niet gevonden (curl-fallback wordt gebruikt)"
-fi
-echo ""
-
 echo "--- Python dependencies ---"
 python3 -c "import openpyxl; print('✅ openpyxl: OK')" 2>/dev/null \
     || echo "⚠️  openpyxl: ontbreekt → pip install openpyxl --break-system-packages"

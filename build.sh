@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build script for ai-panda-klantpagina.plugin v2
+# Build script for ai-panda-klantpagina.plugin
 # Assembles an isolated build at dist/plugin and packages it as a ZIP.
 #
 # Usage: ./build.sh
@@ -12,7 +12,7 @@ PLUGIN_SRC="$SCRIPT_DIR/plugin"
 BUILD_ROOT="$SCRIPT_DIR/dist"
 BUILD_PLUGIN="$BUILD_ROOT/plugin"
 
-echo "Building ai-panda-klantpagina.plugin v2..."
+echo "Building ai-panda-klantpagina.plugin..."
 
 echo "  Preparing build workspace..."
 rm -rf "$BUILD_PLUGIN"
@@ -23,20 +23,19 @@ cp -R "$PLUGIN_SRC"/. "$BUILD_PLUGIN"/
 rm -rf "$BUILD_PLUGIN/skills" "$BUILD_PLUGIN/scripts" "$BUILD_PLUGIN/data" "$BUILD_PLUGIN/assets"
 mkdir -p "$BUILD_PLUGIN/skills" "$BUILD_PLUGIN/scripts" "$BUILD_PLUGIN/data" "$BUILD_PLUGIN/assets"
 
-echo "  Syncing v2 skills from .claude/skills..."
-mkdir -p "$BUILD_PLUGIN/skills/klantpagina-v2"
-cp "$SCRIPT_DIR/.claude/skills/klantpagina-v2/SKILL.md" "$BUILD_PLUGIN/skills/klantpagina-v2/SKILL.md"
-mkdir -p "$BUILD_PLUGIN/skills/gemini-image-v2"
-cp "$SCRIPT_DIR/.claude/skills/gemini-image-v2/SKILL.md" "$BUILD_PLUGIN/skills/gemini-image-v2/SKILL.md"
-mkdir -p "$BUILD_PLUGIN/skills/ai-quiz-v2"
-cp "$SCRIPT_DIR/.claude/skills/ai-quiz-v2/SKILL.md" "$BUILD_PLUGIN/skills/ai-quiz-v2/SKILL.md"
-mkdir -p "$BUILD_PLUGIN/skills/ai-toekomstvisie-v2"
-cp "$SCRIPT_DIR/.claude/skills/ai-toekomstvisie-v2/SKILL.md" "$BUILD_PLUGIN/skills/ai-toekomstvisie-v2/SKILL.md"
+echo "  Syncing skills from .claude/skills..."
+mkdir -p "$BUILD_PLUGIN/skills/klantpagina"
+cp "$SCRIPT_DIR/.claude/skills/klantpagina/SKILL.md" "$BUILD_PLUGIN/skills/klantpagina/SKILL.md"
+mkdir -p "$BUILD_PLUGIN/skills/gemini-image"
+cp "$SCRIPT_DIR/.claude/skills/gemini-image/SKILL.md" "$BUILD_PLUGIN/skills/gemini-image/SKILL.md"
+mkdir -p "$BUILD_PLUGIN/skills/ai-quiz"
+cp "$SCRIPT_DIR/.claude/skills/ai-quiz/SKILL.md" "$BUILD_PLUGIN/skills/ai-quiz/SKILL.md"
+mkdir -p "$BUILD_PLUGIN/skills/ai-toekomstvisie"
+cp "$SCRIPT_DIR/.claude/skills/ai-toekomstvisie/SKILL.md" "$BUILD_PLUGIN/skills/ai-toekomstvisie/SKILL.md"
 
 # V1 skills zijn gearchiveerd in .claude/skills/_archive/ en worden niet meegebundeld.
 
 echo "  Bundling runtime files..."
-cp "$SCRIPT_DIR/scripts/generate_notion_image.py" "$BUILD_PLUGIN/scripts/"
 cp "$SCRIPT_DIR/data/ai-panda-team.xlsx" "$BUILD_PLUGIN/data/"
 cp "$SCRIPT_DIR/assets/panda-reference.png" "$BUILD_PLUGIN/assets/"
 

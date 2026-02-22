@@ -149,7 +149,7 @@ def _fetch_logo_b64(domain: str) -> str | None:
                 ["curl", "-sL", "-o", "-", url],
                 capture_output=True, timeout=10,
             )
-            if result.returncode == 0 and len(result.stdout) > 100:
+            if result.returncode == 0 and len(result.stdout) > 10_000:
                 logger.info("Logo resolved for domain '%s' via %s", domain, url.split("?")[0])
                 return base64.b64encode(result.stdout).decode()
             logger.warning("Logo fetch attempt failed for domain '%s' via %s", domain, url.split("?")[0])
