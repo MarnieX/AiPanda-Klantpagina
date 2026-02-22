@@ -14,12 +14,12 @@ Dit project volgt [Semantic Versioning](https://semver.org/lang/nl/).
 Visuele verrijking en robuustheid: panda-karakter in elke Gamma-slide, merkkleuren doorheen de hele flow, landscape hero-afbeelding, Gemini-model vastgezet en Gamma image-model gecorrigeerd.
 
 ### Added
-- **Terugkerend panda-karakter**: ai-toekomstvisie-v2 stuurt per slide een [Scene: ...] hint zodat de panda op minstens 7 van de 10 slides verschijnt
-- **Merkkleur-extractie vroeg in de flow**: klantpagina-v2 stap 2A haalt nu MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR en HUISSTIJL_KENMERK op via WebSearch/WebFetch; beschikbaar voor de hele flow
+- **Terugkerend panda-karakter**: ai-toekomstvisie stuurt per slide een [Scene: ...] hint zodat de panda op minstens 7 van de 10 slides verschijnt
+- **Merkkleur-extractie vroeg in de flow**: klantpagina stap 2A haalt nu MERKKLEUR_PRIMAIR, MERKKLEUR_SECUNDAIR en HUISSTIJL_KENMERK op via WebSearch/WebFetch; beschikbaar voor de hele flow
 
 ### Changed
 - **Hero-afbeelding landscape**: panda-server.py genereert nu 16:9 afbeeldingen (Gemini `aspectRatio: 16:9`, OpenAI `1792x1024`)
-- **Gemini model vastgezet**: gemini-image-v2/SKILL.md bevat nu een expliciete verbodsbepaling — model altijd `gemini-3-pro-image-preview`, nooit opzoeken of wisselen
+- **Gemini model vastgezet**: gemini-image/SKILL.md bevat nu een expliciete verbodsbepaling — model altijd `gemini-3-pro-image-preview`, nooit opzoeken of wisselen
 - **Gamma image-model gecorrigeerd**: `flux-kontext-max` (PRO-only) vervangen door `flux-2-pro` (beschikbaar op standaardplan)
 - **Gamma timeout-gedrag**: timeout wordt niet meer als fout behandeld; skill stopt en verwijst naar gamma.app/recent — geen dubbele presentaties
 - **V1 skills gearchiveerd**: verplaatst naar `.claude/skills/_archive/`, niet meer meegebundeld in de plugin
@@ -41,8 +41,8 @@ Foolproof Gamma-presentaties: dynamische thema-validatie, bedrijfslogo in header
 - `LESSONS-LEARNED.md` verplaatst van `docs/` naar projectroot
 
 ### Changed
-- **ai-toekomstvisie-v2 aanroep-interface**: accepteert nu ook `WEBSITE_DOMEIN` en `MERKKLEUR_PRIMAIR` als optionele inputparameters
-- **klantpagina-v2 stap 8**: geeft WEBSITE_DOMEIN + MERKKLEUR_PRIMAIR door aan ai-toekomstvisie-v2 (bespaart extra WebSearch-ronde)
+- **ai-toekomstvisie aanroep-interface**: accepteert nu ook `WEBSITE_DOMEIN` en `MERKKLEUR_PRIMAIR` als optionele inputparameters
+- **klantpagina stap 8**: geeft WEBSITE_DOMEIN + MERKKLEUR_PRIMAIR door aan ai-toekomstvisie (bespaart extra WebSearch-ronde)
 - **Fallback-beschrijving**: hardcoded themeId `0r1msp6zfjh4o59` vervangen door dynamische lookup
 - Plugin manifest versie: 2.1.0 → 2.2.0
 
@@ -67,8 +67,8 @@ OpenAI fallback, fotorealistische panda-prompt, bedrijfslogo-integratie, en robu
 - **Logo API**: Clearbit (sunset dec 2025) vervangen door Logo.dev + Google Favicons fallback
 - **Upload primair**: catbox.moe (was 0x0.st, nu 403). tmpfiles.org als fallback
 - **Logo fetching**: `urllib.request` vervangen door `subprocess` + `curl` (voorkomt Python SSL-certificaatproblemen)
-- **gemini-image-v2 skill**: stap 2 checkt nu beide API keys, fallback-keten bevat OpenAI, curl-fallbacks gebruiken catbox/tmpfiles
-- **klantpagina-v2 skill**: API key check gebruikt `check_api_keys`, stap 5A gebruikt `generate_panda_image` MCP tool met `sector` + `website` parameters
+- **gemini-image skill**: stap 2 checkt nu beide API keys, fallback-keten bevat OpenAI, curl-fallbacks gebruiken catbox/tmpfiles
+- **klantpagina skill**: API key check gebruikt `check_api_keys`, stap 5A gebruikt `generate_panda_image` MCP tool met `sector` + `website` parameters
 - Plugin manifest versie: 2.0.0 → 2.1.0
 
 ### Removed
@@ -82,10 +82,10 @@ OpenAI fallback, fotorealistische panda-prompt, bedrijfslogo-integratie, en robu
 Volledige herbouw van de plugin met orchestrator-architectuur. Alle 4 skills herschreven als v2 met quick mode, MCP server uitgebreid, template geëxtraheerd, hooks verwijderd.
 
 ### Added
-- **klantpagina-v2 skill**: orchestrator (~220 regels, was 678) die delegeert naar sub-skills via quick mode
-- **gemini-image-v2 skill**: quick mode interface, fallback_url logica bij MCP response, opgeschoonde diagnostics
-- **ai-quiz-v2 skill**: quick mode interface, optionele Notion-pagina (alleen standalone), Python-first base64 encoding
-- **ai-toekomstvisie-v2 skill**: quick mode interface, kwaliteitscheck inline verplaatst naar stap 3 (pre-validatie)
+- **klantpagina skill**: orchestrator (~220 regels, was 678) die delegeert naar sub-skills via quick mode
+- **gemini-image skill**: quick mode interface, fallback_url logica bij MCP response, opgeschoonde diagnostics
+- **ai-quiz skill**: quick mode interface, optionele Notion-pagina (alleen standalone), Python-first base64 encoding
+- **ai-toekomstvisie skill**: quick mode interface, kwaliteitscheck inline verplaatst naar stap 3 (pre-validatie)
 - `read_team_excel` MCP tool: leest team Excel via CLAUDE_PLUGIN_ROOT met find-fallback, retourneert JSON
 - `check_gemini_api_key` MCP tool: controleert of API key beschikbaar is in de sessie
 - `set_gemini_api_key` MCP tool: slaat API key op in geheugen (nooit op schijf, verdwijnt bij sessie-einde)
@@ -95,7 +95,7 @@ Volledige herbouw van de plugin met orchestrator-architectuur. Alle 4 skills her
 ### Changed
 - MCP server hernoemd: `gemini-image-server.py` → `panda-server.py`
 - MCP server naam: `gemini-images` → `panda-server`
-- `/klantpagina` command verwijst nu naar klantpagina-v2 skill
+- `/klantpagina` command verwijst nu naar klantpagina skill
 - `build.sh` synct v2 skills, bundelt templates, verwijdert oude bestanden
 - Plugin manifest versie: 0.2.0 → 2.0.0
 - API key management: van bash `export` (shell-only) naar MCP tool (server + shell)
@@ -104,8 +104,8 @@ Volledige herbouw van de plugin met orchestrator-architectuur. Alle 4 skills her
 - `plugin/hooks/hooks.json` en hooks directory (quality check niet meer nodig, sub-skills melden eigen status)
 - `plugin/servers/gemini-image-server.py` (vervangen door panda-server.py)
 - Inline Excel-leeslogica uit klantpagina (50 regels → MCP tool)
-- Inline image-generatie uit klantpagina (175 regels → delegatie naar gemini-image-v2)
-- Inline quiz-generatie uit klantpagina (65 regels → delegatie naar ai-quiz-v2)
+- Inline image-generatie uit klantpagina (175 regels → delegatie naar gemini-image)
+- Inline quiz-generatie uit klantpagina (65 regels → delegatie naar ai-quiz)
 - Inline Notion template uit klantpagina (140 regels → apart bestand)
 - Omgevingsdetectie bash uit klantpagina (sub-skills handelen dit zelf af)
 - `[DIAG]` diagnostics uit klantpagina (sub-skills melden zelf hun status)

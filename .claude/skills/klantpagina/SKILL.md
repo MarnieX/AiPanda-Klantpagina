@@ -1,9 +1,9 @@
 ---
-name: klantpagina-v2
+name: klantpagina
 description: "Genereer een professionele Notion-klantpagina voor AI Panda. Orchestreert sub-skills voor image-generatie, quiz en toekomstvisie. Leest team uit Excel via MCP en gebruikt een extern template."
 ---
 
-# AI Panda Klantpagina Generator v2
+# AI Panda Klantpagina Generator
 
 Je genereert een professionele Notion-klantpagina voor AI Panda. Volg de stappen exact in volgorde. Start parallelstappen altijd tegelijk om snelheid te winnen.
 
@@ -175,11 +175,11 @@ Sla op als ROADMAP_CONTENT (markdown tekst voor fase 1 t/m 4).
 
 ### 2E — Interactieve quiz genereren
 
-Voer de `ai-quiz-v2` skill uit in quick mode.
+Voer de `ai-quiz` skill uit in quick mode.
 
-Geef mee: BEDRIJFSNAAM, SECTOR, PARENT_SKILL = "klantpagina-v2"
+Geef mee: BEDRIJFSNAAM, SECTOR, PARENT_SKILL = "klantpagina"
 
-Volg de stappen van ai-quiz-v2 vanaf stap 1 (vragen genereren). Stap 4 (Notion-pagina) wordt overgeslagen door PARENT_SKILL.
+Volg de stappen van ai-quiz vanaf stap 1 (vragen genereren). Stap 4 (Notion-pagina) wordt overgeslagen door PARENT_SKILL.
 
 Het resultaat is QUIZ_URL.
 
@@ -253,15 +253,15 @@ Toekomstvisie presentatie wordt nu gegenereerd...
 
 Voer dit uit NADAT de Notion-URL getoond is.
 
-Voer de `ai-toekomstvisie-v2` skill uit in quick mode.
+Voer de `ai-toekomstvisie` skill uit in quick mode.
 
 Geef mee: BEDRIJFSNAAM, SECTOR, OMSCHRIJVING, WEBSITE_DOMEIN, MERKKLEUR_PRIMAIR,
 MERKKLEUR_SECUNDAIR, HUISSTIJL_KENMERK (alle uit fase 2A).
 
-Door deze variabelen mee te geven slaat ai-toekomstvisie-v2 stap 1A (huisstijl-research)
+Door deze variabelen mee te geven slaat ai-toekomstvisie stap 1A (huisstijl-research)
 automatisch over, omdat de data al beschikbaar is. Dit bespaart een extra WebFetch-ronde.
 
-Volg de stappen van ai-toekomstvisie-v2 vanaf stap 1 (research).
+Volg de stappen van ai-toekomstvisie vanaf stap 1 (research).
 
 Zodra klaar, toon het eindresultaat:
 

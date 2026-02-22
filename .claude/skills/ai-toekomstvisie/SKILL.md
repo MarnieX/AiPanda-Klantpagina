@@ -1,5 +1,5 @@
 ---
-name: ai-toekomstvisie-v2
+name: ai-toekomstvisie
 description: >
   Genereer een visionaire AI-toekomstvisie voor een klant als Gamma.app presentatie van 10 slides
   in de AI Panda huisstijl. Schrijft een inspirerend 10-jaar transformatieverhaal en bouwt
@@ -9,7 +9,7 @@ description: >
   "maak een toekomstvisie voor [bedrijf]", "gamma presentatie voor [klant]".
 ---
 
-# AI Toekomstvisie — Gamma Presentatie v2
+# AI Toekomstvisie — Gamma Presentatie
 
 ## Doel
 

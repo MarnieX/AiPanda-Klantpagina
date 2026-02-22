@@ -20,10 +20,10 @@ De plugin begeleidt je stap voor stap bij het aanmaken van een klantpagina in No
 
 | Component | Naam | Beschrijving |
 |-----------|------|-------------|
-| Skill | `klantpagina-v2` | Orchestrator die sub-skills aanstuurt |
-| Skill | `gemini-image-v2` | Image generation (Gemini + OpenAI fallback) |
-| Skill | `ai-quiz-v2` | Interactieve AI-Readiness quiz |
-| Skill | `ai-toekomstvisie-v2` | Gamma.app presentatie |
+| Skill | `klantpagina` | Orchestrator die sub-skills aanstuurt |
+| Skill | `gemini-image` | Image generation (Gemini + OpenAI fallback) |
+| Skill | `ai-quiz` | Interactieve AI-Readiness quiz |
+| Skill | `ai-toekomstvisie` | Gamma.app presentatie |
 | Command | `/klantpagina` | Snelle trigger om de wizard te starten |
 | MCP Server | `panda-server` | Beeldgeneratie, logo ophalen, team Excel, API key management |
 

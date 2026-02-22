@@ -9,4 +9,4 @@ Hey Panda! Even geduld, ik start de klantpagina-wizard...
 
 ---
 
-Voer daarna de klantpagina-v2 skill uit, stap voor stap, beginnend bij **Stap 1 (vraag om bedrijf)**.
+Voer daarna de klantpagina skill uit, stap voor stap, beginnend bij **Stap 1 (vraag om bedrijf)**.

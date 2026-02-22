@@ -6,21 +6,20 @@
 - Python 3.8+ (image generation via Google Gemini)
 - Claude Code Skills (.claude/skills/) voor workflow-orchestratie
 - Notion MCP Server (pagina's aanmaken en beheren)
-- Google Gemini API (AI-beeldgeneratie via Nano Banana Pro)
+- Google Gemini API (AI-beeldgeneratie)
 - Cloudinary (optioneel, image hosting)
 
 **Project type:** Claude Code Plugin met skills en MCP-integraties.
 
 **Bestanden:**
 - `ai-panda-klantpagina.zip` - Gebouwd plugin-bestand voor Cowork
-- `.claude/skills/klantpagina/SKILL.md` - Hoofdskill: klantpagina generator
-- `.claude/skills/ai-quiz/SKILL.md` - Standalone AI-Readiness quiz skill
-- `.claude/skills/gemini-image/SKILL.md` - Standalone image generation skill
-- `scripts/generate_notion_image.py` - Python script voor AI-beeldgeneratie
-- `scripts/prompt-optimizer.py` - Prompt optimalisatie voor betere beeldresultaten
-- `scripts/banana.sh` - CLI wrapper voor image generation
+- `.claude/skills/klantpagina/SKILL.md` - Hoofdskill: klantpagina generator (orchestrator)
+- `.claude/skills/ai-quiz/SKILL.md` - Sub-skill: AI-Readiness quiz
+- `.claude/skills/gemini-image/SKILL.md` - Sub-skill: AI-beeldgeneratie
+- `.claude/skills/ai-toekomstvisie/SKILL.md` - Sub-skill: Gamma-presentatie
 - `data/ai-panda-team.xlsx` - Teambestand met consultants
-- `plugin/` - Plugin bronbestanden (servers, commands, hooks, skills)
+- `plugin/` - Plugin bronbestanden (servers, commands, skills)
+- `plugin/servers/panda-server.py` - MCP server (Gemini/OpenAI image gen + Excel)
 - `quiz/` - Interactieve quiz app (git submodule, GitHub Pages)
 - `assets/panda-reference.png` - Panda character referentiebeeld voor Gemini
 - `build.sh` - Bouwt plugin/ tot .zip

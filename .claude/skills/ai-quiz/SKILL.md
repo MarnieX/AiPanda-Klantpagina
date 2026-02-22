@@ -1,9 +1,9 @@
 ---
-name: ai-quiz-v2
+name: ai-quiz
 description: "Genereer een interactieve AI-Readiness Quickscan quiz voor een bedrijf. Bouwt een klikbare quiz-URL. Werkt standalone (met Notion-pagina) en in quick mode (vanuit andere skills, zonder Notion)."
 ---
 
-# AI-Readiness Quiz Generator v2
+# AI-Readiness Quiz Generator
 
 Genereer een interactieve AI-Readiness Quickscan: een klikbare quiz die in de browser draait. De vragen worden als JSON meegegeven in de URL, zodat geen server nodig is.
 

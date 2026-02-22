@@ -1,11 +1,11 @@
 ---
 name: ai-quiz
-description: "Genereer een interactieve AI-Readiness Quickscan quiz voor een bedrijf. Bouwt een klikbare quiz-URL en embed deze in een Notion-pagina."
+description: "Genereer een interactieve AI-Readiness Quickscan quiz voor een bedrijf. Bouwt een klikbare quiz-URL. Werkt standalone (met Notion-pagina) en in quick mode (vanuit andere skills, zonder Notion)."
 ---
 
-# AI-Readiness Quiz Generator (Interactief)
+# AI-Readiness Quiz Generator
 
-Deze skill genereert een interactieve AI-Readiness Quickscan: een klikbare quiz die in de browser draait. De vragen worden als JSON meegegeven in de URL, zodat geen server nodig is.
+Genereer een interactieve AI-Readiness Quickscan: een klikbare quiz die in de browser draait. De vragen worden als JSON meegegeven in de URL, zodat geen server nodig is.
 
 ## Configuratie
 
@@ -13,15 +13,22 @@ Deze skill genereert een interactieve AI-Readiness Quickscan: een klikbare quiz 
 QUIZ_BASE_URL = https://marniex.github.io/aipanda-quiz
 ```
 
-> **Let op:** Als de GitHub Pages URL nog niet live is, gebruik dan de lokale `quiz/index.html` voor testen.
+---
 
-## Input
+## Aanroep-interface (voor gebruik vanuit andere skills)
 
-De skill verwacht de volgende contextvariabelen (of vraagt erom als ze ontbreken):
-- `BEDRIJFSNAAM` (bijv. "Coolblue")
-- `SECTOR` (bijv. "Retail")
+```
+Input:  BEDRIJFSNAAM, SECTOR
+Output: QUIZ_URL
+```
 
-Als deze niet beschikbaar zijn, vraag erom via `AskUserQuestion`.
+Als BEDRIJFSNAAM en SECTOR al beschikbaar zijn: sla input-vragen over, ga direct naar stap 1 (vragen genereren). Sla ook stap 4 (Notion-pagina) over wanneer aangeroepen vanuit een andere skill (PARENT_SKILL is gezet).
+
+---
+
+## Input (alleen standalone)
+
+Als BEDRIJFSNAAM of SECTOR niet beschikbaar zijn, vraag erom via AskUserQuestion.
 
 ---
 
@@ -76,35 +83,44 @@ Sla op als `QUIZ_JSON`.
 
 ## Stap 3: Base64-encode en bouw de URL
 
-Encodeer de JSON naar een base64 string en bouw de volledige quiz-URL:
+**Primaire methode (Python, werkt overal):**
+
+```bash
+QUIZ_URL=$(python3 -c "
+import base64, json, sys
+data = '''[QUIZ_JSON]'''
+b64 = base64.b64encode(data.encode()).decode()
+print(f'https://marniex.github.io/aipanda-quiz/#data={b64}')
+")
+echo "$QUIZ_URL"
+```
+
+**Alternatieve methode (bash):**
 
 ```bash
 QUIZ_BASE_URL="https://marniex.github.io/aipanda-quiz"
 QUIZ_JSON='[DE GEGENEREERDE JSON]'
-
-# Base64-encode (URL-safe)
 B64=$(echo -n "$QUIZ_JSON" | base64 | tr -d '\n')
-
-# Bouw de volledige URL
 QUIZ_URL="${QUIZ_BASE_URL}/#data=${B64}"
-
 echo "$QUIZ_URL"
+```
+
+**Verificatie:** Decodeer de base64 terug om te controleren dat de JSON intact is:
+```bash
+echo "$B64" | base64 -d | python3 -m json.tool
 ```
 
 Sla het resultaat op als `QUIZ_URL`.
 
-**Verificatie:** Decodeer de base64 terug om te controleren dat de JSON intact is:
-```bash
-echo "$B64" | base64 -d
-```
-
 ---
 
-## Stap 4: Maak Notion-pagina aan
+## Stap 4: Notion-pagina aanmaken (optioneel)
+
+**Alleen uitvoeren als de skill standalone draait (niet vanuit een andere skill).** Controleer: als PARENT_SKILL is gezet, sla deze stap over.
 
 Gebruik `notion-create-pages` om een quiz-pagina aan te maken.
 
-**Als er een `PARENT_PAGE_ID` beschikbaar is** (bijv. vanuit de klantpagina-skill): maak de pagina aan als sub-pagina met `page_id: PARENT_PAGE_ID`.
+**Als er een `PARENT_PAGE_ID` beschikbaar is:** maak de pagina aan als sub-pagina met `page_id: PARENT_PAGE_ID`.
 
 **Titel:** `AI-Readiness Quickscan — [BEDRIJFSNAAM]`
 
@@ -156,29 +172,17 @@ Beantwoord 5 meerkeuzevragen over AI-gebruik binnen [BEDRIJFSNAAM]. Per vraag ki
 
 Toon aan de gebruiker:
 1. De quiz-URL (klikbaar)
-2. De Notion-pagina URL (als beschikbaar)
+2. De Notion-pagina URL (als aangemaakt)
 3. Korte bevestiging: "Interactieve quiz aangemaakt voor [BEDRIJFSNAAM]"
 
 Sla op:
 - `QUIZ_URL` — de directe link naar de interactieve quiz
-- `QUIZ_PAGE_ID` — het Notion page ID (voor gebruik door andere skills)
+- `QUIZ_PAGE_ID` — het Notion page ID (indien aangemaakt)
 
 ---
 
 ## Foutafhandeling
 
-- Base64-encoding faalt → probeer Python als alternatief:
-  ```bash
-  python3 -c "import base64, json; print(base64.b64encode(json.dumps([DATA]).encode()).decode())"
-  ```
+- Base64-encoding faalt (bash) → gebruik Python-methode (stap 3 primaire methode)
 - Notion-pagina aanmaken faalt → toon alleen de quiz-URL als resultaat. GA ALTIJD DOOR.
-- Quiz-URL is te lang → dit zou niet moeten voorkomen (hash fragment heeft geen server-side limiet), maar als het toch faalt: verkort de vraagteksten.
-
----
-
-## Integratie met klantpagina-skill
-
-Wanneer deze skill wordt aangeroepen vanuit de klantpagina-skill (stap 5C/6B):
-- De klantpagina-skill levert `BEDRIJFSNAAM`, `SECTOR` en `PARENT_PAGE_ID`
-- Deze skill levert `QUIZ_URL` en `QUIZ_PAGE_ID` terug
-- De klantpagina-skill kan de `QUIZ_URL` embedden in de hoofdpagina
+- Quiz-URL is te lang → verkort de vraagteksten

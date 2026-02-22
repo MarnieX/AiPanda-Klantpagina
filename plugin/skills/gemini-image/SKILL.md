@@ -1,17 +1,29 @@
 ---
 name: gemini-image
-description: "Genereer afbeeldingen via Google Gemini API. Geef een beschrijving of laat een prompt bouwen op basis van context. Retourneert een publieke URL. Werkt in Cowork (via browser MCP) en lokaal (via curl)."
+description: "Genereer afbeeldingen via Google Gemini API (primair) of OpenAI (fallback). Werkt standalone (interactief) en in quick mode (vanuit andere skills). Retourneert een publieke URL."
 ---
 
 # Gemini Image Generator
 
-Genereer afbeeldingen via Google Gemini API. Werkt met elke prompt: panda's, productfoto's, illustraties, diagrammen, etc. Detecteert automatisch de omgeving en kiest de juiste methode.
+Genereer afbeeldingen via Google Gemini API (primair) of OpenAI (fallback). Werkt met elke prompt: panda's, productfoto's, illustraties, diagrammen, etc. Detecteert automatisch de omgeving en kiest de juiste methode.
 
 **Referentiebeeld panda:** `https://files.catbox.moe/23dzti.png`
+**Providers:** Gemini (met referentie-image, multimodal) → OpenAI (prompt-only) → fallback
 
 ---
 
-## Stap 1: Input
+## Aanroep-interface (voor gebruik vanuit andere skills)
+
+```
+Input:  IMAGE_PROMPT (Engelse prompt)
+Output: IMAGE_URL (publieke URL of lege string)
+```
+
+Als IMAGE_PROMPT al beschikbaar is: sla stap 1 (interactieve vragen) over, ga direct naar stap 2 (API key check).
+
+---
+
+## Stap 1: Input (alleen standalone)
 
 Twee modi: direct (gebruiker beschrijft zelf) of guided (Claude bouwt prompt).
 
@@ -52,35 +64,49 @@ Gebruik AskUserQuestion:
 
 Bouw op basis van de antwoorden een geoptimaliseerde Engelse prompt. Voeg stijl- en compositie-instructies toe.
 
+**Bij panda-prompts:** Gebruik altijd het fotorealistische karakter:
+```
+A photorealistic giant panda with a realistic furry head, black eye patches,
+and round ears, on a human body wearing a tailored black business suit,
+crisp white dress shirt, and a bold orange necktie. The panda has black
+furry paws instead of human hands. Confident posture, striding forward as
+a leader. Cinematic photography style, natural lighting, sharp focus,
+shallow depth of field.
+```
+
 **Als gebruiker een eigen beschrijving typt:** Vertaal naar het Engels als dat nog niet zo is, en optimaliseer de prompt licht (voeg compositie/stijl details toe).
 
 Sla op: IMAGE_PROMPT (Engelse prompt), FORMAT_INSTRUCTION (bijv. "square 1:1 aspect ratio")
 
 ---
 
-## Stap 2: GEMINI_API_KEY check
+## Stap 2: API key check
 
-```bash
-echo "GEMINI_API_KEY: ${GEMINI_API_KEY:+OK}"
-```
+Controleer of API keys beschikbaar zijn via de MCP tool `check_api_keys`.
 
-Als dit NIET "OK" print:
+**Response:** `{"gemini": true/false, "openai": true/false}`
 
-Vraag de key via AskUserQuestion:
-- question: "GEMINI_API_KEY ontbreekt. Plak je Gemini API key hieronder (aanmaken op https://aistudio.google.com/apikey)."
+**Als minstens één key `true`:** Ga door naar stap 3.
+
+**Als beide `false`:** Vraag de key via AskUserQuestion:
+- question: "Geen API keys gevonden. Plak een Gemini of OpenAI API key hieronder. Gemini: https://aistudio.google.com/apikey — OpenAI: https://platform.openai.com/api-keys"
 - header: "API Key"
 - options:
-  - "Ik heb geen key, annuleer" — stop de skill
-  - "Key komt eraan" — de gebruiker plakt de key via het Other-tekstveld
+  - "Ik heb geen key, sla over" — retourneer lege string als IMAGE_URL
+  - "Gemini key" — de gebruiker plakt de key via het Other-tekstveld
+  - "OpenAI key" — de gebruiker plakt de key via het Other-tekstveld
 - multiSelect: false
 
 Als de gebruiker een key plakt:
+1. Bepaal de provider op basis van de gekozen optie
+2. Sla op via MCP tool `set_api_key` met `provider` ("gemini" of "openai") en `api_key`
+3. Exporteer ook in de shell voor curl-fallbacks:
 ```bash
-export GEMINI_API_KEY="[GEPLAKTE_KEY]"
-echo "[DIAG] Key geactiveerd voor deze sessie"
+export GEMINI_API_KEY="[GEPLAKTE_KEY]"   # als Gemini
+export OPENAI_API_KEY="[GEPLAKTE_KEY]"   # als OpenAI
 ```
 
-Als de gebruiker geen key heeft: meld dit en stop. Zonder key kan er geen afbeelding gegenereerd worden.
+Als de gebruiker geen key heeft: retourneer lege string als IMAGE_URL. Stop NOOIT de flow.
 
 ---
 
@@ -90,7 +116,7 @@ Als de gebruiker geen key heeft: meld dit en stop. Zonder key kan er geen afbeel
 if [ -d "/sessions" ]; then echo "ENVIRONMENT=cowork"; else echo "ENVIRONMENT=local"; fi
 ```
 
-- **cowork** → Ga naar Stap 4B (browser MCP)
+- **cowork** → Ga naar Stap 4B (MCP server primair, browser fallback)
 - **local** → Ga naar Stap 4A (curl)
 
 ---
@@ -99,11 +125,12 @@ if [ -d "/sessions" ]; then echo "ENVIRONMENT=cowork"; else echo "ENVIRONMENT=lo
 
 Combineer IMAGE_PROMPT met eventuele FORMAT_INSTRUCTION in de uiteindelijke prompt.
 
+### 4A.1 — Gemini (primair)
+
 ```bash
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 OUTPUT="/tmp/gemini_${TIMESTAMP}.png"
 
-# Gemini API via curl
 RESPONSE=$(curl -s -m 120 \
   "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=$GEMINI_API_KEY" \
   -H "Content-Type: application/json" \
@@ -112,7 +139,6 @@ RESPONSE=$(curl -s -m 120 \
     "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}
   }')
 
-# Decodeer base64 naar PNG
 python3 -c "
 import json, base64, sys
 data = json.loads(sys.stdin.read())
@@ -120,34 +146,65 @@ for part in data.get('candidates', [{}])[0].get('content', {}).get('parts', []):
     if 'inlineData' in part:
         with open('$OUTPUT', 'wb') as f:
             f.write(base64.b64decode(part['inlineData']['data']))
-        print('OK: afbeelding opgeslagen als $OUTPUT')
+        print('OK')
         sys.exit(0)
-print('FAIL: geen afbeelding in response')
-print(json.dumps(data, indent=2)[:500], file=sys.stderr)
+print('FAIL')
 sys.exit(1)
 " <<< "$RESPONSE"
+```
 
-# Upload naar catbox.moe voor publieke URL
+Als Gemini faalt en OPENAI_API_KEY beschikbaar is, probeer OpenAI:
+
+### 4A.2 — OpenAI (fallback)
+
+```bash
+RESPONSE=$(curl -s -m 120 \
+  "https://api.openai.com/v1/images/generations" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-image-1.5",
+    "prompt": "[IMAGE_PROMPT]. [FORMAT_INSTRUCTION]",
+    "n": 1,
+    "size": "1024x1024",
+    "quality": "high"
+  }')
+
+python3 -c "
+import json, base64, sys
+data = json.loads(sys.stdin.read())
+for item in data.get('data', []):
+    if 'b64_json' in item:
+        with open('$OUTPUT', 'wb') as f:
+            f.write(base64.b64decode(item['b64_json']))
+        print('OK')
+        sys.exit(0)
+print('FAIL')
+sys.exit(1)
+" <<< "$RESPONSE"
+```
+
+### 4A.3 — Upload
+
+```bash
+# Upload: catbox.moe (primair), tmpfiles.org (fallback)
 IMAGE_URL=$(curl -s -F "reqtype=fileupload" -F "fileToUpload=@$OUTPUT" https://catbox.moe/user/api.php)
+if [ -z "$IMAGE_URL" ] || ! echo "$IMAGE_URL" | grep -q "^http"; then
+    TMPFILES_RESP=$(curl -s -F "file=@$OUTPUT" https://tmpfiles.org/api/v1/upload)
+    IMAGE_URL=$(echo "$TMPFILES_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['data']['url'].replace('tmpfiles.org/','tmpfiles.org/dl/',1).replace('http://','https://'))" 2>/dev/null)
+fi
 echo "URL: $IMAGE_URL"
 ```
 
 **Error handling:**
-- Als de Gemini API een fout retourneert: toon de foutmelding en meld dat de generatie mislukt is.
-- Als catbox upload faalt: probeer nogmaals, of meld de lokale padnaam als fallback.
+- Gemini API fout → OpenAI fallback → lege string
+- Upload faalt → probeer andere host, daarna placeholder
 
-**Output:** Toon de publieke URL en een korte bevestiging:
-```
-Afbeelding gegenereerd en geupload:
-URL: [IMAGE_URL]
-Lokaal bestand: [OUTPUT]
-```
+**Output:** Toon de publieke URL en een korte bevestiging.
 
 ---
 
-## Stap 4B: Cowork (MCP server primair, browser MCP als fallback)
-
-In Cowork blokkeert de sandbox-proxy uitgaand HTTP-verkeer voor directe Python/curl calls. De MCP server heeft een socksio fix waardoor deze wel door de proxy kan. De Chrome MCP-bridge is de fallback.
+## Stap 4B: Cowork (MCP server primair, browser fallback)
 
 ### 4B.0 — MCP server (primair)
 
@@ -159,8 +216,9 @@ MCP tool: generate_custom_image
 ```
 
 Parse de JSON-response:
-- `success: true` → `image_url` is IMAGE_URL. Ga naar stap 4B.5 (screenshot) of toon de URL direct.
-- `success: false` → ga naar stap 4B.1 (browser fallback).
+- `success: true` → `image_url` is IMAGE_URL. Klaar. (response bevat ook `provider`)
+- `success: false` + `fallback_url` aanwezig → gebruik `fallback_url` als IMAGE_URL. Klaar.
+- `success: false` zonder `fallback_url` → ga naar stap 4B.1 (browser fallback).
 
 ### 4B.1 — Tab verkrijgen (browser fallback)
 
@@ -170,11 +228,10 @@ Sla het `tabId` op.
 ### 4B.2 — Navigeer naar JS-context
 
 MCP tool: `navigate` naar `https://example.com` met het tabId.
-Dit geeft een schone pagina om JavaScript uit te voeren.
 
 ### 4B.3 — Genereer image via Gemini API
 
-MCP tool: `javascript_tool` in het tabId. Voer dit script uit:
+MCP tool: `javascript_tool` in het tabId:
 
 ```javascript
 (async () => {
@@ -216,7 +273,7 @@ MCP tool: `javascript_tool` in het tabId. Voer dit script uit:
 ```
 
 Als `success: true` en `hasImage: true`: ga door naar 4B.4.
-Als er een fout is: meld de fout en ga naar de fallback (placeholder URL).
+Als er een fout is: ga naar fallback-keten.
 
 ### 4B.4 — Download naar lokale machine
 
@@ -251,20 +308,18 @@ MCP tool: `javascript_tool` in het tabId:
 
 Daarna: MCP tool `computer` (screenshot) om de afbeelding als bewijs in het gesprek te tonen.
 
-### 4B.6 — (Optioneel) Upload naar catbox.moe voor publieke URL
+### 4B.6 — Upload voor publieke URL
 
 Alleen nodig als een publieke URL gewenst is (bijv. vanuit klantpagina flow).
 
 **Methode A: upload_image_base64 MCP tool (primair, geen CORS)**
 
-Haal de base64 data op uit de browser en geef deze door aan de MCP server tool `upload_image_base64`. Dit omzeilt CORS omdat de upload server-side via curl gebeurt.
-
-MCP tool: `javascript_tool` in het tabId om de base64 data op te halen:
+Haal de base64 data op uit de browser:
 ```javascript
 (() => window._geminiB64 || 'NO_DATA')()
 ```
 
-Geef de volledige base64 string door aan:
+Geef door aan:
 ```
 MCP tool: upload_image_base64
   image_base64: "[BASE64_DATA]"
@@ -273,7 +328,7 @@ MCP tool: upload_image_base64
 
 Parse de JSON-response: `success: true` → `image_url` is IMAGE_URL.
 
-**Methode B: Browser-side catbox upload (fallback als MCP tool faalt)**
+**Methode B: Browser-side upload (fallback als MCP tool faalt)**
 
 MCP tool: `javascript_tool` in het tabId:
 
@@ -302,7 +357,7 @@ MCP tool: `javascript_tool` in het tabId:
 })()
 ```
 
-**Output voor standalone gebruik:** Toon de screenshot en meld dat het bestand gedownload is naar de lokale Downloads-map.
+**Standalone output:** Toon de screenshot en meld dat het bestand gedownload is.
 
 ---
 
@@ -310,23 +365,18 @@ MCP tool: `javascript_tool` in het tabId:
 
 ```
 Lokaal:
-  Curl naar Gemini API → Catbox upload → Publieke URL
-  Fallback: Placeholder URL
+  Gemini + referentie (MCP) → OpenAI prompt-only (MCP) → Gemini curl → OpenAI curl → lege string
 
 Cowork:
-  1. MCP generate_custom_image (primair, server-side met socksio fix)
-  2. Browser JS fetch + upload_image_base64 MCP tool (fallback, omzeilt CORS)
-  3. Browser JS fetch + catbox browser upload (laatste poging)
-  4. Placeholder URL (flow stopt nooit)
+  1. MCP generate_custom_image (Gemini+ref → OpenAI intern)
+  2. success:false + fallback_url → gebruik fallback_url
+  3. Browser JS Gemini+ref → upload_image_base64
+  4. Browser JS fetch + catbox browser upload
+  5. Lege string (flow stopt nooit)
 ```
 
 ---
 
-## Gebruik vanuit andere skills
+## Foutafhandeling
 
-Deze skill kan aangeroepen worden als referentie vanuit andere skills. Het patroon verschilt per omgeving:
-
-**Lokaal:** Het curl-patroon (stap 4A) is het kernmechanisme.
-**Cowork:** De browser MCP flow (stap 4B) met 5 MCP-calls.
-
-Andere skills hoeven niet de volledige flow te doorlopen (AskUserQuestion etc.), maar kunnen direct het juiste patroon gebruiken met een zelfgebouwde prompt.
+Bij elke fout: ga door naar het volgende niveau in de fallback-keten. Retourneer uiteindelijk altijd een IMAGE_URL (publieke URL of lege string). Stop NOOIT de flow.
