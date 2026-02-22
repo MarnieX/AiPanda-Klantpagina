@@ -1,6 +1,7 @@
 ---
 name: gemini-image
 description: "Genereer afbeeldingen via Google Gemini API (primair) of OpenAI (fallback). Werkt standalone (interactief) en in quick mode (vanuit andere skills). Retourneert een publieke URL."
+allowed-tools: Read, Write, Bash, WebFetch, WebSearch, AskUserQuestion, TodoWrite, check_api_keys, set_api_key, generate_panda_image, generate_custom_image, upload_image_base64
 ---
 
 # Gemini Image Generator
@@ -9,6 +10,11 @@ Genereer afbeeldingen via Google Gemini API (primair) of OpenAI (fallback). Werk
 
 **Referentiebeeld panda:** `https://files.catbox.moe/23dzti.png`
 **Providers:** Gemini (met referentie-image, multimodal) → OpenAI (prompt-only) → fallback
+
+> ⚠️ **VASTGEZET MODEL — NIET WIJZIGEN**
+> Gebruik ALTIJD `gemini-3-pro-image-preview` als Gemini model.
+> Lijst NOOIT beschikbare modellen op. Probeer NOOIT een ander model.
+> Het model is vastgezet en mag niet worden gewijzigd, vervangen of aangepast, ook niet als een ander model beschikbaar lijkt of als een API-call mislukt. Bij een mislukte call: ga direct naar de fallback (stap 4A.2 of 4B).
 
 ---
 

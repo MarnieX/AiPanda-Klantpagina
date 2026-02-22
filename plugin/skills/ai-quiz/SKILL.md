@@ -1,6 +1,7 @@
 ---
 name: ai-quiz
 description: "Genereer een interactieve AI-Readiness Quickscan quiz voor een bedrijf. Bouwt een klikbare quiz-URL. Werkt standalone (met Notion-pagina) en in quick mode (vanuit andere skills, zonder Notion)."
+allowed-tools: Read, Write, Bash, WebFetch, WebSearch, AskUserQuestion, TodoWrite, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-fetch
 ---
 
 # AI-Readiness Quiz Generator

@@ -7,6 +7,7 @@ description: >
 
   Aanroepen vanuit de klantpagina-skill na het aanmaken van de Notion-pagina, of standalone met:
   "maak een toekomstvisie voor [bedrijf]", "gamma presentatie voor [klant]".
+allowed-tools: Read, Write, Bash, WebFetch, WebSearch, AskUserQuestion, TodoWrite, mcp__claude_ai_Gamma__generate, mcp__claude_ai_Gamma__get_themes, mcp__claude_ai_Gamma__get_folders
 ---
 
 # AI Toekomstvisie — Gamma Presentatie
