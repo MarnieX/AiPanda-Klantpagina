@@ -1,4 +1,4 @@
-# AI Panda Klantpagina Generator v2.3
+# AI Panda Klantpagina Generator
 
 Genereer professionele Notion-klantpagina's voor AI Panda met een interactieve wizard.
 
@@ -75,6 +75,65 @@ Gemini + referentie-image + bedrijfslogo (multimodal)
   → OpenAI gpt-image-1.5 (prompt-only)
     → Placeholder/fallback URL (flow stopt nooit)
 ```
+
+## Platform support
+
+### Cowork (Windows, Mac, Linux — via browser)
+
+Volledig ondersteund. De MCP server draait in een Linux-container op Anthropic-servers. Je Windows-machine doet niets meer dan de browser draaien. Geen installatie, geen configuratie.
+
+**Stappenplan voor eindgebruikers:**
+1. Ontvang `ai-panda-klantpagina.zip` van je AI Panda consultant
+2. Open Cowork in je browser
+3. Instellingen → Plugins → Plugin toevoegen → selecteer het `.zip`-bestand
+4. Typ `/klantpagina` en volg de wizard
+
+**API keys instellen (aanbevolen):**
+
+- Windows: `C:\Users\[jijnaam]\.claude\settings.json`
+- Mac/Linux: `~/.claude/settings.json`
+
+```json
+{
+  "env": {
+    "GEMINI_API_KEY": "AIza...",
+    "OPENAI_API_KEY": "sk-..."
+  }
+}
+```
+
+Herstart Cowork na het opslaan. Geen keys? Geen probleem — de plugin vraagt om een key zodra die nodig is, of gebruikt een placeholder-afbeelding.
+
+### Lokaal development op Mac/Linux
+
+```bash
+uv run plugin/servers/panda-server.py
+```
+
+Alle tools zijn beschikbaar (`curl`, `python3`, `bash`). Build script en readiness tests werken direct.
+
+### Lokaal development op Windows
+
+De MCP server draait op Windows, maar twee tools ontbreken by default:
+
+- `curl` — voor logo-ophaling en image-upload
+- `find` — voor Excel-fallback (alleen als `CLAUDE_PLUGIN_ROOT` niet is ingesteld)
+
+**Optie 1 (aanbevolen): WSL**
+```bash
+wsl
+cd /mnt/c/Users/[jijnaam]/pad/naar/project
+uv run plugin/servers/panda-server.py
+```
+
+**Optie 2: Tools installeren**
+```powershell
+winget install curl
+# findutils via Chocolatey:
+choco install findutils
+```
+
+**Build script en readiness tests:** werken niet op cmd.exe/PowerShell. Gebruik WSL of Git Bash.
 
 ## Excel-formaat (ai-panda-team.xlsx)
 
